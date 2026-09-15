@@ -1,0 +1,85 @@
+h1 {
+    font-size: 4rem;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.a {
+    text-decoration: none;
+    background: none;
+}
+
+.help-section {
+    padding-right: 56px;
+}
+
+.help-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.explanation {
+    padding: 20px 0;
+}
+
+.explanation h2, h1 {
+    margin-bottom: 1rem;
+}
+
+.manual {
+    display: flex;
+    flex-direction: column;
+}
+
+.manual h2 {
+    margin-bottom: 1rem;
+}
+
+.manual p {
+    margin-bottom: 1rem;
+}
+
+.manual ol {
+    counter-reset: step;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.manual li {
+    list-style: none;
+    counter-increment: step;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin: 0;
+}
+
+.manual li::before {
+    content: counter(step) ".";
+    font-size: 2rem;
+    font-weight: bold;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.manual h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.manual span {
+    font-size: 1rem;
+    font-weight: normal;
+}
+
+.li-headline-and-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
