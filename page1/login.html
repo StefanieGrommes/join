@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <!-- Grundstruktur des Dokuments -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Join - Login</title>
+
+    <!-- Schriftart für das Design -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Stylesheet der Login-Seite -->
+    <link rel="stylesheet" href="./login.css" />
+  </head>
+
+  <body>
+    <!-- Hauptcontainer der Seite -->
+    <div class="page login-page">
+      <!-- Intro-Overlay mit dem großen Join-Logo -->
+      <div class="app-intro" aria-hidden="true">
+        <div class="join-logo" aria-label="Join logo">
+          <img class="join-preview" src="../img/icons/join_icon.png" alt="Join logo" />
+        </div>
+      </div>
+
+      <!-- Kopfbereich mit Logo und Sign-up-Link -->
+      <header class="page-header">
+        <img class="header-icon" src="../img/icons/join_icon.png" alt="Join icon" />
+
+        <div class="header-actions">
+          <span class="header-copy">Not a Join user?</span>
+          <button type="button" class="top-link">Sign up</button>
+        </div>
+      </header>
+
+      <!-- Hauptbereich mit dem Login-Formular -->
+      <main class="login-shell">
+        <section class="content-card" aria-labelledby="login-title">
+          <h1 id="login-title">Log in</h1>
+
+          <form class="login-form">
+            <label class="field">
+              <span class="field__label">Email</span>
+              <input type="email" placeholder="Email" />
+            </label>
+
+            <label class="field">
+              <span class="field__label">Password</span>
+              <input type="password" placeholder="Password" />
+            </label>
+
+            <div class="button-row">
+              <button type="submit" class="btn btn--primary">Log in</button>
+              <button type="button" class="btn btn--secondary">Guest Log in</button>
+            </div>
+          </form>
+        </section>
+      </main>
+
+      <!-- Footer mit legalen Links -->
+      <footer class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Legal notice</a>
+      </footer>
+    </div>
+
+    <script src="./login.js"></script>
+  </body>
+</html>
