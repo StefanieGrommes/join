@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <!-- Grundstruktur des Dokuments -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Join - Sign up</title>
+
+    <!-- Schriftarten für das Design -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Stylesheet der Sign-up-Seite -->
+    <link rel="stylesheet" href="./signup.css" />
+  </head>
+
+  <body>
+    <!-- Hauptcontainer der Seite -->
+    <div class="page signup-page">
+      <!-- Intro-Overlay mit dem großen Join-Logo -->
+      <div class="app-intro" aria-hidden="true">
+        <div class="join-logo" aria-label="Join logo">
+          <img class="join-preview" src="../img/icons/join_icon.png" alt="Join logo" />
+        </div>
+      </div>
+
+      <!-- Kopfbereich mit Logo und Link zur Login-Seite -->
+      <header class="page-header">
+        <img class="header-icon" src="../img/icons/join_icon.png" alt="Join icon" />
+
+        <div class="header-actions">
+          <span class="header-copy">Already have an account?</span>
+          <button type="button" class="top-link">Log in</button>
+        </div>
+      </header>
+
+      <!-- Hauptbereich mit dem Sign-up-Formular -->
+      <main class="auth-panel">
+        <section class="content-card" aria-labelledby="signup-title">
+          <h1 id="signup-title">Sign up</h1>
+
+          <form class="signup-form">
+            <label class="field">
+              <span class="field__label">Name</span>
+              <input type="text" placeholder="Name" />
+            </label>
+
+            <label class="field">
+              <span class="field__label">Email</span>
+              <input type="email" placeholder="Email" />
+            </label>
+
+            <label class="field">
+              <span class="field__label">Password</span>
+              <input type="password" placeholder="Password" />
+            </label>
+
+            <label class="field">
+              <span class="field__label">Confirm Password</span>
+              <input type="password" placeholder="Confirm Password" />
+            </label>
+
+            <label class="checkbox-line">
+              <input type="checkbox" />
+              <span>I accept the <a href="#">privacy policy</a></span>
+            </label>
+
+            <button type="submit" class="btn btn--primary">Sign up</button>
+          </form>
+        </section>
+      </main>
+
+      <!-- Footer mit legalen Links -->
+      <footer class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Legal notice</a>
+      </footer>
+    </div>
+
+    <script src="./signup.js"></script>
+  </body>
+</html>
