@@ -14,6 +14,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    padding: 0 0 56px 0;
     gap: 12px;
 }
 
@@ -47,6 +48,7 @@ h2 {
     font-family: var(--default-font);
     font-size: 64px;
 }
+
 .date {
     font-size: 20px;
     font-family: var(--default-font);
@@ -62,7 +64,7 @@ h2 {
 .grey-seperator {
     background-color: #D1D1D1;
     height: 102px;
-    width: 3px;
+    width: 2px;
 }
 
 .grey-boxes-task {
@@ -70,13 +72,13 @@ h2 {
     border-radius: 30px;
     box-shadow: 0 0 4px 1px rgba(82, 82, 82, 0.4);
     background-color: white;
-    padding: 58px 38px;
 }
 
 .flex-row {
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 18px;
 }
 
 .task-name-and-amount {
@@ -84,15 +86,19 @@ h2 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    line-height: 1.2;
 }
 
 .task-boxes-and-welcome-message-wrapper {
     display: flex;
-    align-items: center;
+    gap: 80px;
 }
 
 .task-boxes {
     display: grid;
+    width: 560px;
+    height: 540px;
     grid-template-rows: 1fr 1fr 1fr;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-template-areas: "to-do to-do to-do done done done"
@@ -104,6 +110,7 @@ h2 {
 .welcome-message {
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
 
 #to-do { 
@@ -132,8 +139,23 @@ h2 {
 
 .urgent-and-calendar {
     display: flex;
-    gap: 20px;
+    gap: 18px;
     align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+}
+
+.calendar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.urgent-and-seperator {
+    display: flex;
+    align-items: center;
+    gap: 36px;
 }
 
 .daytime {
