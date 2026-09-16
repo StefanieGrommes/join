@@ -116,6 +116,7 @@ aside li {
     justify-content: start;
     align-items: center;
     width: 100%;
+    grid-area: nav;
 }
 
 .nav-links li {
@@ -137,6 +138,7 @@ aside li {
 .logo-wrapper {
     align-self: start;
     justify-self: center;
+    grid-area: logo;
 }
 
 .legal-and-policy {
@@ -148,6 +150,7 @@ aside li {
     align-self: end;
     justify-self: center;
     padding: 20px 0 20px 0;
+    grid-area: legal;
 }
 
 .legal-and-policy li {
