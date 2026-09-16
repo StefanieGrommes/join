@@ -1,0 +1,149 @@
+:root {
+    --default-font: 'Inter', sans-serif;
+}
+
+.summary {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: start;
+    padding: 0 96px 12px 96px;
+}
+
+.summary-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 12px;
+}
+
+h1 {
+    font-size: 60px;
+    font-family: var(--default-font);
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 32px;
+    font-family: var(--default-font);
+    font-weight: 400;
+    color: #2A3647;
+}
+
+.task-normal {
+    font-size: 20px;
+    font-family: var(--default-font);
+    font-weight: 400;
+}
+
+.normal-text {
+    font-size: 16px;
+    font-family: var(--default-font);
+    font-weight: 400;
+}
+
+.amount-bold {
+    font-weight: 600;
+    font-family: var(--default-font);
+    font-size: 64px;
+}
+.date {
+    font-size: 20px;
+    font-family: var(--default-font);
+    font-weight: 700;
+}
+
+.blue-seperator {
+    background-color:#29ABE2;
+    height: 65px;
+    width: 3px;
+}
+
+.grey-seperator {
+    background-color: #D1D1D1;
+    height: 102px;
+    width: 3px;
+}
+
+.grey-boxes-task {
+    border: unset;
+    border-radius: 30px;
+    box-shadow: 0 0 4px 1px rgba(82, 82, 82, 0.4);
+    background-color: white;
+    padding: 58px 38px;
+}
+
+.flex-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.task-name-and-amount {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.task-boxes-and-welcome-message-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.task-boxes {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas: "to-do to-do to-do done done done"
+                         "urgent urgent urgent urgent urgent urgent"
+                         "tasks-in-board tasks-in-board tasks-in-progress tasks-in-progress feedback feedback";
+    gap: 28px;
+}
+
+.welcome-message {
+    display: flex;
+    flex-direction: column;
+}
+
+#to-do { 
+    grid-area: to-do;
+}
+
+#done { 
+    grid-area: done; 
+}
+
+#urgent-and-calendar { 
+    grid-area: urgent; 
+}
+
+#tasks-in-board {
+    grid-area: tasks-in-board; 
+}
+
+#tasks-in-progress { 
+    grid-area: tasks-in-progress; 
+}
+
+#awaiting-feedback { 
+    grid-area: feedback; 
+}
+
+.urgent-and-calendar {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.daytime {
+    font-family: var(--default-font);
+    font-size: 48px;
+    font-weight: 500;
+}
+
+.name {
+    font-family: var(--default-font);
+    font-size: 64px;
+    font-weight: 700;
+}
