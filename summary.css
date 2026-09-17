@@ -35,12 +35,15 @@ h2 {
     font-size: 20px;
     font-family: var(--default-font);
     font-weight: 400;
+    color: #2A3647;
+    line-height: 1.2;
 }
 
 .normal-text {
     font-size: 16px;
     font-family: var(--default-font);
     font-weight: 400;
+    line-height: 1.2;
 }
 
 .amount-bold {
@@ -70,8 +73,36 @@ h2 {
 .grey-boxes-task {
     border: unset;
     border-radius: 30px;
-    box-shadow: 0 0 4px 1px rgba(82, 82, 82, 0.4);
+    box-shadow: 0 0 4px 0px rgba(82, 82, 82, 0.4);
     background-color: white;
+}
+
+.grey-boxes-task:hover {
+    box-shadow: 0 4px 4px 0px rgba(82, 82, 82, 0.25);
+    transform: scale(1.03);
+    cursor: pointer;
+    background-color: rgb(42,54,71);
+    color: white;
+}
+
+.grey-boxes-task:hover p {
+    color: white;
+}
+
+.grey-boxes-task:hover .task-icon-to-do circle {
+    fill: white;
+}
+
+.grey-boxes-task:hover .task-icon-to-do path {
+    fill:  rgb(42,54,71);
+}
+
+.grey-boxes-task:hover .task-icon-done circle {
+    fill: white;
+}
+
+.grey-boxes-task:hover .task-icon-done path {
+    stroke: rgb(42,54,71);
 }
 
 .flex-row {
@@ -162,10 +193,13 @@ h2 {
     font-family: var(--default-font);
     font-size: 48px;
     font-weight: 500;
+    line-height: 1.2;
 }
 
 .name {
     font-family: var(--default-font);
     font-size: 64px;
     font-weight: 700;
+    line-height: 1.2;
+    color: #124658;
 }
