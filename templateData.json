@@ -1,0 +1,156 @@
+{
+  "contacts": [
+    {
+      "id": "1",
+      "firstName": "Patrice",
+      "lastName": "Garcia",
+      "email": "p.garcia@googlemail.com",
+      "phone": "+49 175 3490333"
+    },
+    {
+      "id": "2",
+      "firstName": "Henry",
+      "lastName": "Umlauf",
+      "email": "henry.umlauf@web.de",
+      "phone": "+49 176 1234567"
+    },
+    {
+      "id": "3",
+      "firstName": "Doris",
+      "lastName": "Wienke",
+      "email": "info@doriswienke.com",
+      "phone": "+49 177 8901234"
+    },
+    {
+      "id": "4",
+      "firstName": "Stella",
+      "lastName": "Werner",
+      "email": "werner_s@gmx.de",
+      "phone": "+49 178 5678901"
+    },
+    {
+      "id": "5",
+      "firstName": "Samuel",
+      "lastName": "Schmidt",
+      "email": "samu.schmidt@googlemail.com",
+      "phone": "+49 179 2345678"
+    },
+    {
+      "id": "6",
+      "firstName": "Dr. Karl-Heinz",
+      "lastName": "Bösing",
+      "email": "boesing@fraunhofer-institut.com",
+      "phone": "+49 180 9876543"
+    },
+    {
+      "id": "7",
+      "firstName": "Ben",
+      "lastName": "Theiss",
+      "email": "benni@theiss-events.com",
+      "phone": "+49 1571 6543210"
+    },
+    {
+      "id": "8",
+      "firstName": "Iris",
+      "lastName": "Menke",
+      "email": "iris.menke@web.de",
+      "phone": "+49 182 3210987"
+    },
+    {
+      "id": "9",
+      "firstName": "Elias",
+      "lastName": "Simons",
+      "email": "ellisimons@googlemail.com",
+      "phone": "+49 153 0987654"
+    },
+    {
+      "id": "10",
+      "firstName": "Julia",
+      "lastName": "Günther",
+      "email": "mail@juliaguenther.com",
+      "phone": "+49 164 7654321"
+    }
+  ],
+  "tasks": [
+    {
+      "title": "Add-Contact-Popup animieren",
+      "description": "Das Popup soll laut Figma-Prototyp von rechts einfliegen und beim Schliessen wieder rausfliegen. Ein Klick auf den abgedunkelten Rand schliesst ebenfalls.",
+      "dueDate": "2026-11-11",
+      "priority": "low",
+      "assignedTo": [{"id": "10"}],
+      "category": "UserStory",
+      "subtasks": [
+        "Keyframes fuer Ein- und Ausflug anlegen",
+        "Schliessen ueber den Backdrop",
+        "prefers-reduced-motion beruecksichtigen"
+      ]
+    },
+    {
+      "title": "JSDoc fuer die Board-Skripte nachziehen",
+      "description": "board.js, boardEdit.js und boardTaskDialog.js sind nur teilweise dokumentiert. Alle Funktionen brauchen Beschreibung, Parameter und Rueckgabewert, damit jsdoc sauber durchlaeuft.",
+      "dueDate": "2027-01-31",
+      "priority": "medium",
+      "assignedTo": [{"id": "2"}],
+      "category": "TechnicalTask",
+      "subtasks": [
+        "board.js dokumentieren",
+        "boardEdit.js dokumentieren",
+        "npm run jsdoc ohne Warnungen"
+      ]
+    },
+{
+  "title": "Dark Mode fuer das Dashboard implementieren",
+  "description": "Laut Figma-Prototyp soll ein Toggle im Header zwischen Light- und Dark-Theme wechseln. Farbwerte als CSS-Variablen auslagern, Praeferenz im localStorage speichern.",
+  "dueDate": "2026-12-05",
+  "priority": "medium",
+  "assignedTo": [{"id": "3"}, {"id": "1"}],
+  "category": "UserStory",
+  "subtasks": [
+    "CSS-Variablen fuer beide Themes definieren",
+    "Toggle-Button im Header bauen",
+    "Theme-Praeferenz in localStorage anlegen"
+  ]
+},
+{
+  "title": "Kontaktliste nach Nachname alphabetisch sortieren",
+  "description": "Aktuell werden Kontakte in Einfuegereihenfolge angezeigt. Liste soll beim Laden und nach jedem Hinzufuegen automatisch nach lastName sortiert werden.",
+  "dueDate": "2026-10-20",
+  "priority": "low",
+  "assignedTo": [{"id": "3"}],
+  "category": "TechnicalTask",
+  "subtasks": [
+    "Sortierfunktion nach lastName schreiben",
+    "Sortierung nach Add-Contact erneut anwenden",
+    "Edge-Case: Dr.-Titel bei Sortierung ignorieren"
+  ]
+},
+{
+  "title": "Validierung fuer Telefonnummern-Eingabe",
+  "description": "Das Kontaktformular soll Telefonnummern auf gueltiges Format pruefen, bevor gespeichert wird. Fehlermeldung inline unter dem Feld anzeigen.",
+  "dueDate": "2026-11-25",
+  "priority": "medium",
+  "assignedTo": [{"id": "10"}, {"id": "9"}],
+  "category": "TechnicalTask",
+  "subtasks": [
+    "Regeln fuer internationale Nummern definieren",
+    "Inline-Fehlermeldung im Formular einbauen",
+    "Unit-Test fuer Validierungsfunktion schreiben"
+  ]
+},
+{
+  "title": "Firebase-URL zentral konfigurieren",
+  "description": "In firebase-config.js stehen mehrere BASE_URLs auskommentiert nebeneinander. Beim Wechsel wird regelmaessig die falsche aktiviert. Eine Quelle festlegen und dokumentieren.",
+  "dueDate": "2026-09-08",
+  "priority": "urgent",
+  "assignedTo": [
+    {"id": "2"},
+    {"id": "6"}
+  ],
+  "category": "TechnicalTask",
+  "subtasks": [
+    "Auskommentierte URLs entfernen",
+    "Team-Datenbank im README festhalten"
+  ]
+}
+  ]
+}
