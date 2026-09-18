@@ -14,19 +14,23 @@
 * {
   box-sizing: border-box;
 }
-
-html,
-body {
-  margin: 0;
-  min-height: 100%;
-  font-family: "Inter", sans-serif;
-  background: var(--bg);
-  color: var(--text);
+html {
+  margin-top: 0px;
 }
 
 body {
   min-height: 100vh;
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  height: 1024px;
 }
+
 
 button,
 input {
@@ -37,25 +41,21 @@ input {
 .page {
   width: 100%;
   min-height: 100vh;
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   background: var(--bg);
-  padding: 40px 20px 80px;
 }
 
-.login-page {
-  overflow: hidden;
-}
 
 .page-header {
-  width: min(1200px, 92vw);
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 28px;
+  align-items: flex-start;
+  width: 95%;
+  height: 122px;
+  margin-top: 67px;
 }
 
 .header-actions {
@@ -70,10 +70,11 @@ input {
 }
 
 .header-icon {
-  width: 44px;
-  height: 44px;
+  width: 100px;
+  height: 120px;
   display: block;
   object-fit: contain;
+
 }
 
 .top-link {
@@ -121,24 +122,36 @@ input {
 
 /* Formularbereich */
 .login-shell {
-  width: min(560px, 90vw);
-  min-height: 420px;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: min(560px, 90vw);
+  min-height: 420px;
   background: rgba(255, 255, 255, 0.18);
-  border: 1px solid var(--card-border);
-  border-radius: 18px;
-  box-shadow: 0 8px 24px rgba(17, 24, 39, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  box-shadow: 0 -8px 18px rgba(17, 24, 39, 0.16), 0 8px 18px rgba(17, 24, 39, 0.08), 0 16px 28px rgba(17, 24, 39, 0.04);
   position: relative;
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-.login-page.ready .login-shell {
+.login-page .login-shell {
+  display: flex;
   opacity: 1;
   transform: translateY(0);
+  width: 652px;
+  height: 449px;
+  padding: 0px;
+}
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .content-card {
@@ -146,25 +159,40 @@ input {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgb(252, 252, 252);
   border: 1px solid transparent;
   border-radius: 18px;
   padding: 28px 22px 22px;
 }
 
-h1 {
-  margin: 0 0 18px;
+.login-title {
+  display: flex;
   text-align: center;
-  font-size: clamp(2.2rem, 3vw, 3.8rem);
-  line-height: 1.1;
+  flex-direction: column;
   font-weight: 700;
-  letter-spacing: -0.06em;
+  font-size: 61px;
+  color: #000;
+}
+
+h1{
+  margin-top: 0px;
+}
+
+.login-title::after {
+  content: "";
+  display: block;
+  width: 90%;
+  height: 4px;
+  background: #24a6e9;
+  margin: 8px auto 0;
+  border-radius: 2px;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  align-items: center;
 }
 
 .field {
@@ -173,20 +201,36 @@ h1 {
   gap: 8px;
 }
 
+.input-with-icon {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
 .field__label {
   font-size: 14px;
   color: var(--muted);
 }
 
 .field input {
-  width: 100%;
-  height: 46px;
+  width: 422px;
+  height: 48px;
   border: 1px solid var(--input-border);
   border-radius: 8px;
   background: var(--input-bg);
   color: var(--text);
   font-size: 15px;
-  padding: 0 12px;
+  padding: 0 42px 0 12px;
 }
 
 .field input::placeholder {
@@ -195,41 +239,53 @@ h1 {
 
 .button-row {
   display: flex;
+  width: 322px;
   gap: 12px;
-  margin-top: 8px;
+  justify-content: space-between
+
+
 }
 
 .btn {
-  flex: 1;
-  height: 42px;
+  height: 48px;
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 18px;
   cursor: pointer;
+  transition: opacity 0.2s ease;
 }
 
 .btn--primary {
-  background: var(--button-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2a3442;
   color: #fff;
+  width: 146px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
 }
 
 .btn--secondary {
-  background: var(--button-light);
-  color: var(--text);
-  border: 1px solid rgba(29, 42, 56, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f2f5f7;
+  color: #1d2a38;
+  border: 1px solid rgba(29, 42, 56, 0.12);
+  width: 204px;
 }
 
 /* Footer mit Links */
-.footer-links {
-  position: absolute;
-  left: 18px;
-  bottom: 18px;
+.footer {
   display: flex;
   gap: 18px;
   font-size: 14px;
+  margin-bottom: 38px;
+  margin-top: 227px;
 }
 
-.footer-links a {
+.footer a {
   color: var(--muted);
   text-decoration: none;
 }
@@ -248,9 +304,7 @@ h1 {
   }
 }
 
-  .button-row {
-    flex-direction: column;
-  }
+ 
 
   .content-card {
     padding: 22px 16px 18px;
