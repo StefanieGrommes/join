@@ -138,7 +138,7 @@ input {
 
 .signup-title::after {
   content: "";
-  width: 90%;
+  width: 70%;
   height: 4px;
   margin: 16px auto 0;
   border-radius: 2px;
@@ -225,14 +225,26 @@ input {
   cursor: pointer;
 }
 
+.btn:not(:disabled):hover {
+  background-color: #5b6673;
+  color: #ffffff;
+}
+
 .btn:disabled {
+  background: #e6e8ec;
+  color: #8b94a1;
   opacity: 0.55;
   cursor: not-allowed;
 }
 
+.btn:disabled:hover {
+  background: #e6e8ec;
+  color: #8b94a1;
+}
+
 .footer {
   margin-top: auto;
-  margin-bottom: 16px;
+  margin-bottom: 40px;
   display: flex;
   gap: 18px;
   font-size: 14px;

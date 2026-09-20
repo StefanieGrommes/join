@@ -39,7 +39,9 @@ input {
   flex-direction: column;
   align-items: center;
   background: var(--bg);
-  padding: 24px 20px 32px;
+  justify-content: space-between;
+
+
 }
 
 .login-page {
@@ -51,6 +53,7 @@ input {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  margin-top: 48px;
 }
 
 .header-actions {
@@ -82,6 +85,12 @@ input {
   font-weight: 500;
   cursor: pointer;
 }
+
+.top-link:hover {
+  background: #415061;
+}
+
+
 
 .app-intro {
   position: fixed;
@@ -154,7 +163,7 @@ input {
 
 .login-title::after {
   content: "";
-  width: 90%;
+  width: 85%;
   height: 4px;
   margin: 16px auto 0;
   border-radius: 2px;
@@ -227,6 +236,11 @@ input {
   transition: opacity 0.2s ease;
 }
 
+.btn:not(:disabled):hover {
+  background-color: #5b6673;
+  color: #ffffff;
+}
+
 .btn--primary {
   width: 146px;
   border: none;
@@ -241,9 +255,14 @@ input {
   color: #1d2a38;
 }
 
+.btn--secondary:not(:disabled):hover {
+  background-color: #e6e8ec;
+  color: #1d2a38;
+}
+
 .footer {
   margin-top: 120px;
-  margin-bottom: 16px;
+  margin-bottom: 40px;
   display: flex;
   gap: 18px;
   font-size: 14px;
