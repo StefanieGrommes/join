@@ -65,7 +65,7 @@ input {
 }
 
 .header-copy {
-  font-size: 16px;
+  font-size: 20px;
   color: var(--text);
 }
 
@@ -82,10 +82,11 @@ input {
   border-radius: 10px;
   background: var(--button-dark);
   color: #fff;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
-  padding: 10px 20px;
   cursor: pointer;
+  width: 91px;
+  height: 49px;
 }
 
 /* Intro-Overlay */
@@ -191,7 +192,7 @@ h1{
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 32px;
   align-items: center;
 }
 
@@ -213,7 +214,8 @@ h1{
   width: 18px;
   height: 18px;
   object-fit: contain;
-  opacity: 0.7;
+  opacity: 1;
+  filter: brightness(0) saturate(100%);
   pointer-events: none;
 }
 
@@ -225,22 +227,24 @@ h1{
 .field input {
   width: 422px;
   height: 48px;
-  border: 1px solid var(--input-border);
+  border: 1px solid #677076;
   border-radius: 8px;
-  background: var(--input-bg);
+  background: white;
   color: var(--text);
-  font-size: 15px;
+  font-size: 18px;
   padding: 0 42px 0 12px;
 }
 
 .field input::placeholder {
-  color: #7c8693;
+  color: #2f3b4a;
+  opacity: 1;
+  font-size: 18px;
 }
 
 .button-row {
   display: flex;
   width: 322px;
-  gap: 12px;
+  gap: 35px;
   justify-content: space-between
 
 
@@ -270,9 +274,9 @@ h1{
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f2f5f7;
+  background: #ffffff;
   color: #1d2a38;
-  border: 1px solid rgba(29, 42, 56, 0.12);
+  border: 1px solid #1d2a38;
   width: 204px;
 }
 
