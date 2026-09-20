@@ -69,23 +69,77 @@
       </aside>
 
       <main class="board-content" aria-label="Board Content">
-        <header class="board-top-container" aria-label="Board top container"></header>
-        <section class="board-header-container" aria-label="Board header container"></section>
-        <section class="board-main-container" aria-label="Board main container">
-          <div class="board-main-column" data-column="todo" aria-label="Todo column">
-            <div class="board-card board-card--todo" data-card-id="todo-card" draggable="true" aria-label="Todo card"></div>
+
+
+        <header class="board-top-container" aria-label="Board top container">
+          <div class="board-top-inner">
+            <p class="board-top-title">Kanban Project Management Tool</p>
+
+            <div class="board-top-actions" aria-label="Top actions">
+              <button class="board-top-help-button" type="button" aria-label="Help">
+                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                  <circle cx="12" cy="12" r="8"></circle>
+                  <path d="M9.8 9.6a2.2 2.2 0 1 1 3.8 1.5c-.6.6-1.3 1-1.3 2"></path>
+                  <circle cx="12" cy="16.7" r=".6"></circle>
+                </svg>
+              </button>
+
+              <button class="board-top-profile-button" type="button" aria-label="Profile">
+                SM
+              </button>
+            </div>
           </div>
-          <div class="board-main-column" data-column="in-progress" aria-label="In progress column">
-            <div class="board-card board-card--in-progress" data-card-id="in-progress-card" draggable="true" aria-label="In progress card"></div>
-          </div>
-          <div class="board-main-column" data-column="await-feedback" aria-label="Await feedback column">
-            <div class="board-card board-card--await-feedback" data-card-id="await-feedback-card" draggable="true" aria-label="Await feedback card"></div>
-          </div>
-          <div class="board-main-column" data-column="done" aria-label="Done column">
-            <div class="board-card board-card--done" data-card-id="done-card" draggable="true" aria-label="Done card"></div>
+        </header>
+
+        <section class="board-header-container" aria-label="Board header container">
+          <div class="board-header-inner">
+            <h1 class="board-header-title">Board</h1>
+
+            <div class="board-header-actions" aria-label="Board actions">
+              <div class="board-search-field">
+                <input type="text" placeholder="Find Task" aria-label="Find task" />
+                <span class="board-search-divider" aria-hidden="true"></span>
+                <button class="board-search-button" type="button" aria-label="Search">
+                  <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                    <circle cx="11" cy="11" r="6"></circle>
+                    <path d="M16 16l4 4"></path>
+                  </svg>
+                </button>
+              </div>
+
+              <button class="board-add-task-button" type="button" aria-label="Add task">
+                Add task
+                <span class="board-add-task-plus" aria-hidden="true">+</span>
+              </button>
+            </div>
           </div>
         </section>
+
+        <section class="board-main-container" aria-label="Board main container">
+            
+            <div class="board-main-column" data-column="todo" aria-label="Todo column">
+                <div class="board-card board-card--todo" data-card-id="todo-card" draggable="true" aria-label="Todo card"></div>
+            </div>
+
+            <div class="board-main-column" data-column="in-progress" aria-label="In progress column">
+                <div class="board-card board-card--in-progress" data-card-id="in-progress-card" draggable="true" aria-label="In progress card"></div>
+            </div>
+
+            <div class="board-main-column" data-column="await-feedback" aria-label="Await feedback column">
+                <div class="board-card board-card--await-feedback" data-card-id="await-feedback-card" draggable="true" aria-label="Await feedback card"></div>
+            </div>
+
+            <div class="board-main-column" data-column="done" aria-label="Done column">
+                <div class="board-card board-card--done" data-card-id="done-card" draggable="true" aria-label="Done card"></div>
+            </div>
+
+        </section>
+
+
+
       </main>
+
+
     </div>
     <script src="./board-layout.js"></script>
   </body>
