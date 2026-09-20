@@ -1,6 +1,170 @@
-h1 {
+.add-task-content h1 {
   font-size: 61px;
   font-weight: 700;
+  margin-bottom: 48px;
+}
 
-  line-height: 120%;
+.form-column-left {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-left: 56px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-field label {
+  font-size: 20px;
+  font-weight: 400;
+  color: rgb(42, 54, 71);
+}
+
+.form-field input {
+  height: 48px;
+}
+
+.form-field textarea {
+  min-height: 120px;
+  padding: 18px 16px;
+  resize: vertical;
+}
+
+.form-field input,
+.form-field textarea {
+  border: unset;
+  border: 1px solid rgb(104, 104, 104);
+  border-radius: 10px;
+  padding: 12px 21px;
+  font-family: inherit;
+  box-sizing: border-box;
+  width: 100%;
+  transition: border-color 100ms;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: rgb(104, 104, 104);
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: rgb(104, 104, 104);
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.required-star {
+  color: rgb(255, 129, 144);
+}
+
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 180px;
+}
+.required-hint {
+  font-size: 20px;
+  font-weight: 400;
+}
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon img {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.priority-btn {
+  padding: 16px 20px;
+  width: 136px;
+  height: 56px;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 400;
+  font-family: inherit;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  border: 1px solid rgb(209, 209, 209);
+}
+.priority-options {
+  display: flex;
+  gap: 16px;
+}
+
+.priority-btn img {
+  width: 20px;
+  height: auto;
+}
+
+.dropdown-toggle {
+  position: relative;
+}
+.dropdown-toggle img {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.subtask-actions {
+  position: absolute;
+  top: 50%;
+  right: 21px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.subtask-actions img {
+  position: static;
+  transform: none;
+  pointer-events: auto;
+}
+.action-divider {
+  width: 1px;
+  height: 24px;
+  background-color: rgb(168, 168, 168);
+}
+
+.form-columns {
+  display: flex;
+  gap: 48px;
+}
+.form-column-right {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  border-left: 1px solid rgb(104, 104, 104);
+  padding-left: 48px;
+}
+
+.field-label {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.form-column-left,
+.form-column-right {
+  flex: 1;
+  max-width: 440px;
+}
+
+.priority-medium.priority-active {
+  background-color: rgb(255, 168, 0);
+  color: white;
 }

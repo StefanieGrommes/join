@@ -155,19 +155,76 @@
               <div class="form-field">
                 <label for="taskDescription">Description</label>
                 <textarea id="taskDescription" placeholder="Enter a Description"></textarea>
-                <span class="field-error"></span>
               </div>
 
               <div class="form-field">
                 <label for="taskDueDate">Due date<span class="required-star">*</span></label>
-                <input id="taskDueDate" type="text" placeholder="dd/mm/yyyy" />
+                <div class="input-with-icon">
+                  <input id="taskDueDate" type="text" placeholder="dd/mm/yyyy" />
+                  <img src="./assets/calendar.svg" alt="" />
+                </div>
                 <span class="field-error"></span>
               </div>
             </div>
-            <div class="form-column-right"></div>
+            <div class="form-column-right">
+              <div class="form-field">
+                <p class="field-label">Priority</p>
+                <div class="priority-options">
+                  <button type="button" class="priority-btn priority-urgent">
+                    Urgent <img src="./assets/urgent.svg" alt="" />
+                  </button>
+                  <button type="button" class="priority-btn priority-medium priority-active">
+                    Medium <img src="./assets/mediumWhite.svg" alt="" />
+                  </button>
+                  <button type="button" class="priority-btn priority-low">
+                    Low <img src="./assets/low.svg" alt="" />
+                  </button>
+                </div>
+              </div>
+              <div class="form-field">
+                <p class="field-label">Assigned to</p>
+                <div class="dropdown">
+                  <div class="dropdown-toggle">
+                    <input
+                      id="assignedToInput"
+                      type="text"
+                      placeholder="Select contacts to assign"
+                    />
+                    <img src="./assets/arrowdropdown.svg" alt="" />
+                  </div>
+                  <ul class="dropdown-list"></ul>
+                </div>
+              </div>
+              <div class="form-field">
+                <p class="field-label">Category<span class="required-star">*</span></p>
+                <div class="dropdown">
+                  <div class="dropdown-toggle">
+                    <input categoryinput type="text" placeholder="Select task category" />
+                    <img src="./assets/arrowdropdown.svg" alt="" />
+                  </div>
+                  <ul class="dropdown-list"></ul>
+                </div>
+              </div>
+              <div class="form-field">
+                <p class="field-label">Subtasks</p>
+                <div class="input-with-icon">
+                  <input id="subtaskInput" type="text" placeholder="Add new subtask" />
+                  <div class="subtask-actions">
+                    <img src="./assets/close.svg" alt="" />
+                    <span class="action-divider"></span>
+                    <img src="./assets/check.svg" alt="" />
+                  </div>
+                </div>
+                <ul class="subtask-list"></ul>
+              </div>
+            </div>
           </div>
 
-          <div class="form-footer"></div>
+          <div class="form-footer">
+            <p class="required-hint">
+              <span class="required-star">*</span>This field is required
+            </p>
+          </div>
         </form>
       </section>
     </main>
