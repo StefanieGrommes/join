@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <!-- Grundstruktur des Dokuments -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Join - Sign up</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+
+    <!-- Schriftarten für das Design -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Stylesheet der Sign-up-Seite -->
+    <link rel="stylesheet" href="./signup.css" />
+  </head>
+
+  <body>
+    <!-- Hauptcontainer der Seite -->
+    <div class="page signup-page">
+      <!-- Intro-Overlay mit dem großen Join-Logo -->
+      <div class="app-intro" aria-hidden="true">
+        <div class="join-logo" aria-label="Join logo">
+          <img class="join-preview" src="../img/icons/join_icon.png" alt="Join logo" />
+        </div>
+      </div>
+
+
+
+      <header class="page-header">
+        <img class="header-icon" src="../img/icons/join_icon.png" alt="Join icon" />
+      </header>
+
+
+
+
+
+
+
+      <main class="auth-panel">
+
+        <section class="content-card" aria-labelledby="signup-title">
+
+
+          <div class="signup-form">
+
+                      <h1 id="signup-title" class="signup-title">Sign up</h1>
+
+          <div class="fields-container">
+            <div class="field input-with-icon">
+              <input type="text" placeholder="Name" />
+              <img src="../img/icons/person(1).png" alt="Person icon" class="input-icon" />
+            </div>
+
+            <div class="field input-with-icon">
+              <input type="email" placeholder="Email" />
+              <img src="../img/icons/mail.png" alt="Mail icon" class="input-icon" />
+            </div>
+
+            <div class="field input-with-icon">
+              <input type="password" placeholder="Password" />
+              <img src="../img/icons/lock.png" alt="Lock icon" class="input-icon" />
+            </div>
+
+            <div class="field input-with-icon">
+              <input type="password" placeholder="Confirm Password" />
+              <img src="../img/icons/lock.png" alt="Lock icon" class="input-icon" />
+            </div>
+
+            <div class="checkbox-line">
+              <input id="privacy-policy-checkbox" type="checkbox" />
+              <span>I accept the <a href="#">privacy policy</a></span>
+            </div>
+          </div>
+            <button id="signup-submit-button" type="submit" class="btn btn--primary" disabled>Sign up</button>
+          </div>
+        </section>
+
+      </main>
+
+
+
+
+
+
+
+
+
+      <footer class="footer">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Legal notice</a>
+      </footer>
+    </div>
+
+    <script src="./signup.js"></script>
+  </body>
+</html>
