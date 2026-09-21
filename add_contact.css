@@ -42,6 +42,7 @@ dialog:modal {
 .add-contact-wrapper {
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 .right-side-add-contact {
@@ -73,6 +74,12 @@ dialog:modal {
     cursor: pointer;
 }
 
+.close-dialog-wrapper {
+    position: absolute;
+    top: 32px;
+    right: 32px;
+}
+
 .profile-initials-btn {
     width: 120px;
 }
@@ -90,11 +97,13 @@ dialog:modal {
 
 .create-contact-btn {
     background-color: var(--main-color);
+    cursor: pointer;
 }
 
 .cancel-btn {
     background-color: white;
     border: 1px var(--main-color) solid;
+    cursor: pointer;
 }
 
 .cancel-btn p {
