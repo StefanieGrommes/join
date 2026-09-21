@@ -194,15 +194,19 @@
                   </div>
                   <ul class="dropdown-list"></ul>
                 </div>
+                <div class="assigned-avatars"></div>
               </div>
               <div class="form-field">
                 <p class="field-label">Category<span class="required-star">*</span></p>
                 <div class="dropdown">
                   <div class="dropdown-toggle">
-                    <input categoryinput type="text" placeholder="Select task category" />
+                    <input id="categoryInput" type="text" placeholder="Select task category" />
                     <img src="./assets/arrowdropdown.svg" alt="" />
                   </div>
-                  <ul class="dropdown-list"></ul>
+                  <ul class="dropdown-list">
+                    <li>Technical Task</li>
+                    <li>User Story</li>
+                  </ul>
                 </div>
               </div>
               <div class="form-field">
@@ -224,6 +228,14 @@
             <p class="required-hint">
               <span class="required-star">*</span>This field is required
             </p>
+            <div class="form-actions">
+              <button type="button" class="btn-clear">
+                Clear <span class="icon-close"></span>
+              </button>
+              <button type="submit" class="btn-create">
+                Create Task <span class="icon-check"></span>
+              </button>
+            </div>
           </div>
         </form>
       </section>
