@@ -77,34 +77,49 @@
     <main>
         BLALLALABBABBABA <button type="button" onclick="addContact()">Add new contact</button>
         <dialog>
-            
+            <div class="dialog-grid-area">
             <div class="dialog-aside">
                 <div class="headlines-and-separator">
-                    <img src="./assets/join-logo.svg" alt="Join Logo">
-            
+                    <div class="logo-wrapper">
+                        <img src="./assets/join-logo.svg" alt="Join Logo">
+                    </div>
                     <h1>Add contact</h1>
                     <h2>Tasks are better with a team!</h2>
                     <div class="blue-horizontal-separator"></div>
                 </div>
             </div>
             <div class="add-contact-wrapper">
-                <div class="close-dialog-wrapper"><button class="close-dialog-btn">X</button></div>
+                
                 <div class="initials-and-form-wrapper">
                     <div class="profile-initials-btn">
-                        <svg class="initials-ellipse" width="56" height="56" viewBox="0 0 56 56" fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="28" cy="28" r="26.5" stroke="#2A3647" stroke-width="3" />
-                        </svg>
+                        <img src="./assets/contact-guest-img.svg" alt="Guest Image">
                     </div>
+                    <div class="right-side-add-contact">
+                    <div class="close-dialog-wrapper"><button class="close-dialog-btn" onclick="closeDialog()"><img src="./assets/contact-form-close.svg" alt="Close dialog"></button></div>
                     <form class="add-contact-form">
-                        <input type="text" placeholder="Name">
-                        <input type="text" placeholder="Email">
-                        <input type="text" placeholder="Phone">
-                        <button>Cancel</button><button>Create contact</button>
+                        <div class="form-input-fields">
+                            <div class="input-wrapper">
+                                <input type="text" placeholder="Name">
+                                <img src="./assets/contact-form-name.svg" alt="">
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="text" placeholder="Email">
+                                <img src="./assets/contact-form-mail.svg" alt="">  
+                            </div>
+                            <div class="input-wrapper">
+                                <input type="text" placeholder="Phone">
+                                <img src="./assets/contact-form-phone.svg" alt="">
+                            </div>
+                        </div>
+                        <div class="form-btn-wrapper">
+                            <button class="contact-form-btn cancel-btn"><p>Cancel</p><img src="./assets/contact-form-cancel.svg" alt="Cancel"></button>
+                            <button class="contact-form-btn create-contact-btn"><p>Create contact</p><img src="./assets/contact-form-create-contact.svg" alt="Create contact"></button>
+                        </div>
                     </form>
+                    </div>
                 </div>
             </div>
-        
+        </div>
         </dialog>
     </main>
     
