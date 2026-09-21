@@ -1,0 +1,58 @@
+
+dialog {
+    width: 1212px;
+    height: 592px;
+    border-radius: 30px;
+    border-style: inherit;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 468px 744px;
+    grid-template-areas: "aside" "form";
+}
+
+.dialog-aside {
+    grid-area: aside;
+    background-color: var(--main-color);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    line-height: 1.2;
+}
+
+.headlines-and-separator {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+.logo-wrapper {
+     width: 100%;
+}
+
+.dialog-aside img {
+    height: 66px;
+    width: 56px;
+    object-fit: fill;
+}
+
+
+.dialog-aside h1 {
+    font-size: 60px;
+    font-family: var(--default-font);
+    font-weight: 700;
+}
+
+.dialog-aside h2 {
+    font-size: 28px;
+    font-family: var(--default-font);
+    font-weight: 400;
+}
+
+.blue-horizontal-separator {
+    height: 3px;
+    width: 90px;
+    background-color: rgb(40,171,226);
+    border-radius: 30px;
+}
