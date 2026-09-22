@@ -75,7 +75,7 @@
     </aside>
     </div>
     <main>
-        BLALLALABBABBABA <button type="button" onclick="addContact()">Add new contact</button>
+        BLALLALABBABBABA <button type="button" onclick="showDialog()">Add new contact</button>
         <dialog>
             <div class="dialog-grid-area">
             <div class="dialog-aside">
@@ -107,17 +107,20 @@
                     <form class="add-contact-form">
                         <div class="form-input-fields">
                             <div class="input-wrapper">
-                                <input type="text" placeholder="Name">
+                                <input type="text" placeholder="Name" minlength="2" maxlength="25" required>
                                 <img src="./assets/contact-form-name.svg" alt="">
                             </div>
+                            <div class="toast-wrapper" id="toast-wrapper"></div>
                             <div class="input-wrapper">
                                 <input type="text" placeholder="Email">
                                 <img src="./assets/contact-form-mail.svg" alt="">  
                             </div>
+                            <div class="toast-wrapper" id="toast-wrapper"></div>
                             <div class="input-wrapper">
                                 <input type="text" placeholder="Phone">
                                 <img src="./assets/contact-form-phone.svg" alt="">
                             </div>
+                            <div class="toast-wrapper" id="toast-wrapper"></div>
                         </div>
                         <div class="form-btn-wrapper">
                             <button class="contact-form-btn cancel-btn"><p>Cancel</p><img src="./assets/contact-form-cancel.svg" alt="Cancel"></button>
