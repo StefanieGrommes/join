@@ -1,8 +1,20 @@
 :root {
+<<<<<<< HEAD
   --main-color: rgb(42, 54, 71);
   --hover-bg-color: rgb(10, 25, 49);
   --header-height: 80px;
   --logo-zone-height: 180px;
+=======
+    --main-color: rgb(42,54,71);
+    --hover-bg-color: rgb(10,25,49);
+    --hover-bg-color-lightblue: rgb(17,70,88);
+    --hover-bg-color-grey: #EEEEEE;
+    --active-btn-border: rgb(9,25,49);
+    --header-height: 80px;
+    --logo-zone-height: 180px;
+    --shadow: 0 4px 4px 0px rgba(82, 82, 82, 0.4);
+    --default-font: 'Inter', sans-serif;
+>>>>>>> main
 }
 
 * {
@@ -28,8 +40,13 @@ body {
     "sidebar navbar"
     "sidebar gap"
     "sidebar main";
+<<<<<<< HEAD
   font-family: "Inter", sans-serif;
   line-height: 1.2;
+=======
+    font-family: 'Inter', sans-serif;
+    background-color: rgb(246,247,248);
+>>>>>>> main
 }
 
 nav {
@@ -60,7 +77,11 @@ nav {
 }
 
 .initials-ellipse:hover {
+<<<<<<< HEAD
   fill: rgb(226, 230, 236);
+=======
+    fill: rgb(226,230,236);
+>>>>>>> main
 }
 
 .aside-blue-box-bg {
@@ -171,9 +192,17 @@ aside li {
 }
 
 main {
+<<<<<<< HEAD
   grid-area: main;
   width: 100%;
   max-width: 1920px;
   margin: 0 auto;
   padding: 20px 20px 12px 40px;
+=======
+    grid-area: main;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 20px 20px 12px 40px;
+>>>>>>> main
 }
