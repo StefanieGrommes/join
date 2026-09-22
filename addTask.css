@@ -1,19 +1,41 @@
+.add-task-content {
+  padding-left: 56px;
+}
+
 .add-task-content h1 {
   font-size: 61px;
   font-weight: 700;
   margin-bottom: 48px;
 }
 
-.add-task-content {
-  padding-left: 56px;
-}
 .add-task-form {
   max-width: 977px;
 }
+
+.form-columns {
+  display: flex;
+  gap: 48px;
+}
+
+.form-column-left,
+.form-column-right {
+  flex: 1;
+  max-width: 440px;
+}
+
 .form-column-left {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.form-column-right {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  border-left: 1px solid rgb(104, 104, 104);
+  padding-left: 48px;
+  max-width: 489px;
 }
 
 .form-field {
@@ -22,14 +44,14 @@
   gap: 8px;
 }
 
-.form-field label {
+.form-field label,
+.field-label {
   font-size: 20px;
   font-weight: 400;
-  color: rgb(42, 54, 71);
+  color: var(--main-color);
 }
 .form-field input,
 .form-field textarea {
-  border: unset;
   border: 1px solid rgba(209, 209, 209, 1);
   background-color: rgba(255, 255, 255, 1);
   border-radius: 10px;
@@ -54,7 +76,7 @@
 .form-field input:focus,
 .form-field textarea:focus {
   outline: none;
-  border-color: rgba(18, 70, 88, 1);
+  border-color: var(--hover-bg-color-lightblue);
 }
 
 .form-field input::placeholder,
@@ -76,20 +98,6 @@
   color: rgb(255, 129, 144);
 }
 
-.form-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 180px;
-}
-.required-hint {
-  font-size: 20px;
-  font-weight: 400;
-}
-.input-with-icon {
-  position: relative;
-}
-
 .input-with-icon img {
   position: absolute;
   top: 50%;
@@ -98,12 +106,16 @@
   pointer-events: none;
 }
 
+.priority-options {
+  display: flex;
+  gap: 16px;
+}
+
 .priority-btn {
   padding: 16px 20px;
   flex-shrink: 0;
   height: 56px;
   width: 136px;
-
   border-radius: 10px;
   background-color: rgb(255, 255, 255);
   display: flex;
@@ -125,71 +137,9 @@
   box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.4);
 }
 
-.priority-options {
-  display: flex;
-  gap: 16px;
-}
-
 .priority-btn img {
   width: 20px;
   height: auto;
-}
-
-.dropdown-toggle {
-  position: relative;
-}
-.dropdown-toggle img {
-  position: absolute;
-  top: 50%;
-  right: 14px;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-.subtask-actions {
-  position: absolute;
-  top: 50%;
-  right: 21px;
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.subtask-actions img {
-  position: static;
-  transform: none;
-  pointer-events: auto;
-}
-.action-divider {
-  width: 1px;
-  height: 24px;
-  background-color: rgb(168, 168, 168);
-}
-
-.form-columns {
-  display: flex;
-  gap: 48px;
-}
-.form-column-right {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  border-left: 1px solid rgb(104, 104, 104);
-  padding-left: 48px;
-}
-
-.field-label {
-  font-size: 20px;
-  font-weight: 400;
-  color: rgb(42, 54, 71);
-}
-
-.form-column-left,
-.form-column-right {
-  flex: 1;
-  max-width: 440px;
-}
-.form-column-right {
-  max-width: 489px;
 }
 
 .priority-urgent.priority-active {
@@ -209,6 +159,20 @@
 .dropdown {
   position: relative;
 }
+
+.dropdown-toggle,
+.input-with-icon {
+  position: relative;
+}
+
+.dropdown-toggle img {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
 .dropdown-list {
   padding: 0 12px;
   list-style: none;
@@ -235,7 +199,11 @@
   font-weight: 400;
 }
 .dropdown-list li:hover {
-  background-color: rgb(240, 240, 240);
+  background-color: var(--hover-bg-color-grey);
+}
+
+.dropdown.open .dropdown-toggle img {
+  transform: translateY(-50%) rotate(180deg);
 }
 
 .dropdown-list .contact-option {
@@ -245,9 +213,6 @@
   border-radius: 10px;
 }
 
-.dropdown.open .dropdown-toggle img {
-  transform: translateY(-50%) rotate(180deg);
-}
 .contact-option img {
   margin-left: auto;
 }
@@ -265,6 +230,7 @@
   border: 2px solid white;
   background-color: rgb(255, 129, 144);
 }
+
 .contact-option.selected {
   background-color: var(--main-color);
   color: white;
@@ -273,9 +239,41 @@
 .contact-option.selected:hover {
   background-color: var(--hover-bg-color);
 }
+
 .assigned-avatars {
   display: flex;
   gap: 10px;
+}
+
+.subtask-actions {
+  position: absolute;
+  top: 50%;
+  right: 21px;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.subtask-actions img {
+  position: static;
+  transform: none;
+  pointer-events: auto;
+}
+.action-divider {
+  width: 1px;
+  height: 24px;
+  background-color: rgb(168, 168, 168);
+}
+
+.form-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 180px;
+}
+.required-hint {
+  font-size: 20px;
+  font-weight: 400;
 }
 
 .form-actions {
@@ -319,21 +317,22 @@
   white-space: nowrap;
 }
 .btn-clear:hover {
-  box-shadow: inset 0 0 0 1px rgba(18, 70, 88, 1);
-  color: rgba(18, 70, 88, 1);
+  box-shadow: inset 0 0 0 1px var(--hover-bg-color-lightblue);
+  color: var(--hover-bg-color-lightblue);
 }
 .btn-clear:active {
-  border: 1px solid rgba(9, 25, 49, 1);
-  color: rgba(9, 25, 49, 1);
+  border: 1px solid var(--active-btn-border);
+  color: var(--active-btn-border);
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
 .btn-create:hover {
-  background-color: rgba(18, 70, 88, 1);
+  background-color: var(--hover-bg-color-lightblue);
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
+
 .btn-create:active {
-  background-color: rgba(9, 25, 49, 1);
+  background-color: var(--active-btn-border);
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
@@ -341,7 +340,6 @@
   width: 24px;
   height: 24px;
   transform: translateY(1px);
-
   background-color: currentColor;
   -webkit-mask: url(./assets/close.svg) no-repeat center / contain;
   mask: url(./assets/close.svg) no-repeat center / contain;
@@ -350,7 +348,6 @@
   width: 24px;
   height: 24px;
   transform: translateY(1px);
-
   background-color: currentColor;
   -webkit-mask: url(./assets/checkWhite.svg) no-repeat center / contain;
   mask: url(./assets/checkWhite.svg) no-repeat center / contain;
@@ -380,7 +377,7 @@
   z-index: 100;
 }
 .toast.toast-visible {
-  transform: translate(-50%, -50vh);
+  transform: translate(-50%, calc(-50vh + 50%));
   opacity: 1;
 }
 
