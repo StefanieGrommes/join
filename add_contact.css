@@ -58,6 +58,10 @@ dialog:modal {
     gap: 32px;
 }
 
+.add-contact-form:hover {
+    cursor: pointer;
+}
+
 .initials-and-form-wrapper {
     display: flex;
     justify-content: space-evenly;
@@ -68,9 +72,19 @@ dialog:modal {
 
 .close-dialog-btn {
     border-style: inherit;
+    border-radius: 50%;
     background-color: transparent;
-    cursor: pointer;
 }
+
+.close-dialog-btn:hover {
+    cursor: pointer;
+    background-color: var(--hover-bg-color-grey);
+}
+
+.close-dialog-btn svg:active path {
+    fill: white;
+}
+
 
 .close-dialog-wrapper {
     position: absolute;
@@ -102,6 +116,7 @@ dialog:modal {
 .create-contact-btn:hover {
     background-color: var(--hover-bg-color-lightblue);
     box-shadow: var(--shadow);
+    cursor: pointer;
 }
 
 .create-contact-btn:active {
@@ -117,7 +132,7 @@ dialog:modal {
 .cancel-btn:hover {
     cursor: pointer;
     border: 2px var(--hover-bg-color-lightblue) solid;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow); 
     transition: background-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
 }
 
@@ -155,10 +170,6 @@ dialog:modal {
     padding: 0 12px;
     height: 50px;
     
-}
-
-.input-wrapper:hover {
-    cursor: pointer;
 }
 
 .input-wrapper input {
