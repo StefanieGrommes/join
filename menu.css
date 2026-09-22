@@ -1,8 +1,12 @@
 :root {
     --main-color: rgb(42,54,71);
     --hover-bg-color: rgb(10,25,49);
+    --hover-bg-color-lightblue: rgb(17,70,88);
+    --active-btn-border: rgb(9,25,49);
     --header-height: 80px;
     --logo-zone-height: 180px;
+    --shadow: 0 4px 4px 0px rgba(82, 82, 82, 0.4);
+    --default-font: 'Inter', sans-serif;
 }
 
 *   {

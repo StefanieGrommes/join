@@ -1,11 +1,9 @@
-
 dialog {
     width: 1212px;
     height: 592px;
     border-radius: 30px;
     border-style: inherit;
-    transition: all 125ms ease-in-out;
-    
+    transition: all 125ms ease-in-out;  
 }
 
 dialog:modal {
@@ -97,13 +95,34 @@ dialog:modal {
 
 .create-contact-btn {
     background-color: var(--main-color);
-    cursor: pointer;
+    border: inherit;
+    transition: background-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
+}
+
+.create-contact-btn:hover {
+    background-color: var(--hover-bg-color-lightblue);
+    box-shadow: var(--shadow);
+}
+
+.create-contact-btn:active {
+    background-color: var(--active-btn-border);
 }
 
 .cancel-btn {
     background-color: white;
     border: 1px var(--main-color) solid;
     cursor: pointer;
+}
+
+.cancel-btn:hover {
+    cursor: pointer;
+    border: 2px var(--hover-bg-color-lightblue) solid;
+    box-shadow: var(--shadow);
+    transition: background-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
+}
+
+.cancel-btn:active {
+    border: 1px var(--active-btn-border) solid;
 }
 
 .cancel-btn p {
@@ -135,6 +154,11 @@ dialog:modal {
     border-radius: 10px;
     padding: 0 12px;
     height: 50px;
+    
+}
+
+.input-wrapper:hover {
+    cursor: pointer;
 }
 
 .input-wrapper input {

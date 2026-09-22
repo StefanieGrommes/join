@@ -1,5 +1,6 @@
 :root {
     --default-font: 'Inter', sans-serif;
+    --shadow: 0 4px 4px 0px rgba(82, 82, 82, 0.4);
 }
 
 .summary {
@@ -78,7 +79,7 @@ h2 {
 }
 
 .grey-boxes-task:hover {
-    box-shadow: 0 4px 4px 0px rgba(82, 82, 82, 0.25);
+    box-shadow: var(--shadow);
     transform: scale(1.03);
     cursor: pointer;
     background-color: rgb(42,54,71);
