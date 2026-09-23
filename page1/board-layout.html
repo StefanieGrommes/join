@@ -12,6 +12,17 @@
 
 
   <body>
+    <!--
+      Diese Datei ist die HTML-Struktur des Boards.
+      Sie enthält nur den sichtbaren Layout-Bauplan:
+      - Sidebar
+      - Board-Header
+      - Spaltenüberschriften
+      - Board-Hauptbereich
+
+      Die Inhalte der Karten kommen aus db.js und werden über templates.js gerendert.
+      Die Logik dafür sitzt in board-layout.js.
+    -->
     <div class="page-layout">
       <aside class="sidebar" aria-label="Navigation Sidebar">
         <div class="sidebar-logo-container">
@@ -107,40 +118,141 @@
                 </button>
               </div>
 
-              <button class="board-add-task-button" type="button" aria-label="Add task">
+              <button id="board-open-add-task-modal" class="board-add-task-button" type="button" aria-label="Add task">
                 Add task
                 <span class="board-add-task-plus" aria-hidden="true">+</span>
               </button>
             </div>
           </div>
+
+          <div class="board-header-columns" aria-label="Board columns header">
+            <div class="board-header-column">
+              <div class="board-column-title">
+                <span>To do</span>
+                <button type="button" aria-label="Add To do">+</button>
+              </div>
+            </div>
+
+            <div class="board-header-column">
+              <div class="board-column-title">
+                <span>In progress</span>
+                <button type="button" aria-label="Add In progress">+</button>
+              </div>
+            </div>
+
+            <div class="board-header-column">
+              <div class="board-column-title">
+                <span>Await feedback</span>
+                <button type="button" aria-label="Add Await feedback">+</button>
+              </div>
+            </div>
+
+            <div class="board-header-column">
+              <div class="board-column-title">
+                <span>Done</span>
+                <button type="button" aria-label="Add Done">+</button>
+              </div>
+            </div>
+          </div>
         </section>
 
+        <!--
+          Board-Hauptbereich:
+          Die vier Spalten sind hier als Container definiert.
+          In diesen Spalten werden die Karten später per JavaScript eingefügt.
+          Die Darstellung der Karten kommt aus templates.js.
+        -->
         <section class="board-main-container" aria-label="Board main container">
-            
-            <div class="board-main-column" data-column="todo" aria-label="Todo column">
-                <div class="board-card board-card--todo" data-card-id="todo-card" draggable="true" aria-label="Todo card"></div>
-            </div>
-
-            <div class="board-main-column" data-column="in-progress" aria-label="In progress column">
-                <div class="board-card board-card--in-progress" data-card-id="in-progress-card" draggable="true" aria-label="In progress card"></div>
-            </div>
-
-            <div class="board-main-column" data-column="await-feedback" aria-label="Await feedback column">
-                <div class="board-card board-card--await-feedback" data-card-id="await-feedback-card" draggable="true" aria-label="Await feedback card"></div>
-            </div>
-
-            <div class="board-main-column" data-column="done" aria-label="Done column">
-                <div class="board-card board-card--done" data-card-id="done-card" draggable="true" aria-label="Done card"></div>
-            </div>
-
+            <div class="board-main-column" data-column="todo" aria-label="Todo column"></div>
+            <div class="board-main-column" data-column="in-progress" aria-label="In progress column"></div>
+            <div class="board-main-column" data-column="await-feedback" aria-label="Await feedback column"></div>
+            <div class="board-main-column" data-column="done" aria-label="Done column"></div>
         </section>
 
 
 
       </main>
 
-
     </div>
+
+    <!--
+      Modal-Dialog für eine neue Task.
+      Dieses Fenster wird beim Klick auf "Add task" geöffnet.
+      Es ist leer zu Beginn und wird nach der Validierung aktiviert.
+    -->
+    <div id="board-add-task-modal" class="board-task-modal" aria-hidden="true">
+      <div class="board-task-dialog" role="dialog" aria-modal="true" aria-labelledby="board-task-dialog-title">
+        <div class="board-task-header">
+          <h2 id="board-task-dialog-title">Add Task</h2>
+          <button id="board-task-close-button" class="board-task-close" type="button" aria-label="Close add task dialog">×</button>
+        </div>
+
+        <form id="board-task-form" class="board-task-form">
+          <div class="board-task-form-column board-task-form-column--left">
+            <label class="board-task-label" for="board-task-title">Title</label>
+            <input id="board-task-title" class="board-task-input" type="text" placeholder="Enter a title" />
+
+            <label class="board-task-label" for="board-task-description">Description</label>
+            <textarea id="board-task-description" class="board-task-textarea" placeholder="Enter a description"></textarea>
+
+            <label class="board-task-label" for="board-task-date">Due date</label>
+            <div class="board-task-date-wrap">
+              <input id="board-task-date" class="board-task-input" type="date" />
+            </div>
+          </div>
+
+          <div class="board-task-form-column board-task-form-column--right">
+            <label class="board-task-label" for="board-task-priority">Priority</label>
+            <select id="board-task-priority" class="board-task-select">
+              <option value="">Urgent</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="Urgent">Urgent</option>
+            </select>
+
+            <label class="board-task-label" for="board-task-assigned">Assigned to</label>
+            <select id="board-task-assigned" class="board-task-select">
+              <option value="">Select contacts to assign</option>
+              <option value="EM">Emanuel Mauer</option>
+              <option value="MB">Marcel Bauer</option>
+              <option value="AM">Anton Mayer</option>
+              <option value="SM">Sofia Müller</option>
+              <option value="BZ">Benedikt Ziegler</option>
+              <option value="JJ">Jasper Jäger</option>
+            </select>
+
+            <label class="board-task-label" for="board-task-category">Category</label>
+            <select id="board-task-category" class="board-task-select">
+              <option value="">Select task category</option>
+              <option value="User Story">User Story</option>
+              <option value="Technical Task">Technical Task</option>
+            </select>
+
+            <label class="board-task-label" for="board-task-subtask">Subtasks</label>
+            <input id="board-task-subtask" class="board-task-input" type="text" placeholder="Add new subtask" />
+          </div>
+        </form>
+
+        <div class="board-task-footer">
+          <span class="board-task-required">This field is required</span>
+          <div class="board-task-actions">
+            <button id="board-task-cancel-button" class="board-task-cancel" type="button">Cancel</button>
+            <button id="board-task-save-button" class="board-task-save" type="button" disabled>Create Task</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--
+      Reihenfolge ist wichtig:
+      1. db.js -> Daten laden
+      2. templates.js -> Funktionen für HTML-Templates verfügbar machen
+      3. board-layout.js -> Logik und Rendern ausführen
+    -->
+    <script src="../script/data/contacts.js"></script>
+    <script src="../script/data/app-data.js"></script>
+    <script src="../script/db.js"></script>
+    <script src="../script/templates.js"></script>
     <script src="./board-layout.js"></script>
   </body>
 

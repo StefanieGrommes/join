@@ -204,24 +204,26 @@ body {
 }
 
 .board-header-container {
-  width: 100%;
   min-height: 232px;
   border-bottom: 1px solid var(--frame-border);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 0 16px;
+  justify-content: flex-end;
+  padding: 0;
+  margin-left: 64px;
+  margin-right: 64px;
 }
 
 .board-header-inner {
   width: 100%;
-  max-width: 1056px;
   min-height: 73px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 0 22px;
+  padding: 0;
+  margin-bottom: 48px;
 }
 
 .board-header-title {
@@ -237,6 +239,67 @@ body {
   align-items: center;
   gap: 20px;
   flex-shrink: 0;
+}
+
+.board-header-columns {
+  min-height: 58px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.board-header-column {
+  width: 252px;
+  min-height: 58px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+
+
+}
+
+.board-column-title {
+  width: 100%;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  font-weight: 500;
+  color: #2f3d4c;
+  letter-spacing: 0;
+  -webkit-text-stroke: 0.4px rgba(47, 61, 76, 0.75);
+  text-shadow: 0 0 0 rgba(47, 61, 76, 0.75);
+}
+
+.board-column-title span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.board-column-title button {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #3a4f67;
+  border-radius: 50%;
+  background: transparent;
+  color: #3a4f67;
+  font-size: 20px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font-weight: 700;
+  -webkit-text-stroke: 0.3px rgba(58, 79, 103, 0.8);
 }
 
 .board-search-field {
@@ -317,11 +380,12 @@ body {
 }
 
 .board-main-container {
-  width: 100%;
   min-height: 688px;
+  margin-left: 64px;
+  margin-right: 64px;
   display: flex;
   flex-direction: row;
-    justify-content: space-between;
+  justify-content: space-between;
 }
 
 .board-main-column {
@@ -345,7 +409,7 @@ body {
 }
 
 .board-card + .board-card {
-  margin-top: -18px;
+  margin-top: 14px;
 }
 
 .board-card--todo {
@@ -375,6 +439,155 @@ body {
 .board-main-column.is-drop-target {
   background: rgba(111, 168, 255, 0.08);
   border-radius: 18px;
+}
+
+/* =====================================================
+   Modal-Dialog für Add Task
+   Der Dialog erscheint als Overlay über dem Board.
+   Er ist zunächst versteckt und wird mit einer Klasse sichtbar.
+   ===================================================== */
+.board-task-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(17, 24, 39, 0.25);
+  z-index: 1000;
+}
+
+.board-task-modal.is-open {
+  display: flex;
+}
+
+.board-task-dialog {
+  width: min(900px, calc(100vw - 48px));
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
+  padding: 20px 28px 18px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.board-task-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.board-task-header h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 2vw, 2.6rem);
+  color: #111827;
+}
+
+.board-task-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: #334155;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.board-task-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.board-task-form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.board-task-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.board-task-input,
+.board-task-textarea,
+.board-task-select {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #fff;
+  color: #111827;
+  font-size: 1rem;
+  padding: 12px 14px;
+  outline: none;
+}
+
+.board-task-input:focus,
+.board-task-textarea:focus,
+.board-task-select:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.board-task-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.board-task-date-wrap {
+  position: relative;
+}
+
+.board-task-date-wrap input {
+  width: 100%;
+}
+
+.board-task-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.board-task-required {
+  color: #ef4444;
+  font-size: 0.9rem;
+}
+
+.board-task-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.board-task-cancel,
+.board-task-save {
+  min-width: 110px;
+  height: 44px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.board-task-cancel {
+  background: #fff;
+  color: #111827;
+}
+
+.board-task-save {
+  background: #2d3d4d;
+  border-color: #2d3d4d;
+  color: #fff;
+}
+
+.board-task-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 @media (max-width: 768px) {

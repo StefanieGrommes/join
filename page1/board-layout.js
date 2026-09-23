@@ -1,62 +1,119 @@
+// ==========================================
+// BOARD LOGIC / LAYOUT-LOGIK
+// ==========================================
+// Diese Datei steuert das Board-Verhalten:
+// - Aufgaben aus db.js laden
+// - initial nur in To-do rendern
+// - Karten flexibel zwischen Spalten verschieben
+// - Add-Task-Dialog öffnen und speichern
+// - Zustand im LocalStorage persistieren
+// ==========================================
+
 const BOARD_STORAGE_KEY = "join-board-layout-state";
 
+// ===============================
+// Board-Zustand aus LocalStorage laden
+// Wenn noch kein Zustand gespeichert ist, werden alle Aufgaben standardmäßig in "todo" gesetzt.
+// ===============================
+function loadBoardState() {
+  try {
+    const storedState = window.localStorage.getItem(BOARD_STORAGE_KEY);
+    return storedState ? JSON.parse(storedState) : {};
+  } catch {
+    return {};
+  }
+}
+
+function getDefaultBoardState() {
+  if (!Array.isArray(tasks)) return {};
+
+  return tasks.reduce((state, task) => {
+    state[task.id] = "todo";
+    return state;
+  }, {});
+}
+
+// ===============================
+// Drag & Drop für eine einzelne Karte
+// ===============================
+function bindCardDragEvents(card, draggedCardRef) {
+  if (!card) return;
+
+  card.addEventListener("dragstart", () => {
+    draggedCardRef.value = card;
+    card.classList.add("is-dragging");
+    card.setAttribute("data-dragging", "true");
+  });
+
+  card.addEventListener("dragend", () => {
+    draggedCardRef.value = null;
+    card.classList.remove("is-dragging");
+    card.removeAttribute("data-dragging");
+    document.querySelectorAll(".board-main-column").forEach((column) => {
+      column.classList.remove("is-drop-target");
+    });
+  });
+}
+
+// ===============================
+// Initialisierung des Boards
+// ===============================
 function initBoardLayout() {
   const columns = Array.from(document.querySelectorAll(".board-main-column"));
-  const cards = Array.from(document.querySelectorAll(".board-card"));
 
-  if (!columns.length || !cards.length) return;
+  if (!columns.length) return;
 
-  const columnById = new Map(columns.map((column) => [column.dataset.column, column]));
-  const cardById = new Map(cards.map((card) => [card.dataset.cardId, card]));
-  const defaultState = {
-    "todo-card": "todo",
-    "in-progress-card": "in-progress",
-    "await-feedback-card": "await-feedback",
-    "done-card": "done",
-  };
+  const defaultState = getDefaultBoardState();
   const savedState = loadBoardState();
   const boardState = { ...defaultState, ...savedState };
-  let draggedCard = null;
+  const draggedCardRef = { value: null };
 
+  // ===============================
+  // Board rendern
+  // Jede Aufgabe wird anhand ihres Saved-State in die passende Spalte gesetzt.
+  // Wenn noch kein Status existiert, landet sie in "todo".
+  // ===============================
   const renderBoardState = () => {
     columns.forEach((column) => {
       column.innerHTML = "";
     });
 
-    Object.entries(boardState).forEach(([cardId, columnId]) => {
-      const card = cardById.get(cardId);
-      const column = columnById.get(columnId);
+    if (!Array.isArray(tasks)) return;
 
-      if (!card || !column) return;
+    tasks.forEach((task) => {
+      const targetColumnId = boardState[task.id] || "todo";
+      const column = columns.find((item) => item.dataset.column === targetColumnId);
 
+      if (!column) return;
+
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = renderTaskCard(task);
+      const card = wrapper.firstElementChild;
+
+      if (!card) return;
+
+      bindCardDragEvents(card, draggedCardRef);
       column.appendChild(card);
     });
   };
 
+  // ===============================
+  // Zustand speichern
+  // ===============================
   const saveBoardState = () => {
     window.localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(boardState));
   };
 
+  // ===============================
+  // Drop-Ziel visuell markieren
+  // ===============================
   const setDropTargetState = (column, isActive) => {
     column.classList.toggle("is-drop-target", isActive);
   };
 
-  cards.forEach((card) => {
-    card.addEventListener("dragstart", () => {
-      draggedCard = card;
-      card.classList.add("is-dragging");
-    });
-
-    card.addEventListener("dragend", () => {
-      card.classList.remove("is-dragging");
-      draggedCard = null;
-      columns.forEach((column) => setDropTargetState(column, false));
-    });
-  });
-
   columns.forEach((column) => {
     column.addEventListener("dragover", (event) => {
-      if (!draggedCard) return;
+      if (!draggedCardRef.value) return;
       event.preventDefault();
       setDropTargetState(column, true);
     });
@@ -68,12 +125,21 @@ function initBoardLayout() {
     column.addEventListener("drop", (event) => {
       event.preventDefault();
 
-      if (!draggedCard) return;
+      if (!draggedCardRef.value) return;
 
       const targetColumnId = column.dataset.column;
-      boardState[draggedCard.dataset.cardId] = targetColumnId;
-      column.appendChild(draggedCard);
+      const draggedCard = draggedCardRef.value;
+      const draggedTaskId = draggedCard.dataset.cardId;
+
+      boardState[draggedTaskId] = targetColumnId;
+
+      const draggedTask = tasks.find((task) => task.id === draggedTaskId);
+      if (draggedTask) {
+        draggedTask.status = targetColumnId;
+      }
+
       saveBoardState();
+      renderBoardState();
       setDropTargetState(column, false);
     });
   });
@@ -81,13 +147,98 @@ function initBoardLayout() {
   renderBoardState();
 }
 
-function loadBoardState() {
-  try {
-    const storedState = window.localStorage.getItem(BOARD_STORAGE_KEY);
-    return storedState ? JSON.parse(storedState) : {};
-  } catch {
-    return {};
-  }
+// ===============================
+// Add-Task-Modal-Steuerung
+// Dieses Modal öffnet sich beim Klick auf den Button
+// und bleibt leer, bis alle Pflichtfelder ausgefüllt sind.
+// ===============================
+function initAddTaskModal() {
+  const openButton = document.getElementById("board-open-add-task-modal");
+  const closeButton = document.getElementById("board-task-close-button");
+  const cancelButton = document.getElementById("board-task-cancel-button");
+  const modal = document.getElementById("board-add-task-modal");
+  const form = document.getElementById("board-task-form");
+  const saveButton = document.getElementById("board-task-save-button");
+
+  const titleInput = document.getElementById("board-task-title");
+  const descriptionInput = document.getElementById("board-task-description");
+  const dateInput = document.getElementById("board-task-date");
+  const priorityInput = document.getElementById("board-task-priority");
+  const assignedInput = document.getElementById("board-task-assigned");
+  const categoryInput = document.getElementById("board-task-category");
+
+  const openModal = () => {
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+  };
+
+  const closeModal = () => {
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+    form.reset();
+    saveButton.disabled = true;
+  };
+
+  const isFormValid = () => {
+    return titleInput.value.trim() !== "" &&
+      descriptionInput.value.trim() !== "" &&
+      dateInput.value.trim() !== "" &&
+      priorityInput.value !== "" &&
+      assignedInput.value !== "" &&
+      categoryInput.value !== "";
+  };
+
+  const updateSaveButtonState = () => {
+    saveButton.disabled = !isFormValid();
+  };
+
+  [titleInput, descriptionInput, dateInput, priorityInput, assignedInput, categoryInput].forEach((field) => {
+    field.addEventListener("input", updateSaveButtonState);
+    field.addEventListener("change", updateSaveButtonState);
+  });
+
+  openButton.addEventListener("click", openModal);
+  closeButton.addEventListener("click", closeModal);
+  cancelButton.addEventListener("click", closeModal);
+
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      closeModal();
+    }
+  });
+
+  saveButton.addEventListener("click", () => {
+    if (!isFormValid()) return;
+
+    const newTask = {
+      id: `task-${Date.now()}`,
+      title: titleInput.value.trim(),
+      description: descriptionInput.value.trim(),
+      dueDate: dateInput.value,
+      priority: priorityInput.value,
+      priorityColor: priorityInput.value === "Urgent" ? "#f66a5f" : priorityInput.value === "Medium" ? "#f9a35c" : "#5bc0be",
+      category: categoryInput.value,
+      categoryColor: categoryInput.value === "Technical Task" ? "#2bc7b7" : "#2d8cff",
+      status: "todo",
+      assignedTo: [assignedInput.value],
+      subtasks: [{ label: "New subtask", done: false }],
+      progress: 0,
+      badge: categoryInput.value
+    };
+
+    tasks.unshift(newTask);
+    const boardState = loadBoardState();
+    boardState[newTask.id] = "todo";
+    window.localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(boardState));
+    initBoardLayout();
+    closeModal();
+  });
 }
 
-document.addEventListener("DOMContentLoaded", initBoardLayout);
+// ===============================
+// Initiales Booten der Seite
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+  initBoardLayout();
+  initAddTaskModal();
+});
