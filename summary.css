@@ -8,15 +8,19 @@
     flex-direction: column;
     align-items: start;
     justify-content: start;
-    padding: 0 96px 12px 96px;
+    height: 100%;
+    min-height: 0;
+    padding: 48px 96px 12px 96px;
 }
 
 .summary-header {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding: 0 0 56px 0;
+    padding: 30px 0 30px 0;
     gap: 12px;
+    grid-column: 1 / -1;
+    grid-row: 1;
 }
 
 h1 {
@@ -76,6 +80,7 @@ h2 {
     border-radius: 30px;
     box-shadow: 0 0 4px 0px rgba(82, 82, 82, 0.4);
     background-color: white;
+    padding: 38px 58px;
 }
 
 .grey-boxes-task:hover {
@@ -123,26 +128,30 @@ h2 {
 }
 
 .task-boxes-and-welcome-message-wrapper {
-    display: flex;
-    gap: 80px;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: 560px 1fr;
+    height: 100%;
+    row-gap: 28px;
+    column-gap: 80px;
 }
 
 .task-boxes {
     display: grid;
-    width: 560px;
-    height: 540px;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-column: 1;
+    grid-row: 2/ span 3;
+    grid-template-rows: subgrid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-areas: "to-do to-do to-do done done done"
+     grid-template-areas: "to-do to-do to-do done done done"
                          "urgent urgent urgent urgent urgent urgent"
                          "tasks-in-board tasks-in-board tasks-in-progress tasks-in-progress feedback feedback";
     gap: 28px;
 }
 
 .welcome-message {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    grid-column: 2;
+    grid-row: 3;
+    align-self: center;
 }
 
 #to-do { 
@@ -174,7 +183,6 @@ h2 {
     gap: 18px;
     align-items: center;
     justify-content: space-between;
-    padding: 0 40px;
 }
 
 .calendar {
@@ -203,4 +211,45 @@ h2 {
     font-weight: 700;
     line-height: 1.2;
     color: #124658;
+}
+
+
+/*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
+
+@media(max-width: 1440px) {
+    h1 {
+        font-size: 48px;
+    }
+
+    h2 {
+        font-size: 26px;
+    }
+
+    .blue-seperator {
+        height: 52px;
+    }
+
+    .task-boxes {
+        width: auto;
+    }
+   
+    .summary {
+        padding: 24px 64px 12px 64px;
+    }
+
+    .task-boxes-and-welcome-message-wrapper { 
+        gap: 48px;
+    }
+
+    .amount-bold {
+        font-size: 48px;
+    }
+
+    .daytime {
+        font-size: 36px;
+    }
+
+    .name {
+        font-size: 48px;
+    }
 }
