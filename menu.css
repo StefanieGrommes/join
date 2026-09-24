@@ -76,14 +76,12 @@ aside {
     min-height: 100dvh;
     width: 220px;
     top: 0;
-    padding: 48px 0;
+    padding: 64px 0;
     position: sticky;
-    display: grid;
-    grid-template-rows: var(--logo-zone-height) 2fr 1fr;
-    grid-template-areas:
-    "logo"
-    "nav"
-    "legal";
+    grid-area: navbar;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 aside a {
@@ -122,6 +120,7 @@ aside li {
     justify-content: start;
     align-items: center;
     width: 100%;
+    gap: 8px;
 }
 
 .nav-links li {
@@ -140,9 +139,11 @@ aside li {
     fill: white;
 }
 
-.logo-wrapper {
-    align-self: start;
-    justify-self: center;
+.logo-and-nav-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 92px;
 }
 
 .legal-and-policy {
@@ -153,7 +154,6 @@ aside li {
     align-items: center;
     align-self: end;
     justify-self: center;
-    padding: 20px 0 20px 0;
 }
 
 .legal-and-policy li {
@@ -177,5 +177,7 @@ main {
     min-height: 0;
     height: 100%;
     overflow-y: auto;
-    padding: 20px 20px 12px 40px;
+    
 }
+
+/*-------------------->MEDIA QUERIES-----------------------------------------------------------*/

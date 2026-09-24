@@ -4,13 +4,9 @@
 }
 
 .summary {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
     height: 100%;
     min-height: 0;
-    padding: 96px 96px 56px 96px;
+    padding: 80px 56px;
 }
 
 .summary-header {
@@ -20,7 +16,7 @@
     gap: 12px;
     grid-column: 1 / -1;
     grid-row: 1;
-    padding: 0;
+    padding: 12px;
 }
 
 h1 {
@@ -129,12 +125,13 @@ h2 {
 }
 
 .task-boxes-and-welcome-message-wrapper {
+    width: 100%;
     display: grid;
     grid-template-rows: auto 168px 168px 170px;
-    grid-template-columns: 560px 1fr;
+    grid-template-columns: minmax(0, 560px) 1fr;
     align-content: start;
     row-gap: 28px;
-    column-gap: 80px;
+    column-gap: clamp(32px, 5vw, 80px);
 }
 
 .task-boxes {
@@ -143,9 +140,9 @@ h2 {
     grid-row: 2/ span 3;
     grid-template-rows: subgrid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-     grid-template-areas: "to-do to-do to-do done done done"
-                         "urgent urgent urgent urgent urgent urgent"
-                         "tasks-in-board tasks-in-board tasks-in-progress tasks-in-progress feedback feedback";
+    grid-template-areas: "to-do to-do to-do done done done"
+                        "urgent urgent urgent urgent urgent urgent"
+                        "tasks-in-board tasks-in-board tasks-in-progress tasks-in-progress feedback feedback";
     gap: 28px;
 }
 
@@ -217,7 +214,8 @@ h2 {
 
 /*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
 
-@media(max-width: 1440px) {
+@media(max-width: 1320px) {
+
     h1 {
         font-size: 52px;
     }
@@ -230,20 +228,8 @@ h2 {
         height: 56px;
     }
 
-    .task-boxes-and-welcome-message-wrapper {
-        grid-template-columns: 460px 1fr;
-    }
-
-    .task-boxes {
-        width: auto;
-    }
-   
     .summary {
-        padding: 42px 72px 42px 72px;
-    }
-
-    .task-boxes-and-welcome-message-wrapper { 
-        gap: 48px;
+        padding: 80px 42px;
     }
 
     .amount-bold {
@@ -259,6 +245,60 @@ h2 {
     }
 }
 
-@media (max-width: 1240px) {
+@media (max-width: 1100px) {
 
+    .task-boxes-and-welcome-message-wrapper {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        row-gap: 8px;
+    }
+
+    .welcome-message {
+        grid-column: 1;
+        grid-row: 2;
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .task-boxes {
+        grid-column: 1;
+        grid-row: 3;
+        grid-template-rows: 138px 138px 140px;
+        max-width: 620px;
+    }
+
+    h1 {
+        font-size: 40px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    .blue-seperator {
+        height: 46px;
+    }
+
+    .task-boxes {
+        width: auto;
+    }
+
+    .daytime {
+        font-size: 30px;
+    }
+
+    .amount-bold {
+        font-size: 34px;
+    }
+
+    .name {
+        font-size: 38px;
+    }
+}
+
+@media (max-width: 768px) {
+    
+   
 }
