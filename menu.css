@@ -23,15 +23,13 @@ html {
 
 body {
   margin: 0;
-  min-height: 100vh;
+  height: 100vh;
+  min-height: auto;
   display: grid;
   grid-template-columns: 220px 1fr;
-  grid-template-rows: var(--header-height) calc(
-      var(--logo-zone-height) - var(--header-height)
-    ) 1fr;
+  grid-template-rows: var(--header-height) 1fr;
   grid-template-areas:
     "sidebar navbar"
-    "sidebar gap"
     "sidebar main";
   font-family: "Inter", sans-serif;
   line-height: 1.2;
@@ -79,14 +77,12 @@ aside {
   min-height: 100dvh;
   width: 220px;
   top: 0;
-  padding: 48px 0;
+  padding: 64px 0;
   position: sticky;
-  display: grid;
-  grid-template-rows: var(--logo-zone-height) 2fr 1fr;
-  grid-template-areas:
-    "logo"
-    "nav"
-    "legal";
+  grid-area: navbar;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 aside a {
@@ -125,7 +121,7 @@ aside li {
   justify-content: start;
   align-items: center;
   width: 100%;
-  grid-area: nav;
+  gap: 8px;
 }
 
 .nav-links li {
@@ -145,10 +141,11 @@ aside li {
   fill: white;
 }
 
-.logo-wrapper {
-  align-self: start;
-  justify-self: center;
-  grid-area: logo;
+.logo-and-nav-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 92px;
 }
 
 .legal-and-policy {
@@ -159,8 +156,6 @@ aside li {
   align-items: center;
   align-self: end;
   justify-self: center;
-  padding: 20px 0 20px 0;
-  grid-area: legal;
 }
 
 .legal-and-policy li {
@@ -177,9 +172,13 @@ aside li {
 }
 
 main {
+  padding: 20px 20px 12px 40px;
   grid-area: main;
   width: 100%;
   max-width: 1440px;
-  margin: 0 auto;
-  padding: 20px 20px 12px 40px;
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
 }
+
+/*-------------------->MEDIA QUERIES-----------------------------------------------------------*/

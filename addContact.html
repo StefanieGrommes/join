@@ -6,12 +6,11 @@
     <link rel="shortcut icon" href="./assets/join-favicon.svg" type="image/x-icon">
     <link rel="stylesheet" href="./fonts.css">
     <link rel="stylesheet" href="./menu.css">
-    <link rel="stylesheet" href="./help.css">
+    <link rel="stylesheet" href="./add_contact.css">
     <title>Join</title>
 </head>
-
 <body>
-   <nav>
+    <nav>
         <p>Kanban Project Management Tool</p>
         <div class="horizontal-navbar-elements">
             <a href="./help.html"><img src="./assets/questions.svg" alt="questions"></a>
@@ -94,86 +93,65 @@
     </div>
     
     <main>
-        <article class="help-section">
-        <div class="help-header">
-            <h1>Help</h1><a href="index.html" class="back-to-start-btn"><img src="./assets/arrow-left-default.png" alt="arrow-left"></img></a>
-        </div>
-        <p>Welcome to the help page for Join, your guide to using our kanban project management tool.
-            Here, we'll provide an overview of what Join is, how it can benefit you, and how to use it</p>
-            <br>
-
-        <section class="explanation">
-            <h2>What is Join?</h2>
-            <p>Join is a kanban-based project management tool designed and built by a group of dedicated students as part of
-                their web development bootcamp at the Developer Akademie.
-
-            Kanban, a Japanese term meaning "billboard", is a highly effective method to visualize work, limit
-            work-in-progress, and maximize efficiency (or flow). Join leverages the principles of kanban to help users
-            manage their tasks and projects in an intuitive, visual interface.
-
-            It is important to note that Join is designed as an educational exercise and is not intended for extensive
-            business usage. While we strive to ensure the best possible user experience, we cannot guarantee consistent
-            availability, reliability, accuracy, or other aspects of quality regarding Join.</p>
-        </section>
-
-        <section class="manual">
-            <h2>How to use it</h2>
-            <p>Here is a step-by-step guide on how to use Join:</p>
-            <ol>
-                <li>
-                    <div class="li-headline-and-text">
-                        <h3>Exploring the Board</h3>
-                        <span>
-                        When you log in to Join, you'll find a default board. This board represents your project and
-                        contains four default lists: "To Do", "In Progress", “Await feedback” and "Done".
-                        </span>
+        BLALLALABBABBABA <button type="button" onclick="showDialog()">Add new contact</button>
+        <dialog>
+            <div class="dialog-grid-area">
+            <div class="dialog-aside">
+                <div class="headlines-and-separator">
+                    <div class="logo-wrapper">
+                        <img src="./assets/join-logo.svg" alt="Join Logo">
                     </div>
-                </li>
-                <li>
-                    <div class="li-headline-and-text">
-                        <h3>Creating Contacts</h3>
-                        <span>
-                            In Join, you can add contacts to collaborate on your projects. Go to the "Contacts" section, click
-                            on "New contact", and fill in the required information. Once added, these contacts can be assigned
-                            tasks and they can interact with the tasks on the board.</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="li-headline-and-text">
-                        <h3>Adding Cards</h3>
-                        <span>
-                            Now that you've added your contacts, you can start adding cards. Cards represent individual tasks.
-                            Click the "+" button under the appropriate list to create a new card. Fill in the task details in
-                            the card, like task name, description, due date, assignees, etc.</span>
-                    </div>
-                </li>
-                <li>
-                    <div class="li-headline-and-text">
-                        <h3>Moving Cards</h3>
-                <span>
-                    As the task moves from one stage to another, you can reflect that on the board by dragging and
-                    dropping the card from one list to another.</span>  
-                    </div>
-            </li>
-            <li>
-                <div class="li-headline-and-text">
-                    <h3>Deleting Cards</h3>
-                    <span>
-                        Once a task is completed, you can either move it to the "Done" list or delete it. Deleting a card
-                        will permanently remove it from the board. Please exercise caution when deleting cards, as this
-                    action is irreversible.
-
-                    Remember that using Join effectively requires consistent updates from you and your team to ensure
-                    the board reflects the current state of your project.
-
-                    Have more questions about Join? Feel free to contact us at steffi.grommes@web.de. We're here to help
-                    you!
-                </span>
+                    <h1>Add contact</h1>
+                    <h2>Tasks are better with a team!</h2>
+                    <div class="blue-horizontal-separator"></div>
                 </div>
-            </li>
-            </ol>
-            </article>
+            </div>
+            <div class="add-contact-wrapper">
+                
+                <div class="initials-and-form-wrapper">
+                    <div class="profile-initials-btn">
+                        <img src="./assets/contact-guest-img.svg" alt="Guest Image">
+                    </div>
+                    <div class="right-side-add-contact">
+                    <div class="close-dialog-wrapper"><button class="close-dialog-btn" onclick="closeDialog()"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="mask0_71720_5528" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="4" y="4" width="24" height="24">
+<rect x="4" y="4" width="24" height="24" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_71720_5528)">
+<path d="M16 17.4L11.1 22.3C10.9167 22.4834 10.6834 22.575 10.4 22.575C10.1167 22.575 9.88338 22.4834 9.70005 22.3C9.51672 22.1167 9.42505 21.8834 9.42505 21.6C9.42505 21.3167 9.51672 21.0834 9.70005 20.9L14.6 16L9.70005 11.1C9.51672 10.9167 9.42505 10.6834 9.42505 10.4C9.42505 10.1167 9.51672 9.88338 9.70005 9.70005C9.88338 9.51672 10.1167 9.42505 10.4 9.42505C10.6834 9.42505 10.9167 9.51672 11.1 9.70005L16 14.6L20.9 9.70005C21.0834 9.51672 21.3167 9.42505 21.6 9.42505C21.8834 9.42505 22.1167 9.51672 22.3 9.70005C22.4834 9.88338 22.575 10.1167 22.575 10.4C22.575 10.6834 22.4834 10.9167 22.3 11.1L17.4 16L22.3 20.9C22.4834 21.0834 22.575 21.3167 22.575 21.6C22.575 21.8834 22.4834 22.1167 22.3 22.3C22.1167 22.4834 21.8834 22.575 21.6 22.575C21.3167 22.575 21.0834 22.4834 20.9 22.3L16 17.4Z" fill="#2A3647"/>
+</g>
+</svg>
+</button></div>
+                    <form class="add-contact-form">
+                        <div class="form-input-fields">
+                            <div class="input-wrapper">
+                                <input type="text" placeholder="Name" minlength="2" maxlength="25" required>
+                                <img src="./assets/contact-form-name.svg" alt="name icon">
+                            </div>
+                            <div class="toast-wrapper" id="toast-wrapper"></div>
+                            <div class="input-wrapper">
+                                <input type="text" placeholder="Email">
+                                <img src="./assets/contact-form-mail.svg" alt="email icon">  
+                            </div>
+                            <div class="toast-wrapper" id="toast-wrapper-mail"></div>
+                            <div class="input-wrapper">
+                                <input type="text" placeholder="Phone">
+                                <img src="./assets/contact-form-phone.svg" alt="phone icon">
+                            </div>
+                            <div class="toast-wrapper" id="toast-wrapper-phone"></div>
+                        </div>
+                        <div class="form-btn-wrapper">
+                            <button class="contact-form-btn cancel-btn"><p>Cancel</p><img src="./assets/contact-form-cancel.svg" alt="Cancel"></button>
+                            <button class="contact-form-btn create-contact-btn"><p>Create contact</p><img src="./assets/contact-form-create-contact.svg" alt="Create contact"></button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </dialog>
     </main>
+    
 </body>
-
+<script src="./add_contact.js"></script>
 </html>

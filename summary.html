@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,9 +26,10 @@
     </nav>
     <div class="aside-blue-box-bg">
         <aside>
-            <div class="logo-wrapper"><img src="./assets/join-logo.svg" alt="Join Logo">
-            </div>
-            <ul class="nav-links">
+        <div class="logo-and-nav-links">
+        <div class="logo-wrapper"><img src="./assets/join-logo.svg" alt="Join Logo">
+        </div>
+        <ul class="nav-links">
                 <li>
                     <div class="nav-element">
                         <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -84,6 +86,7 @@
                     </div>
                 </li>
             </ul>
+        </div>
             <ul class="legal-and-policy">
                 <li><a href="policy.html">Private Policy</a></li>
                 <li><a href="legal.html">Legal notice</a></li>
@@ -92,58 +95,79 @@
     </div>
 
     <main class="summary">
-        <header class="summary-header">
-            <h1>Join 360</h1>
-            <div class="blue-seperator"></div>
-            <h2>Key Metrics at a Glance</h2>
-        </header>
         <div class="task-boxes-and-welcome-message-wrapper">
-            <div class="task-boxes">
-            <div id="to-do" class="grey-boxes-task flex-row"><svg xmlns="http://www.w3.org/2000/svg" width="69" height="69" fill="none" class="task-icon-to-do" viewBox="0 0 69 69"><circle cx="34.5" cy="34.5" r="34.5" fill="#2a3647"/><mask id="mask0_508097_4020" width="33" height="33" x="18" y="18" maskUnits="userSpaceOnUse" style="mask-type:alpha"><path fill="#d9d9d9" d="M18.5 18.5h32v32h-32z"/></mask><g mask="url(#mask0_508097_4020)"><path fill="#fff" d="M25.167 43.833h1.866l11.5-11.5-1.866-1.866-11.5 11.5zM44.233 30.4l-5.666-5.6 1.866-1.867q.767-.766 1.884-.767 1.116 0 1.883.767l1.867 1.867q.765.766.8 1.85a2.4 2.4 0 0 1-.734 1.85zM42.3 32.367 28.167 46.5H22.5v-5.667L36.633 26.7z"/></g></svg>
-                <div class="task-name-and-amount"> <p class="amount-bold">2</p>
-                <p class="task-normal">To Do</p></div>
-               
-            </div>
-            <div id="done" class="grey-boxes-task flex-row"><svg class="task-icon-done"width="69" height="69" viewBox="0 0 69 69" fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="34.5" cy="34.5" r="34.5" fill="#2A3647" />
-                    <path d="M19.5283 34.5001L30.7571 45.5662L49.4717 23.4341" stroke="white" stroke-width="7"
-                        stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                <div class="task-name-and-amount">
-                    <p class="amount-bold">4</p>
-                    <p class="task-normal">Done</p>
+            
+                <header class="summary-header">
+                    <h1>Join 360</h1>
+                    <div class="blue-seperator"></div>
+                    <h2>Key Metrics at a Glance</h2>
+                </header>
+
+                <div class="task-boxes">
+                    <div id="to-do" class="grey-boxes-task flex-row"><svg xmlns="http://www.w3.org/2000/svg" width="69"
+                            height="69" fill="none" class="task-icon-to-do" viewBox="0 0 69 69">
+                            <circle cx="34.5" cy="34.5" r="34.5" fill="#2a3647" />
+                            <mask id="mask0_508097_4020" width="33" height="33" x="18" y="18" maskUnits="userSpaceOnUse"
+                                style="mask-type:alpha">
+                                <path fill="#d9d9d9" d="M18.5 18.5h32v32h-32z" />
+                            </mask>
+                            <g mask="url(#mask0_508097_4020)">
+                                <path fill="#fff"
+                                    d="M25.167 43.833h1.866l11.5-11.5-1.866-1.866-11.5 11.5zM44.233 30.4l-5.666-5.6 1.866-1.867q.767-.766 1.884-.767 1.116 0 1.883.767l1.867 1.867q.765.766.8 1.85a2.4 2.4 0 0 1-.734 1.85zM42.3 32.367 28.167 46.5H22.5v-5.667L36.633 26.7z" />
+                            </g>
+                        </svg>
+                        <div class="task-name-and-amount">
+                            <p class="amount-bold">2</p>
+                            <p class="task-normal">To Do</p>
+                        </div>
+
+                    </div>
+                    <div id="done" class="grey-boxes-task flex-row"><svg class="task-icon-done" width="69" height="69"
+                            viewBox="0 0 69 69" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="34.5" cy="34.5" r="34.5" fill="#2A3647" />
+                            <path d="M19.5283 34.5001L30.7571 45.5662L49.4717 23.4341" stroke="white" stroke-width="7"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <div class="task-name-and-amount">
+                            <p class="amount-bold">4</p>
+                            <p class="task-normal">Done</p>
+                        </div>
+                    </div>
+                    <div id="urgent-and-calendar" class="grey-boxes-task urgent-and-calendar">
+                        <div class="urgent-and-seperator">
+                            <div class="urgent flex-row"><img src="./assets/urgent.svg" alt="red arrow showing up">
+                                <div class="task-name-and-amount">
+                                    <p class="amount-bold">1</p>
+                                    <p class="normal-text">Urgent</p>
+                                </div>
+                            </div>
+                            <div class="grey-seperator"></div>
+                        </div>
+                        <div class="calendar">
+                            <p class="date">October 16, 2022</p>
+                            <p class="normal-text">Upcoming Deadline</p>
+                        </div>
+                    </div>
+                    <div id="tasks-in-board" class="grey-boxes-task task-name-and-amount">
+                        <p class="amount-bold">5</p>
+                        <p class="task-normal">Tasks in <br> Board</p>
+                    </div>
+                    <div id="tasks-in-progress" class="grey-boxes-task task-name-and-amount">
+                        <p class="amount-bold">3</p>
+                        <p class="task-normal">Tasks in <br> Progress</p>
+                    </div>
+                    <div id="awaiting-feedback" class="grey-boxes-task task-name-and-amount">
+                        <p class="amount-bold">2</p>
+                        <p class="task-normal">Awaiting <br> Feedback</p>
+                    </div>
                 </div>
-            </div>
-            <div id="urgent-and-calendar" class="grey-boxes-task urgent-and-calendar">
-                <div class="urgent-and-seperator">
-                <div class="urgent flex-row"><img src="./assets/urgent.svg" alt="red arrow showing up"><div class="task-name-and-amount"><p class="amount-bold">1</p><p class="normal-text">Urgent</p></div></div>
-                <div class="grey-seperator"></div>
-                </div>
-                <div class="calendar">
-                    <p class="date">October 16, 2022</p>
-                    <p class="normal-text">Upcoming Deadline</p>
-                </div>
-            </div>
-            <div id="tasks-in-board" class="grey-boxes-task task-name-and-amount">
-                <p class="amount-bold">5</p>
-                <p class="task-normal">Tasks in <br> Board</p>
-            </div>
-            <div id="tasks-in-progress" class="grey-boxes-task task-name-and-amount">
-                <p class="amount-bold">3</p>
-                <p class="task-normal">Tasks in <br> Progress</p>
-            </div>
-            <div id="awaiting-feedback" class="grey-boxes-task task-name-and-amount">
-                <p class="amount-bold">2</p>
-                <p class="task-normal">Awaiting <br> Feedback</p>
-            </div>
-            </div>
+            
             <div id="welcome-message" class="welcome-message">
-                <p class="daytime">Good morning,</p>
-                <p class="name">Sofia Müller</p>
+                    <p class="daytime">Good morning,</p>
+                    <p class="name">Sofia Müller</p>
             </div>
-            </div>
-        
+            
+
     </main>
 </body>
 
