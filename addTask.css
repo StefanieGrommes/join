@@ -388,6 +388,14 @@
   width: 30px;
   height: 25px;
 }
+
+@media (max-width: 1280px) {
+  .add-task-content {
+    padding-left: 0px;
+    padding-right: 20px;
+  }
+}
+
 @media (max-width: 1050px) {
   .form-columns {
     flex-direction: column;
@@ -400,5 +408,36 @@
   .form-column-left,
   .form-column-right {
     max-width: 100%;
+  }
+
+  .priority-options {
+    justify-content: center;
+  }
+
+  .form-footer {
+    margin-top: 12px;
+  }
+  .required-hint {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-field label {
+    font-size: 16px;
+  }
+  .form-field input {
+    font-size: 16px;
+  }
+  .form-field input::placeholder,
+  .form-field textarea::placeholder {
+    font-size: 16px;
+  }
+
+  .required-hint {
+    display: none;
+  }
+  .form-footer {
+    justify-content: flex-end;
   }
 }
