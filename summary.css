@@ -4,25 +4,26 @@
 }
 
 .summary {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: start;
-    padding: 0 96px 12px 96px;
+    height: 100%;
+    min-height: 0;
+    padding: 80px 56px;
 }
 
 .summary-header {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding: 0 0 56px 0;
     gap: 12px;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding: 12px;
 }
 
 h1 {
     font-size: 60px;
     font-family: var(--default-font);
     font-weight: 700;
+    line-height: 1.2;
 }
 
 h2 {
@@ -76,6 +77,7 @@ h2 {
     border-radius: 30px;
     box-shadow: 0 0 4px 0px rgba(82, 82, 82, 0.4);
     background-color: white;
+    padding: 18px;
 }
 
 .grey-boxes-task:hover {
@@ -123,26 +125,31 @@ h2 {
 }
 
 .task-boxes-and-welcome-message-wrapper {
-    display: flex;
-    gap: 80px;
+    width: 100%;
+    display: grid;
+    grid-template-rows: auto 168px 168px 170px;
+    grid-template-columns: minmax(0, 560px) 1fr;
+    align-content: start;
+    row-gap: 28px;
+    column-gap: clamp(32px, 5vw, 80px);
 }
 
 .task-boxes {
     display: grid;
-    width: 560px;
-    height: 540px;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-column: 1;
+    grid-row: 2/ span 3;
+    grid-template-rows: subgrid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-template-areas: "to-do to-do to-do done done done"
-                         "urgent urgent urgent urgent urgent urgent"
-                         "tasks-in-board tasks-in-board tasks-in-progress tasks-in-progress feedback feedback";
+                        "urgent urgent urgent urgent urgent urgent"
+                        "tasks-in-board tasks-in-board tasks-in-progress tasks-in-progress feedback feedback";
     gap: 28px;
 }
 
 .welcome-message {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    grid-column: 2;
+    grid-row: 3;
+    align-self: center;
 }
 
 #to-do { 
@@ -173,8 +180,7 @@ h2 {
     display: flex;
     gap: 18px;
     align-items: center;
-    justify-content: space-between;
-    padding: 0 40px;
+    justify-content: space-evenly;
 }
 
 .calendar {
@@ -203,4 +209,96 @@ h2 {
     font-weight: 700;
     line-height: 1.2;
     color: #124658;
+}
+
+
+/*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
+
+@media(max-width: 1320px) {
+
+    h1 {
+        font-size: 52px;
+    }
+
+    h2 {
+        font-size: 30px;
+    }
+
+    .blue-seperator {
+        height: 56px;
+    }
+
+    .summary {
+        padding: 80px 42px;
+    }
+
+    .amount-bold {
+        font-size: 48px;
+    }
+
+    .daytime {
+        font-size: 40px;
+    }
+
+    .name {
+        font-size: 52px;
+    }
+}
+
+@media (max-width: 1100px) {
+
+    .task-boxes-and-welcome-message-wrapper {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        row-gap: 8px;
+    }
+
+    .welcome-message {
+        grid-column: 1;
+        grid-row: 2;
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        padding: 12px;
+    }
+
+    .task-boxes {
+        grid-column: 1;
+        grid-row: 3;
+        grid-template-rows: 138px 138px 140px;
+        max-width: 620px;
+    }
+
+    h1 {
+        font-size: 40px;
+    }
+
+    h2 {
+        font-size: 22px;
+    }
+
+    .blue-seperator {
+        height: 46px;
+    }
+
+    .task-boxes {
+        width: auto;
+    }
+
+    .daytime {
+        font-size: 30px;
+    }
+
+    .amount-bold {
+        font-size: 34px;
+    }
+
+    .name {
+        font-size: 38px;
+    }
+}
+
+@media (max-width: 768px) {
+    
+   
 }
