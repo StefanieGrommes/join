@@ -170,28 +170,45 @@ function renderAssignedContacts(assignedIds) {
 // ===============================
 function renderTaskCard(task) {
   const assigned = renderAssignedContacts(task.assignedTo || []);
-  const progressWidth = Math.max(0, Math.min(100, task.progress || 0));
+  const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
+  const doneSubtasks = subtasks.filter((subtask) => subtask.done).length;
+  const totalSubtasks = subtasks.length;
+  const progressWidth = totalSubtasks
+    ? Math.round((doneSubtasks / totalSubtasks) * 100)
+    : Math.max(0, Math.min(100, task.progress || 0));
+  const progressLabel = totalSubtasks
+    ? `${doneSubtasks}/${totalSubtasks} Subtasks`
+    : `${Math.round(progressWidth)}%`;
 
   return `
     <article class="board-card board-card--task" data-card-id="${task.id}" draggable="true" aria-label="${task.title}">
+
       <div class="board-card-header">
         <span class="board-card-badge" style="background:${task.categoryColor};">${task.category}</span>
       </div>
+
+
 
       <h3 class="board-card-title">${task.title}</h3>
 
       <p class="board-card-description">${task.description}</p>
 
+
+      
       <div class="board-card-progress">
         <div class="board-progress-bar">
           <span style="width:${progressWidth}%"></span>
         </div>
-        <span class="board-progress-label">${task.progress}/100</span>
+        <span class="board-progress-label">${progressLabel}</span>
       </div>
 
       <div class="board-card-footer">
         ${assigned}
       </div>
+
+
+
+
     </article>
   `;
 }
@@ -225,15 +242,23 @@ function renderTaskDetail(task) {
 
   return `
     <article class="board-detail-card">
+
+
+
+
       <div class="board-detail-topbar">
         <span class="board-detail-badge" style="background:${task.categoryColor};">${task.category}</span>
         <button class="board-detail-close" type="button" aria-label="Close task">×</button>
       </div>
 
+
       <h2 class="board-detail-title">${task.title}</h2>
 
       <p class="board-detail-description">${task.description}</p>
 
+
+
+  <div class="board-detail-content">
       <div class="board-detail-row">
         <span class="board-detail-label">Due date:</span>
         <span class="board-detail-value">${task.dueDate}</span>
@@ -257,154 +282,20 @@ function renderTaskDetail(task) {
       </div>
 
       <div class="board-detail-actions">
-        <button type="button" class="board-detail-button board-detail-button--ghost">Delete</button>
-        <button type="button" class="board-detail-button board-detail-button--primary">Edit</button>
+        <button type="button" class="board-detail-button board-detail-button--ghost" aria-label="Delete task">
+          <span class="board-detail-button-icon" aria-hidden="true">🗑</span>
+          <span class="board-detail-button-text">Delete</span>
+        </button>
+        <button type="button" class="board-detail-button board-detail-button--primary" aria-label="Edit task">
+          <span class="board-detail-button-icon" aria-hidden="true">✎</span>
+          <span class="board-detail-button-text">Edit</span>
+        </button>
       </div>
+
+
+
+  </div>
     </article>
   `;
 }
 
-// ===============================
-// Große User-Story-Karte
-// Spezielle Variante für User Story Aufgaben.
-// ===============================
-function renderLargeUserStoryCard(task) {
-  const assigned = (task.assignedTo || [])
-    .map((contactId) => getContactById(contactId))
-    .filter(Boolean)
-    .map((contact) => `
-      <div class="board-detail-assignee">
-        ${renderAvatar(contact)}
-        <span>${contact.name}</span>
-      </div>
-    `)
-    .join('');
-
-  const subtasks = (task.subtasks || [])
-    .map((subtask) => `
-      <label class="board-detail-subtask">
-        <input type="checkbox" ${subtask.done ? 'checked' : ''} />
-        <span>${subtask.label}</span>
-      </label>
-    `)
-    .join('');
-
-  return `
-    <article class="board-detail-card board-detail-card--user-story">
-      <div class="board-detail-topbar">
-        <span class="board-detail-badge" style="background:${task.categoryColor};">User Story</span>
-        <button class="board-detail-close" type="button" aria-label="Close task">×</button>
-      </div>
-
-      <h2 class="board-detail-title">${task.title}</h2>
-
-      <p class="board-detail-description">${task.description}</p>
-
-      <div class="board-detail-row">
-        <span class="board-detail-label">Due date:</span>
-        <span class="board-detail-value">${task.dueDate}</span>
-      </div>
-
-      <div class="board-detail-row">
-        <span class="board-detail-label">Priority:</span>
-        <span class="board-detail-value board-detail-priority" style="color:${task.priorityColor};">${task.priority}</span>
-      </div>
-
-      <div class="board-detail-row board-detail-assignees-row">
-        <span class="board-detail-label">Assigned To:</span>
-        <div class="board-detail-assignees">${assigned}</div>
-      </div>
-
-      <div class="board-detail-subtasks">
-        <h4>Subtasks</h4>
-        ${subtasks}
-      </div>
-
-      <div class="board-detail-actions">
-        <button type="button" class="board-detail-button board-detail-button--ghost">Delete</button>
-        <button type="button" class="board-detail-button board-detail-button--primary">Edit</button>
-      </div>
-    </article>
-  `;
-}
-
-// ===============================
-// Große Technical-Task-Karte
-// Spezielle Variante für Technical Tasks.
-// ===============================
-function renderLargeTechnicalTaskCard(task) {
-  const assigned = (task.assignedTo || [])
-    .map((contactId) => getContactById(contactId))
-    .filter(Boolean)
-    .map((contact) => `
-      <div class="board-detail-assignee">
-        ${renderAvatar(contact)}
-        <span>${contact.name}</span>
-      </div>
-    `)
-    .join('');
-
-  const subtasks = (task.subtasks || [])
-    .map((subtask) => `
-      <label class="board-detail-subtask">
-        <input type="checkbox" ${subtask.done ? 'checked' : ''} />
-        <span>${subtask.label}</span>
-      </label>
-    `)
-    .join('');
-
-  return `
-    <article class="board-detail-card board-detail-card--technical-task">
-      <div class="board-detail-topbar">
-        <span class="board-detail-badge" style="background:${task.categoryColor};">Technical Task</span>
-        <button class="board-detail-close" type="button" aria-label="Close task">×</button>
-      </div>
-
-      <h2 class="board-detail-title">${task.title}</h2>
-
-      <p class="board-detail-description">${task.description}</p>
-
-      <div class="board-detail-row">
-        <span class="board-detail-label">Due date:</span>
-        <span class="board-detail-value">${task.dueDate}</span>
-      </div>
-
-      <div class="board-detail-row">
-        <span class="board-detail-label">Priority:</span>
-        <span class="board-detail-value board-detail-priority" style="color:${task.priorityColor};">${task.priority}</span>
-      </div>
-
-      <div class="board-detail-row board-detail-assignees-row">
-        <span class="board-detail-label">Assigned To:</span>
-        <div class="board-detail-assignees">${assigned}</div>
-      </div>
-
-      <div class="board-detail-subtasks">
-        <h4>Subtasks</h4>
-        ${subtasks}
-      </div>
-
-      <div class="board-detail-actions">
-        <button type="button" class="board-detail-button board-detail-button--ghost">Delete</button>
-        <button type="button" class="board-detail-button board-detail-button--primary">Edit</button>
-      </div>
-    </article>
-  `;
-}
-
-// ===============================
-// Board-Initialisierung über DOMContentLoaded
-// Diese Funktion wird beim Laden der Seite ausgeführt.
-// Sie rendert die Board-Karte in der Done-Spalte.
-// ===============================
-function renderDoneColumnCard() {
-  const doneColumn = document.getElementById('board-card-done');
-  if (!doneColumn || !Array.isArray(tasks) || !tasks.length) return;
-
-  const task = tasks.find((item) => item.id === 'done-task-card') || tasks[0];
-  doneColumn.innerHTML = renderTaskCard(task);
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  renderDoneColumnCard();
-});

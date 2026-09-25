@@ -428,6 +428,107 @@ body {
   background: linear-gradient(135deg, #ff8eb0 0%, #ffd4e2 100%);
 }
 
+.board-card--task {
+  background: #ffffff;
+  border: 1px solid #e6eaf0;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+  padding: 12px 14px;
+}
+
+.board-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+}
+
+.board-card-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 2px 12px;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.board-card-title {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.1;
+  font-weight: 700;
+  color: #111827;
+}
+
+.board-card-description {
+  margin: 10px 0 12px;
+  font-size: 14px;
+  line-height: 1.3;
+  color: #6b7280;
+}
+
+.board-card-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.board-progress-bar {
+  flex: 1;
+  height: 8px;
+  border-radius: 99px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.board-progress-bar span {
+  display: block;
+  height: 100%;
+  background: #4589ff;
+  border-radius: 99px;
+}
+
+.board-progress-label {
+  font-size: 13px;
+  font-weight: 400;
+  color: #111827;
+  white-space: nowrap;
+}
+
+.board-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.board-assigned-contacts {
+  display: flex;
+  align-items: center;
+}
+
+.board-contact-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.board-contact-avatar + .board-contact-avatar {
+  margin-left: -8px;
+}
+
 .board-card:active {
   cursor: grabbing;
 }
@@ -548,14 +649,9 @@ body {
 .board-task-footer {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 16px;
   margin-top: 24px;
-}
-
-.board-task-required {
-  color: #ef4444;
-  font-size: 0.9rem;
 }
 
 .board-task-actions {
@@ -588,6 +684,175 @@ body {
 .board-task-save:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* =====================================================
+   Detail-Modal fuer grosse Kartenansicht
+   Dieses Overlay zeigt die renderTaskDetail()-Version einer Task.
+   ===================================================== */
+.board-detail-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(17, 24, 39, 0.25);
+  z-index: 1100;
+}
+
+.board-detail-modal.is-open {
+  display: flex;
+}
+
+.board-detail-modal-dialog {
+  display: flex;
+  border-radius: 20px;
+  width: 525px;
+  height: 871px;
+}
+
+.board-detail-modal-body .board-detail-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: 0;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.16);
+  border: 1px solid rgba(74, 89, 112, 0.12);
+}
+
+.board-detail-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.board-detail-modal-body .board-detail-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 56px;
+}
+
+.board-detail-modal-body .board-detail-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 0 14px;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.board-detail-modal-body .board-detail-close {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  color: #2f3d4c;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.board-detail-modal-body .board-detail-title {
+  margin: 14px 0 10px;
+  font-size: clamp(1.7rem, 2.4vw, 2.4rem);
+  line-height: 1.05;
+  font-weight: 800;
+  color: #111827;
+}
+
+.board-detail-modal-body .board-detail-description {
+  color: #6b7280;
+  font-size: 1rem;
+  margin-bottom: 30px;
+}
+
+.board-detail-modal-body {
+  display: flex;
+  align-items: center;
+  height: 871px;
+}
+
+.board-detail-modal-body .board-detail-label {
+  min-width: 100px;
+  color: #2f3d4c;
+  font-weight: 600;
+}
+
+.board-detail-modal-body .board-detail-value {
+  color: #2f3d4c;
+}
+
+.board-detail-modal-body .board-detail-assignees {
+  display: flex;
+  flex-direction: column;
+}
+.board-detail-assignees {
+  display: flex;
+}
+
+.board-detail-modal-body .board-detail-assignee {
+  display: flex;
+  align-items: center;
+}
+
+.board-detail-modal-body .board-detail-subtasks {
+  margin-top: 14px;
+}
+
+.board-detail-modal-body .board-detail-subtasks h4 {
+  margin: 0 0 10px;
+  color: #2f3d4c;
+  font-size: 1rem;
+}
+
+.board-detail-modal-body .board-detail-subtask {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  color: #2f3d4c;
+}
+
+.board-detail-modal-body .board-detail-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.board-detail-modal-body .board-detail-button {
+  border: none;
+  background: none;
+  padding: 0;
+  min-width: auto;
+  height: auto;
+  color: #2f3d4c;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.board-detail-modal-body .board-detail-button:hover {
+  color: #1b66d1;
+}
+
+.board-detail-modal-body .board-detail-button-icon {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.board-detail-modal-body .board-detail-button-text {
+  font-size: 14px;
+  line-height: 1;
 }
 
 @media (max-width: 768px) {

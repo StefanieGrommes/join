@@ -234,12 +234,21 @@
         </form>
 
         <div class="board-task-footer">
-          <span class="board-task-required">This field is required</span>
           <div class="board-task-actions">
             <button id="board-task-cancel-button" class="board-task-cancel" type="button">Cancel</button>
             <button id="board-task-save-button" class="board-task-save" type="button" disabled>Create Task</button>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!--
+      Detail-Modal für große Kartenansicht.
+      Dieses Modal öffnet sich nur beim Klick auf die Aufgabenbeschreibung einer Board-Karte.
+    -->
+    <div id="board-task-detail-modal" class="board-detail-modal" aria-hidden="true">
+      <div class="board-detail-modal-dialog" role="dialog" aria-modal="true" aria-label="Task details dialog">
+        <div id="board-task-detail-root" class="board-detail-modal-body"></div>
       </div>
     </div>
 

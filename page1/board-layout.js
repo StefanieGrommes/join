@@ -235,10 +235,84 @@ function initAddTaskModal() {
   });
 }
 
+/**
+ * Initialisiert das Detail-Modal fuer Board-Karten.
+ * Das Modal wird nur geoeffnet, wenn auf die Aufgabenbeschreibung geklickt wird.
+ *
+ * @returns {void}
+ */
+function initTaskDetailModal() {
+  const boardMainContainer = document.querySelector(".board-main-container");
+  const detailModal = document.getElementById("board-task-detail-modal");
+  const detailRoot = document.getElementById("board-task-detail-root");
+
+  if (!boardMainContainer || !detailModal || !detailRoot) return;
+
+  /**
+   * Oeffnet das Detail-Modal und rendert die grosse Kartenansicht.
+   *
+   * @param {object} task - Das Task-Objekt aus der Datenbank.
+   * @returns {void}
+   */
+  const openDetailModal = (task) => {
+    if (!task) return;
+
+    detailRoot.innerHTML = renderTaskDetail(task);
+    detailModal.classList.add("is-open");
+    detailModal.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+
+    const closeButton = detailRoot.querySelector(".board-detail-close");
+    if (closeButton) {
+      closeButton.addEventListener("click", closeDetailModal);
+    }
+  };
+
+  /**
+   * Schliesst das Detail-Modal und gibt Scrollen wieder frei.
+   *
+   * @returns {void}
+   */
+  const closeDetailModal = () => {
+    detailModal.classList.remove("is-open");
+    detailModal.setAttribute("aria-hidden", "true");
+    detailRoot.innerHTML = "";
+    document.body.style.overflow = "";
+  };
+
+  boardMainContainer.addEventListener("click", (event) => {
+    const description = event.target.closest(".board-card-description");
+    if (!description) return;
+
+    const card = description.closest(".board-card--task");
+    if (!card) return;
+
+    const taskId = card.dataset.cardId;
+    const task = Array.isArray(tasks) ? tasks.find((item) => item.id === taskId) : null;
+
+    if (!task) return;
+
+    openDetailModal(task);
+  });
+
+  detailModal.addEventListener("click", (event) => {
+    if (event.target === detailModal) {
+      closeDetailModal();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && detailModal.classList.contains("is-open")) {
+      closeDetailModal();
+    }
+  });
+}
+
 // ===============================
 // Initiales Booten der Seite
 // ===============================
 document.addEventListener("DOMContentLoaded", () => {
   initBoardLayout();
   initAddTaskModal();
+  initTaskDetailModal();
 });
