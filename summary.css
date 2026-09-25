@@ -9,11 +9,10 @@
 
 .summary {
     display: flex;
-    align-items: center;
     height: 100%;
     min-height: 0;
     margin-inline: 0;
-    padding: 0 clamp(16px, 56px, 96px);
+    padding: 110px 96px 0 96px;
     box-sizing: border-box;
 }
 
@@ -21,6 +20,7 @@
     flex-grow: 0;
     max-width: 1025px;
     margin-inline: auto;
+    width: 100%;
 }
 
 .summary-header {
@@ -28,11 +28,11 @@
     justify-content: flex-start;
     align-items: center;
     gap: 12px;
-    padding: 0 0 clamp(24px, 5cqw, 56px) 0;
+    padding: 0 0 56px 0;
 }
 
 h1 {
-    font-size: clamp(32px, 5cqw, 60px);
+    font-size: clamp(40px, 5.5cqw, 60px);
     font-family: var(--default-font);
     font-weight: 700;
     line-height: 1.2;
@@ -53,7 +53,7 @@ h2 {
 }
 
 .task-normal {
-    font-size: clamp(16px, 1.6vw, 20px);
+    font-size: min(16px, 20px);
     font-family: var(--default-font);
     font-weight: 400;
     color: var(--main-color);
@@ -70,7 +70,7 @@ h2 {
 .amount-bold {
     font-weight: 600;
     font-family: var(--default-font);
-    font-size: clamp(28px, 4vw, 64px);
+    font-size: min(48px, 64px);
 }
 
 .date {
@@ -85,7 +85,11 @@ h2 {
     width: 3px;
 }
 
-.grey-seperator {
+.blue-separator-mobile {
+    display: none;
+}
+
+.grey-separator {
     background-color: #D1D1D1;
     height: 102px;
     width: 2px;
@@ -154,7 +158,7 @@ h2 {
 .task-boxes {
     display: grid;
     grid-row: 1/4;
-    grid-template-rows: repeat(3, 168px);
+    grid-template-rows: repeat(2, 168px) 170px;
     grid-template-columns: repeat(6, 1fr);
     grid-template-areas: "to-do to-do to-do done done done"
                         "urgent urgent urgent urgent urgent urgent"
@@ -210,6 +214,7 @@ h2 {
     color: var(--accent-color);
 }
 
+
 /*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
 
 @media (max-width: 1300px) {
@@ -218,18 +223,17 @@ h2 {
     }
 
     .task-boxes {
-        grid-template-rows: repeat(3, 152px);
+        grid-template-rows: repeat(2, 152px) 154px;
+    }
+    .summary-header {
+        padding: 0 0 42px 0;
     }
 }
 
 @media (max-width: 1180px) {
-    .summary {
-        align-items: flex-start;
-        padding: clamp(24px, 5vw, 96px);
-    }
 
     .summary-header {
-        padding: 0 0 24px 0;
+        padding: 0 0 4px 0;
     }
 
     .boxes-and-welcome-message {
@@ -249,65 +253,69 @@ h2 {
     .task-boxes {
         grid-column: 1;
         grid-row: 3;
-        grid-template-rows: repeat(3, 138px);
+        grid-template-rows: repeat(2, 168px) 170px;
         max-width: 620px;
         width: auto;
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 940px) {
+    .summary {
+        padding: 110px 54px 0 54px;
+    }
+
+    .task-boxes {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    
     .summary {
         padding: 16px;
-        align-items: flex-start;
+    }
+
+    .welcome-message {
+        display: none;
     }
 
     .summary-header {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: start;
+        padding: 48px 0 40px 16px;
         gap: 8px;
     }
 
-    .blue-separator {
-        width: 40px;
+    .blue-separator-mobile {
+        display: block;
+        width: 90px;
         height: 3px;
+        background-color: #29ABE2;
     }
 
     .task-boxes {
-        grid-template-columns: 1fr;
-        grid-template-rows: repeat(6, auto);
-        grid-template-areas:
-            "to-do"
-            "done"
-            "urgent"
-            "tasks-in-board"
-            "tasks-in-progress"
-            "feedback";
-        max-width: 100%;
-        gap: 16px;
+        grid-row: 1;
+        grid-template-rows: repeat(2, 142px) 144px;
     }
 
-    .grey-boxes-task {
-        padding: 16px;
+    h1 {
+        font-size: 56px;
     }
 
-    .urgent-and-calendar {
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .urgent-and-seperator {
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .grey-seperator {
-        width: 100%;
-        height: 2px;
-    }
-
-    .welcome-message {
-        flex-direction: column;
-        gap: 4px;
-        padding: 0 0 12px 0;
+    .blue-separator {
+        display: none;
     }
 }
+
+@media (max-width: 428px) {
+
+     .task-boxes {
+        grid-row: 1;
+        grid-template-rows: repeat(2, 110px) 116px;
+    }
+
+    .grey-separator {
+        height: 80px;
+    }
+}
+
