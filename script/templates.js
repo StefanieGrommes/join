@@ -271,7 +271,7 @@ function renderTaskDetail(task) {
         </span>
       </div>
 
-      <div class="board-detail-row board-detail-assignees-row">
+      <div class="board-detail-assignees-row">
         <span class="board-detail-label">Assigned To:</span>
         <div class="board-detail-assignees">${assigned}</div>
       </div>

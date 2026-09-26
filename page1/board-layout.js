@@ -11,6 +11,23 @@
 
 const BOARD_STORAGE_KEY = "join-board-layout-state";
 
+/**
+ * Liefert den leeren Hinweistext passend zur Spalte.
+ *
+ * @param {string} columnId - Der Spalten-Schluessel aus data-column.
+ * @returns {string} Hinweistext fuer leere Spalten.
+ */
+function getEmptyColumnMessage(columnId) {
+  const messageMap = {
+    "todo": "No tasks To do",
+    "in-progress": "No tasks In progress",
+    "await-feedback": "No tasks Await feedback",
+    "done": "No tasks Done"
+  };
+
+  return messageMap[columnId] || "No tasks";
+}
+
 // ===============================
 // Board-Zustand aus LocalStorage laden
 // Wenn noch kein Zustand gespeichert ist, werden alle Aufgaben standardmäßig in "todo" gesetzt.
@@ -68,6 +85,24 @@ function initBoardLayout() {
   const boardState = { ...defaultState, ...savedState };
   const draggedCardRef = { value: null };
 
+  /**
+   * Rendert den leeren Zustand fuer Spalten ohne Karten.
+   *
+   * @returns {void}
+   */
+  const renderEmptyStateForColumns = () => {
+    columns.forEach((column) => {
+      const hasTaskCard = column.querySelector(".board-card--task");
+      if (hasTaskCard) return;
+
+      const emptyState = document.createElement("p");
+      emptyState.className = "board-empty-state";
+      emptyState.textContent = getEmptyColumnMessage(column.dataset.column || "");
+      emptyState.setAttribute("aria-label", emptyState.textContent);
+      column.appendChild(emptyState);
+    });
+  };
+
   // ===============================
   // Board rendern
   // Jede Aufgabe wird anhand ihres Saved-State in die passende Spalte gesetzt.
@@ -78,7 +113,10 @@ function initBoardLayout() {
       column.innerHTML = "";
     });
 
-    if (!Array.isArray(tasks)) return;
+    if (!Array.isArray(tasks)) {
+      renderEmptyStateForColumns();
+      return;
+    }
 
     tasks.forEach((task) => {
       const targetColumnId = boardState[task.id] || "todo";
@@ -95,6 +133,8 @@ function initBoardLayout() {
       bindCardDragEvents(card, draggedCardRef);
       column.appendChild(card);
     });
+
+    renderEmptyStateForColumns();
   };
 
   // ===============================

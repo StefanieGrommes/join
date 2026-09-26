@@ -398,6 +398,22 @@ body {
   gap: 0;
 }
 
+.board-empty-state {
+  width: 100%;
+  min-height: 46px;
+  margin: 2px 0 0;
+  border: 1px dashed #a8afb8;
+  border-radius: 10px;
+  background: #f9fafb;
+  color: #9aa3b2;
+  font-size: 18px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 .board-card {
   width: 100%;
   min-height: 160px;
@@ -693,10 +709,10 @@ body {
 .board-detail-modal {
   position: fixed;
   inset: 0;
-  display: flex;
   align-items: center;
   justify-content: center;
   background: rgba(17, 24, 39, 0.25);
+  display: none;
   z-index: 1100;
 }
 
@@ -709,13 +725,17 @@ body {
   border-radius: 20px;
   width: 525px;
   height: 871px;
+  overflow: hidden;
 }
 
 .board-detail-modal-body .board-detail-card {
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
   margin: 0;
+  padding: 32px 40px 28px;
+  box-sizing: border-box;
   background: #ffffff;
   border-radius: 20px;
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.16);
@@ -725,25 +745,28 @@ body {
 .board-detail-content {
   display: flex;
   flex-direction: column;
+  justify-content: space-around;
+  flex: 1;
 }
 
 .board-detail-modal-body .board-detail-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 56px;
+  min-height: 36px;
 }
 
 .board-detail-modal-body .board-detail-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 32px;
-  padding: 0 14px;
+  height: 36px;
+  width: 208px;
   border-radius: 10px;
   color: #ffffff;
-  font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
+  font-size: 23px;
+  line-height: 1;
 }
 
 .board-detail-modal-body .board-detail-close {
@@ -755,11 +778,23 @@ body {
   font-size: 28px;
   line-height: 1;
   cursor: pointer;
+  
+}
+
+.board-detail-row {
+  display: flex;
+  flex-direction: row;
+
+
+}
+
+.board-detail-assignees-row {
+  display: flex;
 }
 
 .board-detail-modal-body .board-detail-title {
-  margin: 14px 0 10px;
-  font-size: clamp(1.7rem, 2.4vw, 2.4rem);
+  margin: 24px 0 24px;
+  font-size: 61px;
   line-height: 1.05;
   font-weight: 800;
   color: #111827;
@@ -767,13 +802,14 @@ body {
 
 .board-detail-modal-body .board-detail-description {
   color: #6b7280;
-  font-size: 1rem;
+  font-size: 20px;
   margin-bottom: 30px;
 }
 
 .board-detail-modal-body {
   display: flex;
   align-items: center;
+  width: 100%;
   height: 871px;
 }
 
