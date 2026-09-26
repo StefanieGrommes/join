@@ -1,12 +1,26 @@
 :root {
+    --main-color: rgb(42, 54, 71);
+    --hover-bg-color: rgb(10, 25, 49);
+    --accent-color: #124658;
     --default-font: 'Inter', sans-serif;
     --shadow: 0 4px 4px 0px rgba(82, 82, 82, 0.4);
+    --box-shadow-default: 0 0 4px 0px rgba(82, 82, 82, 0.4);
 }
 
 .summary {
+    display: flex;
     height: 100%;
     min-height: 0;
-    padding: 80px 56px;
+    margin-inline: 0;
+    padding: 110px 96px 0 96px;
+    box-sizing: border-box;
+}
+
+.task-boxes-and-summary-header {
+    flex-grow: 0;
+    max-width: 1025px;
+    margin-inline: auto;
+    width: 100%;
 }
 
 .summary-header {
@@ -14,30 +28,35 @@
     justify-content: flex-start;
     align-items: center;
     gap: 12px;
-    grid-column: 1 / -1;
-    grid-row: 1;
-    padding: 12px;
+    padding: 0 0 56px 0;
 }
 
 h1 {
-    font-size: 60px;
+    font-size: clamp(40px, 5.5cqw, 60px);
     font-family: var(--default-font);
     font-weight: 700;
     line-height: 1.2;
 }
 
 h2 {
-    font-size: 32px;
+    font-size: clamp(20px, 2.5cqw, 28px);
     font-family: var(--default-font);
     font-weight: 400;
-    color: #2A3647;
+    color: var(--main-color);
+}
+
+.boxes-and-welcome-message {
+    display: grid;
+    max-width: 1025px;
+    grid-template-columns: minmax(0, 560px) 1fr;
+    gap: clamp(16px, 48px, 80px);
 }
 
 .task-normal {
-    font-size: 20px;
+    font-size: min(16px, 20px);
     font-family: var(--default-font);
     font-weight: 400;
-    color: #2A3647;
+    color: var(--main-color);
     line-height: 1.2;
 }
 
@@ -51,7 +70,7 @@ h2 {
 .amount-bold {
     font-weight: 600;
     font-family: var(--default-font);
-    font-size: 64px;
+    font-size: min(48px, 64px);
 }
 
 .date {
@@ -60,13 +79,17 @@ h2 {
     font-weight: 700;
 }
 
-.blue-seperator {
-    background-color:#29ABE2;
-    height: 65px;
+.blue-separator {
+    background-color: #29ABE2;
+    height: clamp(40px, 5vw, 65px);
     width: 3px;
 }
 
-.grey-seperator {
+.blue-separator-mobile {
+    display: none;
+}
+
+.grey-separator {
     background-color: #D1D1D1;
     height: 102px;
     width: 2px;
@@ -75,37 +98,45 @@ h2 {
 .grey-boxes-task {
     border: unset;
     border-radius: 30px;
-    box-shadow: 0 0 4px 0px rgba(82, 82, 82, 0.4);
+    box-shadow: var(--box-shadow-default);
     background-color: white;
     padding: 18px;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
 }
 
-.grey-boxes-task:hover {
+.grey-boxes-task:hover,
+.grey-boxes-task:focus-visible {
     box-shadow: var(--shadow);
     transform: scale(1.03);
     cursor: pointer;
-    background-color: rgb(42,54,71);
+    background-color: var(--main-color);
+    color: white;
+    outline: none;
+}
+
+.grey-boxes-task:hover p,
+.grey-boxes-task:focus-visible p {
     color: white;
 }
 
-.grey-boxes-task:hover p {
-    color: white;
-}
-
-.grey-boxes-task:hover .task-icon-to-do circle {
+.grey-boxes-task:hover .task-icon-to-do circle,
+.grey-boxes-task:focus-visible .task-icon-to-do circle {
     fill: white;
 }
 
-.grey-boxes-task:hover .task-icon-to-do path {
-    fill:  rgb(42,54,71);
+.grey-boxes-task:hover .task-icon-to-do path,
+.grey-boxes-task:focus-visible .task-icon-to-do path {
+    fill: var(--main-color);
 }
 
-.grey-boxes-task:hover .task-icon-done circle {
+.grey-boxes-task:hover .task-icon-done circle,
+.grey-boxes-task:focus-visible .task-icon-done circle {
     fill: white;
 }
 
-.grey-boxes-task:hover .task-icon-done path {
-    stroke: rgb(42,54,71);
+.grey-boxes-task:hover .task-icon-done path,
+.grey-boxes-task:focus-visible .task-icon-done path {
+    stroke: var(--main-color);
 }
 
 .flex-row {
@@ -124,22 +155,11 @@ h2 {
     line-height: 1.2;
 }
 
-.task-boxes-and-welcome-message-wrapper {
-    width: 100%;
-    display: grid;
-    grid-template-rows: auto 168px 168px 170px;
-    grid-template-columns: minmax(0, 560px) 1fr;
-    align-content: start;
-    row-gap: 28px;
-    column-gap: clamp(32px, 5vw, 80px);
-}
-
 .task-boxes {
     display: grid;
-    grid-column: 1;
-    grid-row: 2/ span 3;
-    grid-template-rows: subgrid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-row: 1/4;
+    grid-template-rows: repeat(2, 168px) 170px;
+    grid-template-columns: repeat(6, 1fr);
     grid-template-areas: "to-do to-do to-do done done done"
                         "urgent urgent urgent urgent urgent urgent"
                         "tasks-in-board tasks-in-board tasks-in-progress tasks-in-progress feedback feedback";
@@ -148,33 +168,16 @@ h2 {
 
 .welcome-message {
     grid-column: 2;
-    grid-row: 3;
+    grid-row: 2 / 3;
     align-self: center;
 }
 
-#to-do { 
-    grid-area: to-do;
-}
-
-#done { 
-    grid-area: done; 
-}
-
-#urgent-and-calendar { 
-    grid-area: urgent; 
-}
-
-#tasks-in-board {
-    grid-area: tasks-in-board; 
-}
-
-#tasks-in-progress { 
-    grid-area: tasks-in-progress; 
-}
-
-#awaiting-feedback { 
-    grid-area: feedback; 
-}
+#to-do { grid-area: to-do; }
+#done { grid-area: done; }
+#urgent-and-calendar { grid-area: urgent; }
+#tasks-in-board { grid-area: tasks-in-board; }
+#tasks-in-progress { grid-area: tasks-in-progress; }
+#awaiting-feedback { grid-area: feedback; }
 
 .urgent-and-calendar {
     display: flex;
@@ -198,59 +201,44 @@ h2 {
 
 .daytime {
     font-family: var(--default-font);
-    font-size: 48px;
+    font-size: clamp(26px, 4cqw, 48px);
     font-weight: 500;
     line-height: 1.2;
 }
 
 .name {
     font-family: var(--default-font);
-    font-size: 64px;
+    font-size: clamp(30px, 5.5cqw, 64px);
     font-weight: 700;
     line-height: 1.2;
-    color: #124658;
+    color: var(--accent-color);
 }
 
 
 /*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
 
-@media(max-width: 1320px) {
-
-    h1 {
-        font-size: 52px;
+@media (max-width: 1300px) {
+    .boxes-and-welcome-message {
+        grid-template-columns: minmax(0, 514px) 1fr;
     }
 
-    h2 {
-        font-size: 30px;
+    .task-boxes {
+        grid-template-rows: repeat(2, 152px) 154px;
     }
-
-    .blue-seperator {
-        height: 56px;
-    }
-
-    .summary {
-        padding: 80px 42px;
-    }
-
-    .amount-bold {
-        font-size: 48px;
-    }
-
-    .daytime {
-        font-size: 40px;
-    }
-
-    .name {
-        font-size: 52px;
+    .summary-header {
+        padding: 0 0 42px 0;
     }
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1180px) {
 
-    .task-boxes-and-welcome-message-wrapper {
+    .summary-header {
+        padding: 0 0 4px 0;
+    }
+
+    .boxes-and-welcome-message {
+        gap: 12px;
         grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto;
-        row-gap: 8px;
     }
 
     .welcome-message {
@@ -259,46 +247,75 @@ h2 {
         display: flex;
         align-items: baseline;
         gap: 12px;
-        padding: 12px;
+        padding: 12px 0;
     }
 
     .task-boxes {
         grid-column: 1;
         grid-row: 3;
-        grid-template-rows: 138px 138px 140px;
+        grid-template-rows: repeat(2, 168px) 170px;
         max-width: 620px;
+        width: auto;
     }
+}
 
-    h1 {
-        font-size: 40px;
-    }
-
-    h2 {
-        font-size: 22px;
-    }
-
-    .blue-seperator {
-        height: 46px;
+@media (max-width: 940px) {
+    .summary {
+        padding: 110px 54px 0 54px;
     }
 
     .task-boxes {
-        width: auto;
-    }
-
-    .daytime {
-        font-size: 30px;
-    }
-
-    .amount-bold {
-        font-size: 34px;
-    }
-
-    .name {
-        font-size: 38px;
+        gap: 20px;
     }
 }
 
 @media (max-width: 768px) {
     
-   
+    .summary {
+        padding: 16px;
+    }
+
+    .welcome-message {
+        display: none;
+    }
+
+    .summary-header {
+        flex-direction: column;
+        align-items: start;
+        padding: 48px 0 40px 16px;
+        gap: 8px;
+    }
+
+    .blue-separator-mobile {
+        display: block;
+        width: 90px;
+        height: 3px;
+        background-color: #29ABE2;
+    }
+
+    .task-boxes {
+        grid-row: 1;
+        grid-template-rows: repeat(2, 142px) 144px;
+    }
+
+    h1 {
+        font-size: 56px;
+    }
+
+    .blue-separator {
+        display: none;
+    }
 }
+
+@media (max-width: 428px) {
+
+     .task-boxes {
+        grid-row: 1;
+        grid-template-rows: repeat(2, 110px) 116px;
+    }
+
+    .grey-separator {
+        height: 80px;
+    }
+}
+
