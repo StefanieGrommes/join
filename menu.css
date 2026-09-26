@@ -226,6 +226,7 @@ main {
     padding: 16px 20px 16px 20px;
     border-width: 0;
     box-shadow: 0 0 4px 4px rgba(110, 107, 107, 0.3);
+    width: 100%;
   }
 
   .profile-initials-btn {
