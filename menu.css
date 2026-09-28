@@ -98,7 +98,6 @@ aside {
   top: 0;
   padding: 64px 0;
   position: sticky;
-  grid-area: navbar;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -195,7 +194,6 @@ main {
   grid-area: main;
   width: 100%;
   max-width: calc(1440px - var(--sidebar-width));
-  margin-inline: auto;
   min-height: 0;
   height: 100%;
   container-type: inline-size;
@@ -266,7 +264,6 @@ main {
     align-items: center;
     width: 100%;
     max-width: 428px;
-    margin-inline: auto;
     padding: 0 16px;
   }
 
