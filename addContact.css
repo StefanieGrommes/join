@@ -1,6 +1,4 @@
 dialog {
-    width: 1212px;
-    height: 592px;
     border-radius: 30px;
     border-style: inherit;
     transition: all 125ms ease-in-out;  
@@ -8,6 +6,7 @@ dialog {
 
 dialog:modal {
     margin: auto;
+    width: 85vw;
 }
 
 button {
@@ -19,8 +18,8 @@ button {
     height: 100%;
     display: grid;
     grid-template-rows: 1fr;
-    grid-template-columns: 468px 744px;
-    grid-template-areas: "aside" "form";
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-areas: "aside aside form form form";
 }
 
 .dialog-aside {
@@ -34,32 +33,37 @@ button {
     line-height: 1.2;
 }
 
-.headlines-and-separator {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    gap: 16px;
+.logo-wrapper {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    width: 56px;
+    height: 66px;
+    margin-bottom: 12px;
+}
+
+.headlines-and-slogan {
+    position: relative;
+    gap: 8px;
 }
 
 .add-contact-wrapper {
-    display: flex;
-    flex-direction: column;
-    position: relative;
+    grid-area: form;
+    padding-top: 100px;
+    padding-bottom: 100px;
 }
 
 .right-side-add-contact {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: space-evenly;
-    height: 100%;
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    max-width: 422px;
 }
 
 .add-contact-form {
-    display: flex;
-    flex-direction: column;
-    width: 422px;
-    gap: 32px;
+    position: relative;
+    padding-bottom: 48px;
+    width: 100%
 }
 
 .add-contact-form:hover {
@@ -68,10 +72,12 @@ button {
 
 .initials-and-form-wrapper {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
+    gap: 48px;
     height: 100%;
     width: 100%;
+    padding: 48px;
 }
 
 .close-dialog-btn {
@@ -92,12 +98,15 @@ button {
 
 .close-dialog-wrapper {
     position: absolute;
-    top: 32px;
-    right: 32px;
+    bottom: 100%;
+    right: 0;
+    padding-bottom: 56px;
 }
 
 .profile-initials-btn {
+    flex-shrink: 0;
     width: 120px;
+    height: 120px;
 }
 
 .profile-initials-btn img {
@@ -105,13 +114,9 @@ button {
     object-fit: cover;
 }
 
-.contact-form-btn {
-    gap: 4px;
-    padding: 16px;
-    border-radius: 10px;
-}
-
 .create-contact-btn {
+    height: 56px;
+    width: 214px;
     background-color: var(--main-color);
     border: inherit;
     transition: background-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
@@ -120,7 +125,6 @@ button {
 .create-contact-btn:hover {
     background-color: var(--hover-bg-color-lightblue);
     box-shadow: var(--shadow);
-    cursor: pointer;
 }
 
 .create-contact-btn:active {
@@ -128,15 +132,17 @@ button {
 }
 
 .cancel-btn {
-    background-color: white;
-    border: 1px var(--main-color) solid;
-    box-sizing: border-box;
+    border: 1px solid var(--main-color);
     width: 126px;
     height: 56px;
+    font-size: 20px;
+    background-color: white;
+    color: var(--main-color);
 }
 
+
+
 .cancel-btn:hover {
-    cursor: pointer;
     border: 2px var(--hover-bg-color-lightblue) solid;
     box-shadow: var(--shadow); 
     transition: background-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
@@ -150,7 +156,6 @@ button {
     color: var(--main-color);
     font-family: var(--default-font);
     font-size: 20px;
-    font-weight: 400;
     line-height: 1.2;
 }
 
@@ -165,6 +170,9 @@ button {
 .contact-form-btn {
     display: flex;
     align-items: center;
+    gap: 4px;
+    padding: 16px;
+    border-radius: 10px;
 }
 
 .input-wrapper {
@@ -185,7 +193,6 @@ button {
     padding: 8px 0;
     font-size: 20px;
     font-family: var(--default-font);
-    font-weight: 400;
     line-height: 1.2;
     cursor: pointer;
 }
@@ -193,10 +200,10 @@ button {
 .form-input-fields {
     display: flex;
     flex-direction: column;
-    gap: 32px;
 }
 
 .form-btn-wrapper {
+    margin-top: 48px;
     display: flex;
     gap: 24px;
 }
@@ -215,8 +222,8 @@ button {
 
 .dialog-aside h2 {
     font-size: 28px;
-    font-family: var(--default-font);
     font-weight: 400;
+    font-family: var(--default-font);
 }
 
 .blue-horizontal-separator {
@@ -224,9 +231,12 @@ button {
     width: 90px;
     background-color: rgb(40,171,226);
     border-radius: 30px;
+    margin-top: 16px;
 }
 
 .toast-wrapper {
+    min-height: 32px;
+    font-size: 16px;
     color: var(--main-color);
     opacity: 0;
     pointer-events: none;
