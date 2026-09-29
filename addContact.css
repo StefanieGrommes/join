@@ -6,7 +6,7 @@ dialog {
 
 dialog:modal {
     margin: auto;
-    width: 85vw;
+    width: min(85vw, 1212px);
 }
 
 button {
@@ -15,10 +15,11 @@ button {
 
 .dialog-grid-area {
     width: 100%;
+    max-width: 1212px;
     height: 100%;
     display: grid;
     grid-template-rows: 1fr;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(5,  1fr);
     grid-template-areas: "aside aside form form form";
 }
 
@@ -33,7 +34,7 @@ button {
     line-height: 1.2;
 }
 
-.form-logo-wrapper{
+.form-logo-wrapper {
     position: absolute;
     bottom: 100%;
     left: 0;
@@ -53,9 +54,7 @@ button {
 
 .right-side-add-contact {
     position: relative;
-    flex: 1;
-    min-width: 0;
-    max-width: 422px;
+    width: 100%;
 }
 
 .add-contact-form {
@@ -70,12 +69,11 @@ button {
 
 .initials-and-form-wrapper {
     display: flex;
-    justify-content: center;
     align-items: center;
     gap: 48px;
     height: 100%;
     width: 100%;
-    padding: 48px;
+    padding: 32px;
 }
 
 .close-dialog-btn {
@@ -101,13 +99,17 @@ button {
 }
 
 .profile-initials-btn {
-    flex-shrink: 0;
+    flex-shrink: 1;
     width: 120px;
     height: 120px;
+    max-width: 100%;
+    aspect-ratio: 1;
+    margin-bottom: 80px;
 }
 
 .profile-initials-btn img {
-    width: 120px;
+    width: 100%;
+    height: auto;
     object-fit: cover;
 }
 
@@ -179,12 +181,11 @@ button {
     border: 1px solid #6B6B6BB6;
     border-radius: 10px;
     padding: 0 12px;
-    height: 50px;
-    
+    height: 50px; 
 }
 
 .input-wrapper input {
-    flex: 1;
+    width: 100%;
     border: none;
     outline: none;
     padding: 8px 0;
@@ -243,4 +244,22 @@ button {
 
 .toast-wrapper.show {
     opacity: 1;
+}
+
+
+/*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
+
+@media (max-width: 1300px) {
+   .right-side-add-contact {
+        width: min(400px,90vw);
+   }
+
+}
+
+@media (max-width: 1180px) {
+
+}
+
+@media (max-width: 768px) {
+
 }

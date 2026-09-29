@@ -258,7 +258,7 @@ h2 {
 
 @media (max-width: 940px) {
     .summary {
-        padding: 110px 54px 0 54px;
+        padding: 110px min(68px, 9vw) 0 min(68px, 9vw);
     }
 
     .task-boxes {
