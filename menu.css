@@ -46,6 +46,26 @@ body:has(dialog[open]) {
     overflow: hidden;
 }
 
+h1 {
+font-size: 3.75rem;
+font-weight: 700;
+}
+
+h2 {
+  font-size: 3rem;
+  font-weight: 500;
+}
+
+h5 {
+  font-size: 1.75rem;
+  font-weight: 400;
+}
+
+h6 {
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
 nav {
   min-height: var(--header-height);
   top: 0;

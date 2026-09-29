@@ -1,3 +1,11 @@
+h1 {
+    font-size: clamp(3rem, 5vw, 3.75rem)
+   }
+
+h5 {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem )
+}
+
 dialog {
     border-radius: 30px;
     border-style: inherit;
@@ -91,14 +99,13 @@ button {
     fill: white;
 }
 
-
 .close-dialog-wrapper {
     display: flex;
     justify-content: flex-end;
     padding-bottom: 56px;
 }
 
-.profile-initials-btn {
+.dialog-profile-initials-btn {
     flex-shrink: 1;
     width: 120px;
     height: 120px;
@@ -107,7 +114,7 @@ button {
     margin-bottom: 80px;
 }
 
-.profile-initials-btn img {
+.dialog-profile-initials-btn img {
     width: 100%;
     height: auto;
     object-fit: cover;
@@ -134,12 +141,9 @@ button {
     border: 1px solid var(--main-color);
     width: 126px;
     height: 56px;
-    font-size: 20px;
     background-color: white;
     color: var(--main-color);
 }
-
-
 
 .cancel-btn:hover {
     border: 2px var(--hover-bg-color-lightblue) solid;
@@ -151,24 +155,22 @@ button {
     border: 1px var(--active-btn-border) solid;
 }
 
-.cancel-btn p {
+.cancel-btn h6 {
     color: var(--main-color);
     font-family: var(--default-font);
-    font-size: 20px;
-    line-height: 1.2;
+    
 }
 
-.create-contact-btn p {
+.create-contact-btn h6 {
     color: white;
     font-family: var(--default-font);
-    font-size: 21px;
     font-weight: 700;
-    line-height: 1.2;
 }
 
 .contact-form-btn {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 4px;
     padding: 16px;
     border-radius: 10px;
@@ -189,7 +191,7 @@ button {
     border: none;
     outline: none;
     padding: 8px 0;
-    font-size: 20px;
+    font-size: 1.25rem;
     font-family: var(--default-font);
     line-height: 1.2;
     cursor: pointer;
@@ -210,18 +212,6 @@ button {
     height: 66px;
     width: 56px;
     object-fit: fill;
-}
-
-.dialog-aside h1 {
-    font-size: 60px;
-    font-family: var(--default-font);
-    font-weight: 700;
-}
-
-.dialog-aside h2 {
-    font-size: 28px;
-    font-weight: 400;
-    font-family: var(--default-font);
 }
 
 .blue-horizontal-separator {
@@ -246,20 +236,79 @@ button {
     opacity: 1;
 }
 
-
 /*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
 
-@media (max-width: 1300px) {
-   .right-side-add-contact {
-        width: min(400px,90vw);
-   }
-
-}
-
 @media (max-width: 1180px) {
+    .dialog-grid-area {
+        grid-template-rows: 352px 1fr ;
+        grid-template-columns: 1fr;
+        grid-template-areas: "aside" "form";
+        position: relative;
+    }
 
+    .initials-and-form-wrapper {
+        flex-direction: column;
+        padding: 16px;
+    }
+
+    .dialog-profile-initials-btn {
+        z-index: 100;
+        margin-bottom: 0;
+        position: absolute;
+        top: 292px;
+    }
+
+    .form-btn-wrapper {
+        margin-top: 0;
+        gap: 32px;
+        justify-self: center;
+    
+    }
+
+    .cancel-btn {
+        display: none;
+    }
+
+    .right-side-add-contact {
+        position: static;
+        padding-top: 60px;
+    }
+
+    .close-dialog-wrapper {
+        position: absolute;
+        top: 24px;
+        right: 16px;
+        padding-bottom: 0;
+    }
+
+    .close-dialog-btn svg path {
+        fill: white;
+    }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 428px) {
+    .dialog-aside {
+        align-items: flex-start;
+        padding-left: 16px;
+    }
+    
+    .form-logo-wrapper {
+        display: none;
+    }
 
+    h1 {
+        font-size: clamp(2.5rem, 4vw, 3rem);
+    }
+    h5 {
+        font-size: clamp(1.15rem, 5vw, 1.25rem);
+    }
+
+    h6 {
+        font-size: clamp(1rem, 5.5vw, 1.15rem);
+    }
+
+    .input-wrapper input {
+        font-size: 1rem;
+    }
 }
+
