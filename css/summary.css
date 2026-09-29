@@ -41,7 +41,6 @@ h1 {
 h2 {
     font-size: clamp(20px, 2.5cqw, 28px);
     font-family: var(--default-font);
-    font-weight: 400;
     color: var(--main-color);
 }
 
@@ -55,7 +54,6 @@ h2 {
 .task-normal {
     font-size: min(16px, 20px);
     font-family: var(--default-font);
-    font-weight: 400;
     color: var(--main-color);
     line-height: 1.2;
 }
@@ -63,7 +61,6 @@ h2 {
 .normal-text {
     font-size: 16px;
     font-family: var(--default-font);
-    font-weight: 400;
     line-height: 1.2;
 }
 
@@ -261,7 +258,7 @@ h2 {
 
 @media (max-width: 940px) {
     .summary {
-        padding: 110px 54px 0 54px;
+        padding: 110px min(68px, 9vw) 0 min(68px, 9vw);
     }
 
     .task-boxes {
