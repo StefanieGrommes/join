@@ -1,3 +1,7 @@
+main {
+  padding: 20px 24px 12px 40px;
+}
+
 .add-contact-btn {
   border: 1px solid var(--main-color);
   width: 352px;
@@ -15,7 +19,7 @@
   border-radius: 10px;
   font-family: inherit;
   cursor: pointer;
-  margin: 32px 24px;
+  margin: 16px 0px;
   transition:
     background-color 100ms ease-in-out,
     border-color 100ms ease-in-out,
@@ -26,4 +30,105 @@
 .icon-add {
   width: 29px;
   height: auto;
+}
+.add-task-content {
+  display: flex;
+}
+
+.form-column-left {
+  display: flex;
+  flex-direction: column;
+  padding-right: 24px;
+}
+
+.contact-list-wrapper {
+  overflow-y: scroll;
+  max-height: 400px;
+  scrollbar-width: 10px;
+}
+
+.contact-list-wrapper::-webkit-scrollbar {
+  width: 10px;
+}
+
+.contact-list-wrapper::-webkit-scrollbar-thumb {
+  background-color: rgb(168, 168, 168);
+  border-radius: 10px;
+  height: 50px;
+}
+::-webkit-scrollbar-button {
+  height: 50px;
+}
+
+.group-letter {
+  font-size: 20px;
+  font-weight: 400;
+  border-bottom: 1px solid rgb(209, 209, 209);
+  padding: 0 34px 33px;
+  margin-bottom: 17px;
+}
+
+.contact-item {
+  display: flex;
+  gap: 35px;
+  padding: 0 0 30px 24px;
+  padding-bottom: 30px;
+}
+
+.contact-avatar {
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 42px;
+  width: 42px;
+  border: 2px solid rgba(255, 255, 255, 1);
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.contact-name {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.contact-email,
+.contact-email:visited {
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(0, 124, 238, 1);
+}
+
+.form-column-right {
+  padding: 109px 0 0 80px;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 30px;
+  text-wrap-mode: nowrap;
+}
+
+.title p {
+  font-size: 27px;
+  font-weight: 400;
+  position: relative;
+  top: 5px;
+}
+
+h1 {
+  font-size: 61px;
+  font-weight: 700;
+  border-right: 3px solid rgba(41, 171, 226, 1);
+  padding-right: 30px;
 }
