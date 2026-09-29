@@ -242,59 +242,46 @@ function renderTaskDetail(task) {
 
   return `
     <article class="board-detail-card">
-
-
-
-
       <div class="board-detail-topbar">
         <span class="board-detail-badge" style="background:${task.categoryColor};">${task.category}</span>
         <button class="board-detail-close" type="button" aria-label="Close task">×</button>
       </div>
 
-
       <h2 class="board-detail-title">${task.title}</h2>
-
       <p class="board-detail-description">${task.description}</p>
 
+      <div class="board-detail-content">
+        <div class="board-detail-row">
+          <span class="board-detail-label">Due date:</span>
+          <span class="board-detail-value">${task.dueDate}</span>
+        </div>
 
+        <div class="board-detail-row">
+          <span class="board-detail-label">Priority:</span>
+          <span class="board-detail-value board-detail-priority" style="color:${task.priorityColor};">${task.priority}</span>
+        </div>
 
-  <div class="board-detail-content">
-      <div class="board-detail-row">
-        <span class="board-detail-label">Due date:</span>
-        <span class="board-detail-value">${task.dueDate}</span>
+        <div class="board-detail-assignees-row">
+          <span class="board-detail-label">Assigned To:</span>
+          <div class="board-detail-assignees">${assigned}</div>
+        </div>
+
+        <div class="board-detail-subtasks">
+          <h4>Subtasks</h4>
+          ${subtasks}
+        </div>
+
+        <div class="board-detail-actions">
+          <button type="button" class="board-detail-button board-detail-button--ghost" aria-label="Delete task">
+            <span class="board-detail-button-icon" aria-hidden="true">🗑</span>
+            <span class="board-detail-button-text">Delete</span>
+          </button>
+          <button type="button" class="board-detail-button board-detail-button--primary" aria-label="Edit task">
+            <span class="board-detail-button-icon" aria-hidden="true">✎</span>
+            <span class="board-detail-button-text">Edit</span>
+          </button>
+        </div>
       </div>
-
-      <div class="board-detail-row">
-        <span class="board-detail-label">Priority:</span>
-        <span class="board-detail-value board-detail-priority" style="color:${task.priorityColor};">
-          ${task.priority}
-        </span>
-      </div>
-
-      <div class="board-detail-assignees-row">
-        <span class="board-detail-label">Assigned To:</span>
-        <div class="board-detail-assignees">${assigned}</div>
-      </div>
-
-      <div class="board-detail-subtasks">
-        <h4>Subtasks</h4>
-        ${subtasks}
-      </div>
-
-      <div class="board-detail-actions">
-        <button type="button" class="board-detail-button board-detail-button--ghost" aria-label="Delete task">
-          <span class="board-detail-button-icon" aria-hidden="true">🗑</span>
-          <span class="board-detail-button-text">Delete</span>
-        </button>
-        <button type="button" class="board-detail-button board-detail-button--primary" aria-label="Edit task">
-          <span class="board-detail-button-icon" aria-hidden="true">✎</span>
-          <span class="board-detail-button-text">Edit</span>
-        </button>
-      </div>
-
-
-
-  </div>
     </article>
   `;
 }
