@@ -390,12 +390,10 @@ body {
 
 .board-main-column {
   width: 252px;
-  min-height: 688px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0;
 }
 
 .board-empty-state {
@@ -451,6 +449,7 @@ body {
   border-radius: 20px;
   box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
   padding: 12px 14px;
+  width: 100%;
 }
 
 .board-card-header {
@@ -729,7 +728,8 @@ body {
   display: flex;
   border-radius: 18px;
   width: 525px;
-  min-height: 931px;
+  height: auto;
+  max-height: min(931px, calc(100vh - 24px));
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -744,6 +744,9 @@ body {
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
   padding: 26px 32px 22px;
   width: 100%;
+  height: auto;
+  max-height: inherit;
+  overflow-y: auto;
 }
 
 .board-detail-content {
@@ -822,9 +825,10 @@ body {
 
 .board-detail-modal-body {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   width: 100%;
-  height: 871px;
+  height: auto;
+  max-height: inherit;
 }
 
 .board-detail-modal-body .board-detail-label {
