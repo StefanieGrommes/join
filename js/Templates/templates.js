@@ -232,9 +232,9 @@ function renderTaskDetail(task) {
     .join('');
 
   const subtasks = (task.subtasks || [])
-    .map((subtask) => `
+    .map((subtask, index) => `
       <label class="board-detail-subtask">
-        <input type="checkbox" ${subtask.done ? 'checked' : ''} />
+        <input type="checkbox" data-subtask-index="${index}" ${subtask.done ? 'checked' : ''} />
         <span>${subtask.label}</span>
       </label>
     `)
@@ -272,11 +272,11 @@ function renderTaskDetail(task) {
         </div>
 
         <div class="board-detail-actions">
-          <button type="button" class="board-detail-button board-detail-button--ghost" aria-label="Delete task">
+          <button type="button" class="board-detail-button board-detail-button--ghost" data-action="delete-task" aria-label="Delete task">
             <span class="board-detail-button-icon" aria-hidden="true">🗑</span>
             <span class="board-detail-button-text">Delete</span>
           </button>
-          <button type="button" class="board-detail-button board-detail-button--primary" aria-label="Edit task">
+          <button type="button" class="board-detail-button board-detail-button--primary" data-action="edit-task" aria-label="Edit task">
             <span class="board-detail-button-icon" aria-hidden="true">✎</span>
             <span class="board-detail-button-text">Edit</span>
           </button>
@@ -285,4 +285,5 @@ function renderTaskDetail(task) {
     </article>
   `;
 }
+
 
