@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Board Layout Start</title>
+    <link rel="stylesheet" href="../css/board-layout.css" />
+  </head>
+
+
+
+
+
+  <body>
+    <!--
+      Diese Datei ist die HTML-Struktur des Boards.
+      Sie enthält nur den sichtbaren Layout-Bauplan:
+      - Sidebar
+      - Board-Header
+      - Spaltenüberschriften
+      - Board-Hauptbereich
+
+      Die Inhalte der Karten kommen aus db.js und werden über templates.js gerendert.
+      Die Logik dafür sitzt in board-layout.js.
+    -->
+    <div class="page-layout">
+      <aside class="sidebar" aria-label="Navigation Sidebar">
+        <div class="sidebar-logo-container">
+          <img class="sidebar-logo" src="../img/icons/join-icon-white.png" alt="Join logo" />
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          <a class="sidebar-nav-item" href="summary.html" aria-label="Summary">
+            <span class="sidebar-nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <rect x="3" y="3" width="8" height="8" rx="1"></rect>
+                <rect x="13" y="3" width="8" height="18" rx="1"></rect>
+                <rect x="3" y="13" width="8" height="8" rx="1"></rect>
+              </svg>
+            </span>
+            <span class="sidebar-nav-label">Summary</span>
+          </a>
+
+          <a class="sidebar-nav-item" href="addTask.html" aria-label="Add Task">
+            <span class="sidebar-nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <path d="M4 16.5V20h3.5L18 9.5 14.5 6 4 16.5z"></path>
+                <path d="M13.5 7l3.5 3.5"></path>
+              </svg>
+            </span>
+            <span class="sidebar-nav-label">Add Task</span>
+          </a>
+
+          <a class="sidebar-nav-item sidebar-nav-item--active" href="board-layout.html" aria-label="Board">
+            <span class="sidebar-nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <rect x="3" y="4" width="5" height="16" rx="1"></rect>
+                <rect x="10" y="4" width="5" height="16" rx="1"></rect>
+                <rect x="17" y="4" width="4" height="16" rx="1"></rect>
+              </svg>
+            </span>
+            <span class="sidebar-nav-label">Board</span>
+          </a>
+
+          <a class="sidebar-nav-item" href="contacts.html" aria-label="Contacts">
+            <span class="sidebar-nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" focusable="false">
+                <circle cx="12" cy="9" r="3.5"></circle>
+                <path d="M5 20v-2c0-2.8 2.8-4.5 7-4.5s7 1.7 7 4.5v2"></path>
+              </svg>
+            </span>
+            <span class="sidebar-nav-label">Contacts</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Legal notice</a>
+        </div>
+      </aside>
+
+      <main class="board-content" aria-label="Board Content">
+
+
+        <header class="board-top-container" aria-label="Board top container">
+          <div class="board-top-inner">
+            <p class="board-top-title">Kanban Project Management Tool</p>
+
+            <div class="board-top-actions" aria-label="Top actions">
+              <button class="board-top-help-button" type="button" aria-label="Help">
+                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                  <circle cx="12" cy="12" r="8"></circle>
+                  <path d="M9.8 9.6a2.2 2.2 0 1 1 3.8 1.5c-.6.6-1.3 1-1.3 2"></path>
+                  <circle cx="12" cy="16.7" r=".6"></circle>
+                </svg>
+              </button>
+
+              <button class="board-top-profile-button" type="button" aria-label="Profile">
+                SM
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <section class="board-header-container" aria-label="Board header container">
+          <div class="board-header-inner">
+            <h1 class="board-header-title">Board</h1>
+
+            <div class="board-header-actions" aria-label="Board actions">
+              <div class="board-search-field">
+                <input type="text" placeholder="Find Task" aria-label="Find task" />
+                <span class="board-search-divider" aria-hidden="true"></span>
+                <button class="board-search-button" type="button" aria-label="Search">
+                  <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                    <circle cx="11" cy="11" r="6"></circle>
+                    <path d="M16 16l4 4"></path>
+                  </svg>
+                </button>
+              </div>
+
+              <button id="board-open-add-task-modal" class="board-add-task-button" type="button" aria-label="Add task">
+                Add task
+                <span class="board-add-task-plus" aria-hidden="true">+</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="board-header-columns" aria-label="Board columns header">
+            <div class="board-header-column">
+              <div class="board-column-title">
+                <span>To do</span>
+                <button type="button" data-column="todo" aria-label="Add To do">+</button>
+              </div>
+            </div>
+
+            <div class="board-header-column">
+              <div class="board-column-title">
+                <span>In progress</span>
+                <button type="button" data-column="in-progress" aria-label="Add In progress">+</button>
+              </div>
+            </div>
+
+            <div class="board-header-column">
+              <div class="board-column-title">
+                <span>Await feedback</span>
+                <button type="button" data-column="await-feedback" aria-label="Add Await feedback">+</button>
+              </div>
+            </div>
+
+            <div class="board-header-column">
+              <div class="board-column-title">
+                <span>Done</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!--
+          Board-Hauptbereich:
+          Die vier Spalten sind hier als Container definiert.
+          In diesen Spalten werden die Karten später per JavaScript eingefügt.
+          Die Darstellung der Karten kommt aus templates.js.
+        -->
+        <section class="board-main-container" aria-label="Board main container">
+            <div class="board-main-column" data-column="todo" aria-label="Todo column"></div>
+            <div class="board-main-column" data-column="in-progress" aria-label="In progress column"></div>
+            <div class="board-main-column" data-column="await-feedback" aria-label="Await feedback column"></div>
+            <div class="board-main-column" data-column="done" aria-label="Done column"></div>
+        </section>
+
+
+
+      </main>
+
+    </div>
+
+    <nav class="board-mobile-top-nav" aria-label="Mobile top navigation">
+      <div class="board-mobile-logo-wrapper">
+        <img src="../assets/join-favicon.svg" alt="Join logo" />
+      </div>
+
+      <button class="board-mobile-profile-button" type="button" aria-label="Profile">
+        <svg class="board-mobile-profile-circle" width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="28" cy="28" r="26.5" stroke="#2A3647" stroke-width="3" />
+        </svg>
+      </button>
+    </nav>
+
+    <nav class="board-mobile-footer-nav" aria-label="Mobile footer navigation">
+      <div class="board-mobile-footer-links">
+        <a class="board-mobile-nav-link" href="summary.html" aria-label="Summary">
+          <span class="board-mobile-nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 30 30" focusable="false">
+              <path d="M25.2273 2.5H4.77273H4.5C3.39543 2.5 2.5 3.39573 2.5 4.5003C2.5 4.68009 2.5 4.80746 2.5 4.83997V25.2945V25.5C2.5 26.6046 3.39572 27.5 4.50029 27.5C4.64377 27.5 4.74401 27.5 4.77272 27.5H25.2273C25.256 27.5 25.3562 27.5 25.4997 27.5C26.6043 27.5 27.5 26.6041 27.5 25.4995C27.5 25.3927 27.5 25.3188 27.5 25.2945V4.83994C27.5 4.80744 27.5 4.68008 27.5 4.5003C27.5 3.39573 26.6043 2.5 25.4997 2.5C25.3562 2.5 25.256 2.5 25.2273 2.5ZM17.2727 25.2945H4.77273V16.2036H17.2727V25.2945ZM17.2727 13.9309H4.77273V4.83997L17.2727 4.83994V13.9309ZM25.2273 25.2945H19.5455V4.83997H25.2273V25.2945Z"></path>
+            </svg>
+          </span>
+          <span class="board-mobile-nav-label">Summary</span>
+        </a>
+
+        <a class="board-mobile-nav-link" href="addTask.html" aria-label="Add Task">
+          <span class="board-mobile-nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 30 30" focusable="false">
+              <path d="M4.62652 27.2024C3.95579 27.2024 3.38161 26.9635 2.90396 26.4859C2.42632 26.0083 2.1875 25.4341 2.1875 24.7633V7.69017C2.1875 7.01944 2.42632 6.44525 2.90396 5.96761C3.38161 5.48996 3.95579 5.25114 4.62652 5.25114H15.5107L13.0716 7.69017H4.62652V24.7633H21.6997V16.2877L24.1387 13.8487V24.7633C24.1387 25.4341 23.8999 26.0083 23.4223 26.4859C22.9446 26.9635 22.3704 27.2024 21.6997 27.2024H4.62652ZM18.2546 5.95236L19.9924 7.65968L11.9436 15.7085V17.4463H13.6509L21.7302 9.367L23.468 11.0743L15.3887 19.1536C15.1651 19.3772 14.906 19.555 14.6113 19.6871C14.3166 19.8192 14.0066 19.8853 13.6814 19.8853H10.7241C10.3786 19.8853 10.0889 19.7684 9.85518 19.5347C9.62144 19.3009 9.50457 19.0113 9.50457 18.6658V15.7085C9.50457 15.3833 9.56555 15.0733 9.6875 14.7786C9.80945 14.4839 9.98222 14.2247 10.2058 14.0011L18.2546 5.95236ZM23.468 11.0743L18.2546 5.95236L21.3034 2.90358C21.7912 2.41578 22.3755 2.17188 23.0564 2.17188C23.7373 2.17188 24.3115 2.41578 24.779 2.90358L26.4863 4.64139C26.9538 5.10887 27.1875 5.67797 27.1875 6.3487C27.1875 7.01944 26.9538 7.58854 26.4863 8.05602L23.468 11.0743Z"></path>
+            </svg>
+          </span>
+          <span class="board-mobile-nav-label">Add Task</span>
+        </a>
+
+        <a class="board-mobile-nav-link board-mobile-nav-link--active" href="board-layout.html" aria-current="page" aria-label="Board">
+          <span class="board-mobile-nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 30 30" focusable="false">
+              <path d="M22.9546 4.77273L22.9546 25.2271C22.954 25.8296 22.7143 26.4074 22.2882 26.8334C21.8622 27.2595 21.2844 27.4992 20.6819 27.4998L16.1365 27.4998C15.5339 27.4992 14.9562 27.2595 14.5301 26.8334C14.104 26.4074 13.8644 25.8296 13.8638 25.2271L13.8638 4.77273C13.8644 4.17015 14.104 3.59243 14.5301 3.16635C14.9562 2.74026 15.5339 2.50062 16.1365 2.50002L20.6819 2.50002C21.2844 2.50062 21.8622 2.74026 22.2882 3.16635C22.7143 3.59243 22.954 4.17015 22.9546 4.77273ZM16.1365 25.2271L20.6819 25.2271L20.6819 4.77273L16.1365 4.77273L16.1365 25.2271ZM16.1365 4.77273L16.1365 25.2271C16.1359 25.8296 15.8962 26.4073 15.4701 26.8334C15.0441 27.2595 14.4663 27.4991 13.8638 27.4997L9.31835 27.4997C8.71578 27.4991 8.13806 27.2595 7.71197 26.8334C7.28589 26.4073 7.04625 25.8296 7.04565 25.227L7.04565 4.7727C7.04625 4.17013 7.28589 3.59241 7.71197 3.16632C8.13806 2.74024 8.71578 2.5006 9.31835 2.5L13.8638 2.5C14.4663 2.5006 15.0441 2.74024 15.4701 3.16632C15.8962 3.59241 16.1359 4.17015 16.1365 4.77273ZM9.31835 25.227L13.8638 25.2271L13.8638 4.77273L9.31835 4.7727L9.31835 25.227ZM9.31835 4.7727L9.31835 25.227C9.31775 25.8296 9.07811 26.4073 8.65203 26.8334C8.22594 27.2595 7.64822 27.4991 7.04565 27.4997L2.50024 27.4997C1.89767 27.4991 1.31995 27.2595 0.893863 26.8334C0.467779 26.4073 0.228141 25.8296 0.227539 25.227L0.227538 4.7727C0.22814 4.17013 0.467778 3.59241 0.893862 3.16632C1.31995 2.74024 1.89767 2.5006 2.50024 2.5L7.04565 2.5C7.64822 2.5006 8.22594 2.74024 8.65203 3.16632C9.07811 3.59241 9.31775 4.17013 9.31835 4.7727ZM2.50024 25.227L7.04565 25.227L7.04565 4.7727L2.50024 4.7727L2.50024 25.227Z"></path>
+              <path d="M29.7727 4.77298L29.7727 25.2273C29.7721 25.8299 29.5324 26.4076 29.1064 26.8337C28.6803 27.2598 28.1026 27.4994 27.5 27.5L22.9546 27.5C22.352 27.4994 21.7743 27.2598 21.3482 26.8337C20.9221 26.4076 20.6825 25.8296 20.6819 25.2271L20.6819 4.77273C20.6825 4.17015 20.9221 3.59268 21.3482 3.1666C21.7743 2.74051 22.352 2.50088 22.9546 2.50027L27.5 2.50027C28.1026 2.50088 28.6803 2.74051 29.1064 3.1666C29.5324 3.59268 29.7721 4.1704 29.7727 4.77298ZM22.9546 25.2271L27.5 25.2273L27.5 4.77298L22.9546 4.77273L22.9546 25.2271Z"></path>
+            </svg>
+          </span>
+          <span class="board-mobile-nav-label">Board</span>
+        </a>
+
+        <a class="board-mobile-nav-link" href="contacts.html" aria-label="Contacts">
+          <span class="board-mobile-nav-icon" aria-hidden="true">
+            <svg viewBox="0 0 30 30" focusable="false">
+              <path d="M15 22.5C13.8333 22.5 12.7188 22.6823 11.6563 23.0469C10.5938 23.4115 9.625 23.9583 8.75 24.6875V25H21.25V24.6875C20.375 23.9583 19.4062 23.4115 18.3438 23.0469C17.2812 22.6823 16.1667 22.5 15 22.5ZM6.25 23.5625C7.375 22.4583 8.68229 21.5885 10.1719 20.9531C11.6615 20.3177 13.2708 20 15 20C16.7292 20 18.3385 20.3177 19.8281 20.9531C21.3177 21.5885 22.625 22.4583 23.75 23.5625V7.5H6.25V23.5625ZM15 17.5C13.7917 17.5 12.7604 17.0729 11.9062 16.2188C11.0521 15.3646 10.625 14.3333 10.625 13.125C10.625 11.9167 11.0521 10.8854 11.9062 10.0312C12.7604 9.17708 13.7917 8.75 15 8.75C16.2083 8.75 17.2396 9.17708 18.0938 10.0312C18.9479 10.8854 19.375 11.9167 19.375 13.125C19.375 14.3333 18.9479 15.3646 18.0938 16.2188C17.2396 17.0729 16.2083 17.5 15 17.5ZM15 15C15.5208 15 15.9635 14.8177 16.3281 14.4531C16.6927 14.0885 16.875 13.6458 16.875 13.125C16.875 12.6042 16.6927 12.1615 16.3281 11.7969C15.9635 11.4323 15.5208 11.25 15 11.25C14.4792 11.25 14.0365 11.4323 13.6719 11.7969C13.3073 12.1615 13.125 12.6042 13.125 13.125C13.125 13.6458 13.3073 14.0885 13.6719 14.4531C14.0365 14.8177 14.4792 15 15 15ZM6.25 27.5C5.5625 27.5 4.97396 27.2552 4.48438 26.7656C3.99479 26.276 3.75 25.6875 3.75 25V7.5C3.75 6.8125 3.99479 6.22396 4.48438 5.73438C4.97396 5.24479 5.5625 5 6.25 5H7.5V2.5H10V5H20V2.5H22.5V5H23.75C24.4375 5 25.026 5.24479 25.5156 5.73438C26.0052 6.22396 26.25 6.8125 26.25 7.5V25C26.25 25.6875 26.0052 26.276 25.5156 26.7656C25.026 27.2552 24.4375 27.5 23.75 27.5H6.25Z"></path>
+            </svg>
+          </span>
+          <span class="board-mobile-nav-label">Contacts</span>
+        </a>
+      </div>
+    </nav>
+
+    <!--
+      Modal-Dialog für eine neue Task.
+      Dieses Fenster wird beim Klick auf "Add task" geöffnet.
+      Es ist leer zu Beginn und wird nach der Validierung aktiviert.
+    -->
+    <div id="board-add-task-modal" class="board-task-modal" aria-hidden="true">
+      <div class="board-task-dialog" role="dialog" aria-modal="true" aria-labelledby="board-task-dialog-title">
+        <div class="board-task-header">
+          <h2 id="board-task-dialog-title">Add Task</h2>
+          <button id="board-task-close-button" class="board-task-close" type="button" aria-label="Close add task dialog">×</button>
+        </div>
+
+        <form id="board-task-form" class="board-task-form">
+          <div class="board-task-form-column board-task-form-column--left">
+            <label class="board-task-label" for="board-task-title">Title</label>
+            <input id="board-task-title" class="board-task-input" type="text" placeholder="Enter a title" />
+
+            <label class="board-task-label" for="board-task-description">Description</label>
+            <textarea id="board-task-description" class="board-task-textarea" placeholder="Enter a description"></textarea>
+
+            <label class="board-task-label" for="board-task-date">Due date</label>
+            <div class="board-task-date-wrap">
+              <input id="board-task-date" class="board-task-input" type="date" />
+            </div>
+          </div>
+
+          <div class="board-task-form-column board-task-form-column--right">
+            <label class="board-task-label" for="board-task-priority">Priority</label>
+            <select id="board-task-priority" class="board-task-select">
+              <option value="">Urgent</option>
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="Urgent">Urgent</option>
+            </select>
+
+            <label class="board-task-label" for="board-task-assigned">Assigned to</label>
+            <select id="board-task-assigned" class="board-task-select">
+              <option value="">Select contacts to assign</option>
+              <option value="EM">Emanuel Mauer</option>
+              <option value="MB">Marcel Bauer</option>
+              <option value="AM">Anton Mayer</option>
+              <option value="SM">Sofia Müller</option>
+              <option value="BZ">Benedikt Ziegler</option>
+              <option value="JJ">Jasper Jäger</option>
+            </select>
+
+            <label class="board-task-label" for="board-task-category">Category</label>
+            <select id="board-task-category" class="board-task-select">
+              <option value="">Select task category</option>
+              <option value="User Story">User Story</option>
+              <option value="Technical Task">Technical Task</option>
+            </select>
+
+            <label class="board-task-label" for="board-task-subtask">Subtasks</label>
+            <input id="board-task-subtask" class="board-task-input" type="text" placeholder="Add new subtask" />
+          </div>
+        </form>
+
+        <div class="board-task-footer">
+          <div class="board-task-actions">
+            <button id="board-task-cancel-button" class="board-task-cancel" type="button">Cancel</button>
+            <button id="board-task-save-button" class="board-task-save" type="button" disabled>Create Task</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--
+      Detail-Modal für große Kartenansicht.
+      Dieses Modal öffnet sich nur beim Klick auf die Aufgabenbeschreibung einer Board-Karte.
+    -->
+    <div id="board-task-detail-modal" class="board-detail-modal" aria-hidden="true">
+      <div class="board-detail-modal-dialog" role="dialog" aria-modal="true" aria-label="Task details dialog">
+        <div id="board-task-detail-root" class="board-detail-modal-body"></div>
+      </div>
+    </div>
+
+    <!--
+      Reihenfolge ist wichtig:
+      1. db.js -> Daten laden
+      2. templates.js -> Funktionen für HTML-Templates verfügbar machen
+      3. board-layout.js -> Logik und Rendern ausführen
+    -->
+    <script src="../js/data/contacts.js"></script>
+    <script src="../js/data/app-data.js"></script>
+    <script src="../js/db.js"></script>
+    <script src="../js/Templates/templates.js"></script>
+    <script src="../js/board/board-layout.js"></script>
+  </body>
+
+
+
+
+
+</html>
