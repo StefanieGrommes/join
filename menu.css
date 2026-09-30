@@ -1,8 +1,11 @@
 :root {
   --main-color: rgb(42, 54, 71);
-  --accent-color: #124658;
+  --accent-color:rgba(18, 70, 88, 1);
   --hover-bg-color: rgb(10, 25, 49);
   --hover-bg-color-lightblue: rgb(17, 70, 88);
+  --hover-menu: rgba(42, 61, 89, 1);
+  --hover-primary-button: rgb(18,70,88);
+  --hover-secondary-button:rgb(41,171,226);
   --hover-bg-color-grey: #eeeeee;
   --navbar-color: #e7e7e7;
   --active-btn-border: rgb(9, 25, 49);
@@ -11,6 +14,7 @@
   --header-height: 80px;
   --logo-zone-height: 180px;
   --shadow: 0 4px 4px 0px rgba(82, 82, 82, 0.4);
+  --box-shadow-default: 0 0 4px 0px rgba(82, 82, 82, 0.4);
   --default-font: "Inter", sans-serif;
   --second-font: "Open Sans", sans-serif;
 }
@@ -170,9 +174,12 @@ aside li {
   width: 100%;
 }
 
-.nav-links li:hover,
-.legal-and-policy li:hover {
-  background-color: var(--hover-bg-color);
+.nav-links li:hover {
+  background-color: var(--hover-menu);
+}
+
+.legal-and-policy li:hover a {
+  color: var(--hover-primary-button);
 }
 
 .nav-links li:hover a {
@@ -312,5 +319,15 @@ main {
     font-family: var(--second-font);
     font-size: 16px;
     color: var(--navbar-color);
+  }
+
+  .nav-element {
+    padding: min(4px, 2vw);
+  }
+}
+
+@media (max-width: 428px) {
+  .mobile-nav-btns {
+    padding: 0;
   }
 }
