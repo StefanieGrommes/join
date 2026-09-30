@@ -651,8 +651,8 @@
   }
 
   .board-mobile-logo-wrapper img {
-    width: 100%;
-    height: 100%;
+    width: 32px;
+    height: 39px;
     object-fit: contain;
   }
 
@@ -710,6 +710,14 @@
     color: #ffffff;
   }
 
+
+  .board-mobile-profile-circle{
+    width: 40px;
+    height: 40px;
+
+
+
+  }
   .board-mobile-nav-icon {
     width: 22px;
     height: 22px;
@@ -1031,6 +1039,16 @@
   }
 
   @media (max-width: 360px) {
+    .board-header-container,
+    .board-main-container {
+      margin-left: 8px;
+      margin-right: 8px;
+    }
+
+    .board-header-inner {
+      gap: 12px;
+    }
+
     .board-search-field input {
       font-size: 14px;
     }

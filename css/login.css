@@ -90,6 +90,14 @@ input {
   background: #415061;
 }
 
+.mobile-signup-cta {
+  display: none;
+}
+
+.mobile-bottom-area {
+  display: contents;
+}
+
 
 
 .app-intro {
@@ -300,9 +308,16 @@ input {
 @media (max-width: 768px) {
   .page {
     padding: 16px 14px 24px;
+    justify-content: flex-start;
   }
 
-  .header-copy {
+  .page-header {
+    width: 100%;
+    margin-top: 0;
+    margin-bottom: 24px;
+  }
+
+  .header-actions {
     display: none;
   }
 
@@ -311,7 +326,77 @@ input {
   }
 
   .button-row {
+    margin-top: 18px;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn--primary,
+  .btn--secondary {
+    width: 180px;
+    height: 51px;
+  }
+
+  .mobile-signup-cta {
+    width: 292px;
+    min-height: 49px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .mobile-bottom-area {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 36px;
+    padding-bottom: 24px;
+  }
+
+  .mobile-signup-copy {
+    font-size: 32px;
+    line-height: 1;
+    color: #000000;
+    white-space: nowrap;
+  }
+
+  .mobile-signup-button {
+    width: 91px;
+    height: 49px;
+    flex: 0 0 auto;
+  }
+
+  .footer {
+    width: 246px;
+    min-height: 35px;
+    margin-top: auto;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 12px;
+  }
+}
+
+@media (max-width: 768px) and (min-width: 578px) {
+  .mobile-bottom-area {
+    margin-top: 24px;
+  }
+
+  .mobile-signup-cta {
+    width: 292px;
+    min-height: 49px;
+    gap: 10px;
+    justify-content: space-between;
+  }
+
+  .mobile-signup-copy {
+    font-size: 20px;
+    line-height: 1.2;
+    font-weight: 400;
   }
 }
 
@@ -331,19 +416,18 @@ input {
     font-size: 14px;
   }
 
+  .mobile-signup-cta {
+    width: min(292px, 100%);
+  }
+
+  .mobile-signup-copy {
+    font-size: 18px;
+  }
+
   .content-card {
     padding: 22px 12px 22px;
   }
 
-  .button-row {
-    flex-wrap: wrap;
-  }
-
-  .btn--primary,
-  .btn--secondary {
-    width: 100%;
-    max-width: 260px;
-  }
 }
 
 @media (max-width: 420px) {
