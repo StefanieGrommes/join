@@ -1,8 +1,11 @@
 :root {
   --main-color: rgb(42, 54, 71);
-  --accent-color: #124658;
+  --accent-color:rgba(18, 70, 88, 1);
   --hover-bg-color: rgb(10, 25, 49);
   --hover-bg-color-lightblue: rgb(17, 70, 88);
+  --hover-menu: rgba(42, 61, 89, 1);
+  --hover-primary-button: rgb(18,70,88);
+  --hover-secondary-button:rgb(41,171,226);
   --hover-bg-color-grey: #eeeeee;
   --navbar-color: #e7e7e7;
   --active-btn-border: rgb(9, 25, 49);
@@ -11,6 +14,7 @@
   --header-height: 80px;
   --logo-zone-height: 180px;
   --shadow: 0 4px 4px 0px rgba(82, 82, 82, 0.4);
+  --box-shadow-default: 0 0 4px 0px rgba(82, 82, 82, 0.4);
   --default-font: "Inter", sans-serif;
   --second-font: "Open Sans", sans-serif;
 }
@@ -37,8 +41,33 @@ body {
     "sidebar navbar"
     "sidebar main";
   font-family: "Inter", sans-serif;
+  font-weight: 400;
   line-height: 1.2;
   background-color: rgb(246, 247, 248);
+}
+
+body:has(dialog[open]) {
+    overflow: hidden;
+}
+
+h1 {
+font-size: 3.75rem;
+font-weight: 700;
+}
+
+h2 {
+  font-size: 3rem;
+  font-weight: 500;
+}
+
+h5 {
+  font-size: 1.75rem;
+  font-weight: 400;
+}
+
+h6 {
+  font-size: 1.25rem;
+  font-weight: 400;
 }
 
 nav {
@@ -98,7 +127,6 @@ aside {
   top: 0;
   padding: 64px 0;
   position: sticky;
-  grid-area: navbar;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -107,7 +135,6 @@ aside {
 aside a {
   color: var(--navbar-color);
   text-decoration: none;
-  font-weight: 400;
   font-family: "Inter", sans-serif;
 }
 
@@ -147,9 +174,12 @@ aside li {
   width: 100%;
 }
 
-.nav-links li:hover,
-.legal-and-policy li:hover {
-  background-color: var(--hover-bg-color);
+.nav-links li:hover {
+  background-color: var(--hover-menu);
+}
+
+.legal-and-policy li:hover a {
+  color: var(--hover-primary-button);
 }
 
 .nav-links li:hover a {
@@ -206,6 +236,8 @@ main {
   display: none;
 }
 
+/*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
+
 @media (max-width: 768px) {
   nav {
     display: none;
@@ -221,7 +253,7 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 20px;
+    padding: 16px 20px 16px 20px;
     border-width: 0;
     box-shadow: 0 0 4px 4px rgba(110, 107, 107, 0.3);
     width: 100%;
@@ -237,7 +269,10 @@ main {
     height: 40px;
   }
 
-  aside,
+  aside {
+    display: none;
+  }
+
   .aside-blue-box-bg {
     display: none;
   }
@@ -261,7 +296,6 @@ main {
     align-items: center;
     width: 100%;
     max-width: 428px;
-    margin-inline: auto;
     padding: 0 16px;
   }
 
@@ -284,8 +318,17 @@ main {
   .mobile-design a {
     text-decoration: none;
     font-family: var(--second-font);
-    font-weight: 400;
     font-size: 16px;
     color: var(--navbar-color);
+  }
+
+  .nav-element {
+    padding: min(4px, 2vw);
+  }
+}
+
+@media (max-width: 428px) {
+  .mobile-nav-btns {
+    padding: 0;
   }
 }
