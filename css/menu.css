@@ -27,7 +27,8 @@
 
 html {
   scroll-behavior: smooth;
-  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 body {
@@ -223,9 +224,8 @@ aside li {
 main {
   padding: 20px 20px 12px 40px;
   grid-area: main;
-  width: 100%;
+  min-width: 0;
   max-width: calc(1440px - var(--sidebar-width));
-  margin-inline: auto;
   min-height: 0;
   height: 100%;
   container-type: inline-size;
@@ -244,6 +244,7 @@ main {
   }
 
   .nav-mobile {
+    grid-area: nav-footer
     min-height: var(--header-height);
     top: 0;
     position: sticky;
@@ -278,9 +279,20 @@ main {
   }
 
   body {
-    grid-template-columns: 1fr;
+    height: 100dvh;
+    overflow: hidden;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: var(--header-height) 1fr var(--header-height);
     grid-template-areas: "navbar-mobile" "main" "nav-footer";
+  }
+
+  .nav-footer-mobile .nav-element {
+    width: auto;
+    padding: 8px 4px;
+  }
+
+  .nav-element a {
+    width: auto;
   }
 
   .nav-footer-mobile {
