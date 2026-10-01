@@ -112,6 +112,10 @@ nav {
   cursor: pointer;
 }
 
+.questions-image:hover {
+  transform: scale(1.2);
+}
+
 .initials-ellipse:hover {
   fill: rgb(226, 230, 236);
 }
@@ -244,7 +248,7 @@ main {
   }
 
   .nav-mobile {
-    grid-area: nav-footer
+    grid-area: nav-footer;
     min-height: var(--header-height);
     top: 0;
     position: sticky;
@@ -311,15 +315,17 @@ main {
     padding: 0 16px;
   }
 
-  .nav-footer-mobile button {
-    border-style: inherit;
+  .mobile-nav-btns button {
+    width: 76px;
+    height: 76px;
+    border-style: unset;
     background-color: transparent;
     border-radius: 8px;
     cursor: pointer;
   }
 
-  .nav-footer-mobile button:hover {
-    background-color: var(--hover-bg-color);
+  .mobile-nav-btns button:hover {
+    background-color: var(--hover-menu);
   }
 
   .mobile-design {

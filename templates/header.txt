@@ -1,7 +1,7 @@
 <nav>
         <p>Kanban Project Management Tool</p>
         <div class="horizontal-navbar-elements">
-            <a href="../archive/legacy-root/help.html"><img src="../assets/questions.svg" alt="questions"></a>
+            <a href="../archive/legacy-root/help.html"><img src="../assets/questions.svg" alt="questions" class="questions-image"></a>
             <button class="profile-initials-btn">
                 <svg class="initials-ellipse" width="56" height="56" viewBox="0 0 56 56" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
@@ -29,7 +29,7 @@
                 </div>
                 <ul class="nav-links">
                     <li>
-                        <div class="nav-element">
+                        <div class="nav-element" id="summary-icon">
                             <svg width="30" height="30" viewBox="0 0 30 30" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -40,7 +40,7 @@
                         </div>
                     </li>
                     <li>
-                        <div class="nav-element">
+                        <div class="nav-element" id="add-task-icon">
                             <svg width="30" height="30" viewBox="0 0 30 30" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <mask id="mask0_69323_5227" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0"
@@ -57,7 +57,7 @@
                         </div>
                     </li>
                     <li>
-                        <div class="nav-element">
+                        <div class="nav-element" id="board-icon">
                             <svg width="30" height="30" viewBox="0 0 30 30" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -71,7 +71,7 @@
                         </div>
                     </li>
                     <li>
-                        <div class="nav-element">
+                        <div class="nav-element" id="contacts-icon">
                             <svg width="30" height="30" viewBox="0 0 30 30" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <mask id="mask0_69323_5230" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0"

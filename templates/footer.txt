@@ -1,6 +1,6 @@
 <div class="nav-footer-mobile">
         <div class="mobile-nav-btns">
-            <button>
+            <button id="summary-icon">
                 <div class="nav-element mobile-design">
                     <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -10,7 +10,7 @@
                     <a href="../pages/summary.html">Summary</a>
                 </div>
             </button>
-            <button>
+            <button id="add-task-icon">
                 <div class="nav-element mobile-design">
                     <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <mask id="mask0_69323_5227" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
@@ -26,7 +26,7 @@
                     <a href="../pages/addTask.html">Add Task</a>
                 </div>
             </button>
-            <button>
+            <button id="board-icon"">
                 <div class="nav-element mobile-design">
                     <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -39,7 +39,7 @@
                     <a href="../pages/board.html">Board</a>
                 </div>
             </button>
-            <button>
+            <button id="contacts-icon">
                 <div class="nav-element mobile-design">
                     <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <mask id="mask0_69323_5230" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0"
