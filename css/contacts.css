@@ -149,3 +149,8 @@ h1 {
   border-right: 3px solid rgba(41, 171, 226, 1);
   padding-right: 30px;
 }
+
+.form-column-right {
+  display: flex;
+  flex-direction: column;
+}
