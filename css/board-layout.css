@@ -1,3 +1,7 @@
+#board-icon {
+  background-color: var(--active-btn-border);
+}
+
 :root {
   --page-bg: #f6f7fb;
   --sidebar-bg: #2d3d4d;
@@ -933,7 +937,7 @@
       font-weight: 400;
     }
 
-  
+
 
     .board-header-columns {
       display: none;
