@@ -1,19 +1,23 @@
-// Signup-Seite: Intro-Overlay wird nach kurzer Zeit ausgeblendet.
+/**
+ * Initialisiert die Signup-Seite ohne Intro-Animation.
+ *
+ * @returns {void}
+ */
 function initSignupPage() {
-  const intro = document.querySelector(".app-intro");
   const page = document.querySelector(".signup-page");
 
-  if (!intro || !page) return;
-
-  setTimeout(() => {
-    intro.classList.add("hidden");
+  if (page) {
     page.classList.add("ready");
-  }, 1200);
+  }
 
   setupPrivacyCheckboxGate();
 }
 
-// Aktiviert den Sign-up-Button nur, wenn die Datenschutzerklaerung akzeptiert wurde.
+/**
+ * Aktiviert den Sign-up-Button nur, wenn die Datenschutzerklaerung akzeptiert wurde.
+ *
+ * @returns {void}
+ */
 function setupPrivacyCheckboxGate() {
   const policyCheckbox = document.querySelector("#privacy-policy-checkbox");
   const signupButton = document.querySelector("#signup-submit-button");

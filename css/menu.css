@@ -33,8 +33,7 @@ html {
 
 body {
   margin: 0;
-  height: 100vh;
-  min-height: auto;
+  min-height: 100vh;
   display: grid;
   grid-template-columns: var(--sidebar-width) 1fr;
   grid-template-rows: var(--header-height) 1fr;
@@ -81,7 +80,6 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px 12px 40px;
   border-width: 0;
   box-shadow: 0 0 4px 4px rgba(110, 107, 107, 0.3);
 }
@@ -226,14 +224,16 @@ aside li {
 }
 
 main {
-  padding: 20px 20px 12px 40px;
   grid-area: main;
   min-width: 0;
+  width: 100%;
+  min-width: 0;
   max-width: calc(1440px - var(--sidebar-width));
-  min-height: 0;
-  height: 100%;
+  margin-inline: auto;
+  min-height: calc(100vh - var(--header-height));
+  height: auto;
   container-type: inline-size;
-  overflow-y: auto;
+  overflow: visible;
 }
 
 .nav-footer-mobile {

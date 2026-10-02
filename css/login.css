@@ -43,7 +43,6 @@ input {
 
 
 }
-
 .login-page {
   flex: 1;
 }
@@ -276,28 +275,29 @@ input {
   font-size: 14px;
 }
 
-@media (min-width: 992px) {
-  .login-shell {
-    width: 560px;
-    min-height: 430px;
-  }
-}
+
 
 .footer a {
   color: var(--muted);
   text-decoration: none;
 }
 
-@media (max-width: 1200px) {
-  .page-header {
-    margin-bottom: 16px;
-  }
+@media (max-width: 1450px) {
+ .page-header {
+    display: flex;
+    justify-content: space-around;  
+    
+}
 }
 
 @media (max-width: 992px) {
   .header-icon {
     width: 86px;
     height: 102px;
+  }
+
+    .login-shell {
+    min-height: 430px;
   }
 
   .header-copy {
@@ -315,8 +315,19 @@ input {
     width: 100%;
     margin-top: 0;
     margin-bottom: 24px;
+    display: flex;
+      justify-content: space-around;  
+
   }
 
+
+   .page-header {
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+   
   .header-actions {
     display: none;
   }
