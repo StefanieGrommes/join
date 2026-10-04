@@ -196,7 +196,6 @@
   transition: background-color 100ms;
   gap: 16px;
   font-size: 20px;
-  
 }
 
 .dropdown-list li:hover {
@@ -512,6 +511,6 @@
     height: 10.5px;
   }
   .form-footer {
-    margin: 12px 0 0;
+    margin: 12px 0 10px;
   }
 }

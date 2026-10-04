@@ -1,3 +1,11 @@
+button {
+  font-family: inherit;
+}
+
+main {
+  padding: 0px 24px 12px 0px;
+}
+
 .add-contact-btn {
   border: 1px solid var(--main-color);
   width: 352px;
@@ -5,7 +13,6 @@
   padding: 12px 16px;
   font-size: 20px;
   font-weight: 700;
-  background-color: white;
   color: white;
   background-color: var(--main-color);
   display: flex;
@@ -15,7 +22,7 @@
   border-radius: 10px;
   font-family: inherit;
   cursor: pointer;
-  margin: 32px 24px;
+  margin: 32px 0px 0px 24px;
   transition:
     background-color 100ms ease-in-out,
     border-color 100ms ease-in-out,
@@ -23,11 +30,224 @@
     box-shadow 100ms ease-in-out;
 }
 
+.add-contact-btn:hover {
+  background-color: var(--hover-secondary-button);
+  border-color: var(--hover-secondary-button);
+}
+
 .icon-add {
   width: 29px;
   height: auto;
 }
+<<<<<<< HEAD
 
 #contacts-icon {
   background-color: var(--active-btn-border);
 }
+=======
+.add-task-content {
+  display: flex;
+}
+
+.form-column-left {
+  display: flex;
+  flex-direction: column;
+  height: 928px;
+  background-color: white;
+}
+
+.contact-list-wrapper {
+  overflow-y: scroll;
+  max-height: calc(100vh - var(--header-height) - 120px);
+  scrollbar-width: thin;
+  width: 400px;
+  padding-left: 24px;
+  padding-right: 24px;
+  padding-top: 20px;
+}
+
+.contact-list-wrapper::-webkit-scrollbar {
+  width: 24px;
+  scrollbar-width: auto;
+}
+
+.contact-list-wrapper::-webkit-scrollbar-thumb {
+  background-color: rgb(168, 168, 168);
+  border-radius: 10px;
+  min-height: 53px;
+}
+.contact-list-wrapper::-webkit-scrollbar-button:single-button:vertical:decrement {
+  display: block;
+  height: 20px;
+  color: rgb(168, 168, 168);
+  background-color: white;
+  background-image: url(../assets/scroll-button-up.svg);
+  background-repeat: no-repeat;
+  background-position: center 20px;
+  background-size: 8px;
+  padding-top: 20px;
+}
+
+.contact-list-wrapper::-webkit-scrollbar-button:single-button:vertical:increment {
+  display: block;
+  height: 16px;
+  color: rgb(168, 168, 168);
+  background-color: white;
+  background-image: url(../assets/scroll-button-down.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 8px;
+}
+
+.group-letter {
+  font-size: 20px;
+  border-bottom: 1px solid rgb(209, 209, 209);
+  padding: 17px 34px 33px;
+  margin-bottom: 17px;
+}
+
+.contact-item {
+  display: flex;
+  gap: 35px;
+  padding: 15px 24px;
+  border-radius: 10px;
+}
+
+.contact-item:hover {
+  background-color: rgb(245, 245, 245);
+}
+.contact-item-selected {
+  background-color: var(--main-color);
+}
+.contact-item-selected .contact-name {
+  color: white;
+}
+
+.contact-avatar {
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 42px;
+  width: 42px;
+  border: 2px solid rgba(255, 255, 255, 1);
+  font-size: 16px;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.contact-name {
+  font-size: 20px;
+}
+
+.contact-email,
+.contact-email:visited {
+  text-decoration: none;
+  font-size: 16px;
+  color: rgba(0, 124, 238, 1);
+}
+
+.form-column-right {
+  padding: 109px 0 0 54px;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 30px;
+  text-wrap-mode: nowrap;
+}
+
+.title p {
+  font-size: 27px;
+  position: relative;
+  top: 5px;
+}
+
+h1 {
+  font-size: 61px;
+  font-weight: 700;
+  border-right: 3px solid rgba(41, 171, 226, 1);
+  padding-right: 30px;
+}
+
+.contact-avatar-large {
+  height: 120px;
+  width: 120px;
+  border-radius: 50%;
+  border: 3px solid white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 47px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.4);
+}
+
+.contact-detail-name {
+  font-size: 47px;
+  color: black;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.contact-detail {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 54px;
+  margin: 32px 54px 21px 0;
+}
+
+.contact-detail-actions {
+  display: flex;
+  gap: 20px;
+}
+.detail-action-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  color: var(--main-color);
+}
+
+.detail-action-btn:hover {
+  color: var(--hover-primary-button);
+  font-weight: 700;
+}
+.detail-action-btn img {
+  height: 24px;
+  width: 24px;
+}
+.section-label {
+  display: flex;
+
+  align-items: center;
+  height: 74px;
+  width: 207px;
+  font-size: 20px;
+}
+
+.contact-detail-field {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.detail-label {
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 21px;
+}
+>>>>>>> marlon-branch

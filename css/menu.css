@@ -232,12 +232,18 @@ aside li {
 main {
   grid-area: main;
   min-width: 0;
+<<<<<<< HEAD
   width: 100%;
   min-width: 0;
   max-width: calc(1440px - var(--sidebar-width));
   margin-inline: auto;
   min-height: calc(100vh - var(--header-height));
   height: auto;
+=======
+  max-width: calc(1440px - var(--sidebar-width));
+  min-height: 0;
+  height: 100%;
+>>>>>>> marlon-branch
   container-type: inline-size;
   overflow: visible;
 }
