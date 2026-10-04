@@ -1,13 +1,9 @@
-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
 .info-page {
   display: flex;
   flex-direction: column;
   margin-top: 116px;
+  padding-left: 96px;
   width: 1414px;
 }
 

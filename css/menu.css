@@ -80,8 +80,14 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 40px 0 96px;
   border-width: 0;
   box-shadow: 0 0 4px 4px rgba(110, 107, 107, 0.3);
+}
+
+nav p {
+  font-size: 1.25rem;
+  font-weight: 400;
 }
 
 .nav-mobile {
