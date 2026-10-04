@@ -27,3 +27,7 @@
   width: 29px;
   height: auto;
 }
+
+#contacts-icon {
+  background-color: var(--active-btn-border);
+}
