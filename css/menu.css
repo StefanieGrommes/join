@@ -28,7 +28,6 @@
 html {
   scroll-behavior: smooth;
   height: 100dvh;
-  overflow: hidden;
 }
 
 body {
@@ -232,18 +231,9 @@ aside li {
 main {
   grid-area: main;
   min-width: 0;
-<<<<<<< HEAD
-  width: 100%;
-  min-width: 0;
-  max-width: calc(1440px - var(--sidebar-width));
-  margin-inline: auto;
-  min-height: calc(100vh - var(--header-height));
-  height: auto;
-=======
   max-width: calc(1440px - var(--sidebar-width));
   min-height: 0;
   height: 100%;
->>>>>>> marlon-branch
   container-type: inline-size;
   overflow: visible;
 }
@@ -296,7 +286,6 @@ main {
 
   body {
     height: 100dvh;
-    overflow: hidden;
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: var(--header-height) 1fr var(--header-height);
     grid-template-areas: "navbar-mobile" "main" "nav-footer";

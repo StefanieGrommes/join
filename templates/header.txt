@@ -1,7 +1,7 @@
 <nav>
         <p>Kanban Project Management Tool</p>
         <div class="horizontal-navbar-elements">
-            <a href="../archive/legacy-root/help.html"><img src="../assets/questions.svg" alt="questions" class="questions-image"></a>
+            <a href="../pages/help.html"><img src="../assets/questions.svg" alt="questions" class="questions-image"></a>
             <button class="profile-initials-btn">
                 <svg class="initials-ellipse" width="56" height="56" viewBox="0 0 56 56" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
@@ -67,7 +67,7 @@
                                     d="M29.7727 4.77298L29.7727 25.2273C29.7721 25.8299 29.5324 26.4076 29.1064 26.8337C28.6803 27.2598 28.1026 27.4994 27.5 27.5L22.9546 27.5C22.352 27.4994 21.7743 27.2598 21.3482 26.8337C20.9221 26.4076 20.6825 25.8296 20.6819 25.2271L20.6819 4.77273C20.6825 4.17015 20.9221 3.59268 21.3482 3.1666C21.7743 2.74051 22.352 2.50088 22.9546 2.50027L27.5 2.50027C28.1026 2.50088 28.6803 2.74051 29.1064 3.1666C29.5324 3.59268 29.7721 4.1704 29.7727 4.77298ZM22.9546 25.2271L27.5 25.2273L27.5 4.77298L22.9546 4.77273L22.9546 25.2271Z"
                                     fill="#CDCDCD" />
                             </svg>
-                            <a href="../pages/board.html">Board</a>
+                            <a href="../pages/board-layout.html">Board</a>
                         </div>
                     </li>
                     <li>
@@ -90,8 +90,8 @@
                 </ul>
             </div>
             <ul class="legal-and-policy">
-                <li><a href="../archive/legacy-pages/pages/privacy-notice.html">Privacy Policy</a></li>
-                <li><a href="../archive/legacy-pages/pages/legal-notice.html">Legal notice</a></li>
+                <li onclick="changeBackground()" id="privacy-policy"><a href="../pages/privacy-notice.html">Privacy Policy</a></li>
+                <li onclick="changeBackground()" id="legal-notice"><a href="../pages/legal-notice.html">Legal notice</a></li>
             </ul>
         </aside>
     </div>

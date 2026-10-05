@@ -39,12 +39,10 @@ main {
   width: 29px;
   height: auto;
 }
-<<<<<<< HEAD
 
 #contacts-icon {
   background-color: var(--active-btn-border);
 }
-=======
 .add-task-content {
   display: flex;
 }
@@ -245,9 +243,9 @@ h1 {
   flex-direction: column;
   gap: 15px;
 }
+
 .detail-label {
   font-size: 16px;
   font-weight: 700;
   margin-top: 21px;
 }
->>>>>>> marlon-branch
