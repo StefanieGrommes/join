@@ -1,11 +1,11 @@
 :root {
   --main-color: rgb(42, 54, 71);
-  --accent-color:rgba(18, 70, 88, 1);
+  --accent-color: rgba(18, 70, 88, 1);
   --hover-bg-color: rgb(10, 25, 49);
   --hover-bg-color-lightblue: rgb(17, 70, 88);
   --hover-menu: rgba(42, 61, 89, 1);
-  --hover-primary-button: rgb(18,70,88);
-  --hover-secondary-button:rgb(41,171,226);
+  --hover-primary-button: rgb(18, 70, 88);
+  --hover-secondary-button: rgb(41, 171, 226);
   --hover-bg-color-grey: #eeeeee;
   --navbar-color: #e7e7e7;
   --active-btn-border: rgb(9, 25, 49);
@@ -46,12 +46,12 @@ body {
 }
 
 body:has(dialog[open]) {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 h1 {
-font-size: 3.75rem;
-font-weight: 700;
+  font-size: 3.75rem;
+  font-weight: 700;
 }
 
 h2 {
