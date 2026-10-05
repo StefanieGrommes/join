@@ -1,11 +1,11 @@
 :root {
   --main-color: rgb(42, 54, 71);
-  --accent-color:rgba(18, 70, 88, 1);
+  --accent-color: rgba(18, 70, 88, 1);
   --hover-bg-color: rgb(10, 25, 49);
   --hover-bg-color-lightblue: rgb(17, 70, 88);
   --hover-menu: rgba(42, 61, 89, 1);
-  --hover-primary-button: rgb(18,70,88);
-  --hover-secondary-button:rgb(41,171,226);
+  --hover-primary-button: rgb(18, 70, 88);
+  --hover-secondary-button: rgb(41, 171, 226);
   --hover-bg-color-grey: #eeeeee;
   --navbar-color: #e7e7e7;
   --active-btn-border: rgb(9, 25, 49);
@@ -33,8 +33,7 @@ html {
 
 body {
   margin: 0;
-  height: 100vh;
-  min-height: auto;
+  min-height: 100vh;
   display: grid;
   grid-template-columns: var(--sidebar-width) 1fr;
   grid-template-rows: var(--header-height) 1fr;
@@ -48,12 +47,12 @@ body {
 }
 
 body:has(dialog[open]) {
-    overflow: hidden;
+  overflow: hidden;
 }
 
 h1 {
-font-size: 3.75rem;
-font-weight: 700;
+  font-size: 3.75rem;
+  font-weight: 700;
 }
 
 h2 {
@@ -81,9 +80,14 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 20px 12px 40px;
+  padding: 0 40px 0 96px;
   border-width: 0;
   box-shadow: 0 0 4px 4px rgba(110, 107, 107, 0.3);
+}
+
+nav p {
+  font-size: 1.25rem;
+  font-weight: 400;
 }
 
 .nav-mobile {
@@ -226,14 +230,13 @@ aside li {
 }
 
 main {
-  padding: 20px 20px 12px 40px;
   grid-area: main;
   min-width: 0;
   max-width: calc(1440px - var(--sidebar-width));
   min-height: 0;
   height: 100%;
   container-type: inline-size;
-  overflow-y: auto;
+  overflow: visible;
 }
 
 .nav-footer-mobile {
