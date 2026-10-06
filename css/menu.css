@@ -250,7 +250,6 @@ main {
   }
 
   .nav-mobile {
-    grid-area: nav-footer;
     min-height: var(--header-height);
     top: 0;
     position: sticky;
@@ -301,6 +300,7 @@ main {
   }
 
   .nav-footer-mobile {
+    grid-area: nav-footer;
     display: flex;
     justify-content: center;
     align-items: center;
