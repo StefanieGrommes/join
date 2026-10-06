@@ -100,7 +100,7 @@
 
     </div>
 
-    <nav class="board-mobile-top-nav" aria-label="Mobile top navigation">
+    <div class="board-mobile-top-nav" aria-label="Mobile top navigation">
       <div class="board-mobile-logo-wrapper">
         <img src="../assets/join-favicon.svg" alt="Join logo" />
       </div>
@@ -110,9 +110,9 @@
           <circle cx="28" cy="28" r="26.5" stroke="#2A3647" stroke-width="3" />
         </svg>
       </button>
-    </nav>
+    </div>
 
-    <nav class="board-mobile-footer-nav" aria-label="Mobile footer navigation">
+    <div class="board-mobile-footer-nav" aria-label="Mobile footer navigation">
       <div class="board-mobile-footer-links">
         <a class="board-mobile-nav-link" href="summary.html" aria-label="Summary">
           <span class="board-mobile-nav-icon" aria-hidden="true">
@@ -151,7 +151,7 @@
           <span class="board-mobile-nav-label">Contacts</span>
         </a>
       </div>
-    </nav>
+    </div>
 
     <!--
       Modal-Dialog für eine neue Task.
@@ -189,8 +189,7 @@
             </select>
 
             <label class="board-task-label" for="board-task-assigned">Assigned to</label>
-            <select id="board-task-assigned" class="board-task-select">
-              <option value="">Select contacts to assign</option>
+            <select id="board-task-assigned" class="board-task-select" multiple size="5">
               <option value="EM">Emanuel Mauer</option>
               <option value="MB">Marcel Bauer</option>
               <option value="AM">Anton Mayer</option>

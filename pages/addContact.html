@@ -49,29 +49,29 @@
                                         </g>
                                     </svg>
                                 </button></div>
-                            <form class="add-contact-form">
+                            <form class="add-contact-form" novalidate>
                                 <div class="form-input-fields">
                                     <div class="input-wrapper">
-                                        <input type="text" placeholder="Name" minlength="2" maxlength="25" required>
+                                        <input type="text" placeholder="Name" name="name" data-validation="name" data-toast-id="toast-wrapper" aria-invalid="false">
                                         <img src="../assets/contact-form-name.svg" alt="name icon">
                                     </div>
                                     <div class="toast-wrapper" id="toast-wrapper"></div>
                                     <div class="input-wrapper">
-                                        <input type="text" placeholder="Email">
+                                        <input type="text" placeholder="Email" name="email" data-validation="email" data-toast-id="toast-wrapper-mail" aria-invalid="false">
                                         <img src="../assets/contact-form-mail.svg" alt="email icon">
                                     </div>
                                     <div class="toast-wrapper" id="toast-wrapper-mail"></div>
                                     <div class="input-wrapper">
-                                        <input type="text" placeholder="Phone">
+                                        <input type="text" placeholder="Phone" name="phone" data-validation="phone" data-toast-id="toast-wrapper-phone" aria-invalid="false">
                                         <img src="../assets/contact-form-phone.svg" alt="phone icon">
                                     </div>
                                     <div class="toast-wrapper" id="toast-wrapper-phone"></div>
                                 </div>
                                 <div class="form-btn-wrapper">
-                                    <button class="contact-form-btn cancel-btn">
+                                    <button type="button" class="contact-form-btn cancel-btn">
                                         <h6>Cancel</h6><img src="../assets/contact-form-cancel.svg" alt="Cancel">
                                     </button>
-                                    <button class="contact-form-btn create-contact-btn">
+                                    <button type="submit" class="contact-form-btn create-contact-btn" disabled>
                                         <h6>Create contact</h6><img src="../assets/contact-form-create-contact.svg"
                                             alt="Create contact">
                                     </button>

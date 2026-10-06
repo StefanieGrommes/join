@@ -12,6 +12,52 @@
 const BOARD_STORAGE_KEY = "join-board-layout-state";
 let currentBoardSearchQuery = "";
 
+function syncBoardMobileNavigation() {
+  const boardTopNav = document.querySelector(".board-mobile-top-nav");
+  const boardFooterNav = document.querySelector(".board-mobile-footer-nav");
+  const genericHeader = document.querySelector(".nav-mobile");
+  const genericFooter = document.querySelector(".nav-footer-mobile");
+
+  const isMobile = window.innerWidth <= 768;
+
+  if (boardTopNav) {
+    boardTopNav.style.display = isMobile ? "flex" : "";
+    boardTopNav.style.width = isMobile ? "100vw" : "";
+    boardTopNav.style.maxWidth = isMobile ? "100vw" : "";
+    boardTopNav.style.minHeight = isMobile ? "64px" : "";
+    boardTopNav.style.padding = isMobile ? "12px 14px" : "";
+    boardTopNav.style.position = isMobile ? "fixed" : "";
+    boardTopNav.style.top = isMobile ? "0" : "";
+    boardTopNav.style.left = isMobile ? "0" : "";
+    boardTopNav.style.right = isMobile ? "0" : "";
+    boardTopNav.style.gridArea = isMobile ? "auto" : "";
+  }
+
+  if (boardFooterNav) {
+    boardFooterNav.style.display = isMobile ? "flex" : "";
+    boardFooterNav.style.width = isMobile ? "100vw" : "";
+    boardFooterNav.style.maxWidth = isMobile ? "100vw" : "";
+    boardFooterNav.style.minHeight = isMobile ? "0" : "";
+    boardFooterNav.style.padding = isMobile ? "0" : "";
+    boardFooterNav.style.position = isMobile ? "fixed" : "";
+    boardFooterNav.style.left = isMobile ? "0" : "";
+    boardFooterNav.style.right = isMobile ? "0" : "";
+    boardFooterNav.style.bottom = isMobile ? "0" : "";
+    boardFooterNav.style.zIndex = isMobile ? "8" : "";
+    boardFooterNav.style.gridArea = isMobile ? "auto" : "";
+    boardFooterNav.style.background = isMobile ? "var(--sidebar-bg)" : "";
+    boardFooterNav.style.boxShadow = isMobile ? "0 -4px 12px rgba(15, 23, 42, 0.18)" : "";
+  }
+
+  if (genericHeader) {
+    genericHeader.style.display = isMobile ? "none" : "";
+  }
+
+  if (genericFooter) {
+    genericFooter.style.display = isMobile ? "none" : "";
+  }
+}
+
 /**
  * Liefert den leeren Hinweistext passend zur Spalte.
  *
@@ -395,7 +441,11 @@ function initAddTaskModal() {
     descriptionInput.value = task.description || "";
     dateInput.value = task.dueDate || "";
     priorityInput.value = task.priority || "Medium";
-    assignedInput.value = Array.isArray(task.assignedTo) && task.assignedTo[0] ? task.assignedTo[0] : "";
+
+    Array.from(assignedInput.options).forEach((option) => {
+      option.selected = Array.isArray(task.assignedTo) && task.assignedTo.includes(option.value);
+    });
+
     categoryInput.value = task.category || "";
     if (subtaskInput) {
       subtaskInput.value = Array.isArray(task.subtasks) ? task.subtasks.map((subtask) => subtask.label).join(", ") : "";
@@ -406,20 +456,40 @@ function initAddTaskModal() {
     modal.setAttribute("aria-hidden", "false");
   };
 
+  const parseSubtasks = (value) => {
+    if (!value) return [];
+
+    return value
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean)
+      .map((label) => ({ label, done: false }));
+  };
+
+  const getSelectedAssignedContacts = () => {
+    if (!assignedInput) return [];
+    return Array.from(assignedInput.selectedOptions)
+      .map((option) => option.value)
+      .filter(Boolean);
+  };
+
   const isFormValid = () => {
     return titleInput.value.trim() !== "" &&
       descriptionInput.value.trim() !== "" &&
       dateInput.value.trim() !== "" &&
       priorityInput.value !== "" &&
-      assignedInput.value !== "" &&
+      getSelectedAssignedContacts().length > 0 &&
       categoryInput.value !== "";
   };
 
   const updateSaveButtonState = () => {
-    saveButton.disabled = !isFormValid();
+    if (!saveButton) return;
+    const isLoading = saveButton.dataset.loading === "true";
+    saveButton.disabled = isLoading || !isFormValid();
   };
 
   [titleInput, descriptionInput, dateInput, priorityInput, assignedInput, categoryInput].forEach((field) => {
+    if (!field) return;
     field.addEventListener("input", updateSaveButtonState);
     field.addEventListener("change", updateSaveButtonState);
   });
@@ -437,46 +507,53 @@ function initAddTaskModal() {
   saveButton.addEventListener("click", () => {
     if (!isFormValid()) return;
 
-    if (editingTaskId) {
-      const task = Array.isArray(tasks) ? tasks.find((item) => item.id === editingTaskId) : null;
-      if (task) {
-        task.title = titleInput.value.trim();
-        task.description = descriptionInput.value.trim();
-        task.dueDate = dateInput.value;
-        task.priority = priorityInput.value;
-        task.priorityColor = priorityInput.value === "Urgent" ? "#f66a5f" : priorityInput.value === "Medium" ? "#f9a35c" : "#5bc0be";
-        task.category = categoryInput.value;
-        task.categoryColor = categoryInput.value === "Technical Task" ? "#2bc7b7" : "#2d8cff";
-        task.assignedTo = [assignedInput.value];
+    saveButton.dataset.loading = "true";
+    saveButton.disabled = true;
+    saveButton.textContent = editingTaskId ? "Saving..." : "Creating...";
+
+    window.setTimeout(() => {
+      if (editingTaskId) {
+        const task = Array.isArray(tasks) ? tasks.find((item) => item.id === editingTaskId) : null;
+        if (task) {
+          task.title = titleInput.value.trim();
+          task.description = descriptionInput.value.trim();
+          task.dueDate = dateInput.value;
+          task.priority = priorityInput.value;
+          task.priorityColor = priorityInput.value === "Urgent" ? "#f66a5f" : priorityInput.value === "Medium" ? "#f9a35c" : "#5bc0be";
+          task.category = categoryInput.value;
+          task.categoryColor = categoryInput.value === "Technical Task" ? "#2bc7b7" : "#2d8cff";
+          task.assignedTo = getSelectedAssignedContacts();
+          task.subtasks = parseSubtasks(subtaskInput.value);
+        }
+
+        initBoardLayout();
+        closeModal();
+        return;
       }
 
+      const newTask = {
+        id: `task-${Date.now()}`,
+        title: titleInput.value.trim(),
+        description: descriptionInput.value.trim(),
+        dueDate: dateInput.value,
+        priority: priorityInput.value,
+        priorityColor: priorityInput.value === "Urgent" ? "#f66a5f" : priorityInput.value === "Medium" ? "#f9a35c" : "#5bc0be",
+        category: categoryInput.value,
+        categoryColor: categoryInput.value === "Technical Task" ? "#2bc7b7" : "#2d8cff",
+        status: modal.dataset.status || defaultStatus || "todo",
+        assignedTo: getSelectedAssignedContacts(),
+        subtasks: parseSubtasks(subtaskInput.value),
+        progress: 0,
+        badge: categoryInput.value
+      };
+
+      tasks.unshift(newTask);
+      const boardState = loadBoardState();
+      boardState[newTask.id] = newTask.status;
+      window.localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(boardState));
       initBoardLayout();
       closeModal();
-      return;
-    }
-
-    const newTask = {
-      id: `task-${Date.now()}`,
-      title: titleInput.value.trim(),
-      description: descriptionInput.value.trim(),
-      dueDate: dateInput.value,
-      priority: priorityInput.value,
-      priorityColor: priorityInput.value === "Urgent" ? "#f66a5f" : priorityInput.value === "Medium" ? "#f9a35c" : "#5bc0be",
-      category: categoryInput.value,
-      categoryColor: categoryInput.value === "Technical Task" ? "#2bc7b7" : "#2d8cff",
-      status: modal.dataset.status || defaultStatus || "todo",
-      assignedTo: [assignedInput.value],
-      subtasks: [{ label: "New subtask", done: false }],
-      progress: 0,
-      badge: categoryInput.value
-    };
-
-    tasks.unshift(newTask);
-    const boardState = loadBoardState();
-    boardState[newTask.id] = newTask.status;
-    window.localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(boardState));
-    initBoardLayout();
-    closeModal();
+    }, 300);
   });
 
   headerButtons.forEach((button) => {
@@ -677,7 +754,10 @@ function initTaskDetailModal() {
 // Initiales Booten der Seite
 // ===============================
 document.addEventListener("DOMContentLoaded", () => {
+  syncBoardMobileNavigation();
   initBoardLayout();
   initAddTaskModal();
   initTaskDetailModal();
 });
+
+window.addEventListener("resize", syncBoardMobileNavigation);

@@ -39,38 +39,37 @@
         <section class="content-card" aria-labelledby="signup-title">
 
 
-          <div class="signup-form">
+          <form id="signup-form" class="signup-form" novalidate>
+            <h1 id="signup-title" class="signup-title">Sign up</h1>
 
-                      <h1 id="signup-title" class="signup-title">Sign up</h1>
+            <div class="fields-container">
+              <div class="field input-with-icon">
+                <input id="signup-name" type="text" placeholder="Name" name="name" />
+                <img src="../img/icons/person(1).png" alt="Person icon" class="input-icon" />
+              </div>
 
-          <div class="fields-container">
-            <div class="field input-with-icon">
-              <input type="text" placeholder="Name" />
-              <img src="../img/icons/person(1).png" alt="Person icon" class="input-icon" />
+              <div class="field input-with-icon">
+                <input id="signup-email" type="email" placeholder="Email" name="email" />
+                <img src="../img/icons/mail.png" alt="Mail icon" class="input-icon" />
+              </div>
+
+              <div class="field input-with-icon">
+                <input id="signup-password" type="password" placeholder="Password" name="password" />
+                <img src="../img/icons/lock.png" alt="Lock icon" class="input-icon" />
+              </div>
+
+              <div class="field input-with-icon">
+                <input id="signup-confirm-password" type="password" placeholder="Confirm Password" name="confirmPassword" />
+                <img src="../img/icons/lock.png" alt="Lock icon" class="input-icon" />
+              </div>
+
+              <div class="checkbox-line">
+                <input id="privacy-policy-checkbox" type="checkbox" />
+                <span>I accept the <a href="#">privacy policy</a></span>
+              </div>
             </div>
-
-            <div class="field input-with-icon">
-              <input type="email" placeholder="Email" />
-              <img src="../img/icons/mail.png" alt="Mail icon" class="input-icon" />
-            </div>
-
-            <div class="field input-with-icon">
-              <input type="password" placeholder="Password" />
-              <img src="../img/icons/lock.png" alt="Lock icon" class="input-icon" />
-            </div>
-
-            <div class="field input-with-icon">
-              <input type="password" placeholder="Confirm Password" />
-              <img src="../img/icons/lock.png" alt="Lock icon" class="input-icon" />
-            </div>
-
-            <div class="checkbox-line">
-              <input id="privacy-policy-checkbox" type="checkbox" />
-              <span>I accept the <a href="#">privacy policy</a></span>
-            </div>
-          </div>
             <button id="signup-submit-button" type="submit" class="btn btn--primary" disabled>Sign up</button>
-          </div>
+          </form>
         </section>
 
       </main>
