@@ -40,9 +40,6 @@ main {
   height: auto;
 }
 
-#contacts-icon {
-  background-color: var(--active-btn-border);
-}
 .add-task-content {
   display: flex;
 }

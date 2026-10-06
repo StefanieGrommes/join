@@ -1,8 +1,4 @@
 
-#summary-icon {
-    background-color: var(--active-btn-border);
-}
-
 .summary {
     display: flex;
     height: 100%;

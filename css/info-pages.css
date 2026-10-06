@@ -2,10 +2,6 @@
   display: none;
 }
 
-.is-active {
-background-color: var(--hover-btn-border);
-}
-
 .info-page {
   display: flex;
   flex-direction: column;

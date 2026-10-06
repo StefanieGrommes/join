@@ -29,7 +29,7 @@
                 </div>
                 <ul class="nav-links">
                     <li>
-                        <div class="nav-element" id="summary-icon">
+                        <div class="nav-element nav-btn">
                             <svg width="30" height="30" viewBox="0 0 30 30" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -40,7 +40,7 @@
                         </div>
                     </li>
                     <li>
-                        <div class="nav-element" id="add-task-icon">
+                        <div class="nav-element nav-btn">
                             <svg width="30" height="30" viewBox="0 0 30 30" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <mask id="mask0_69323_5227" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0"
@@ -57,7 +57,7 @@
                         </div>
                     </li>
                     <li>
-                        <div class="nav-element" id="board-icon">
+                        <div class="nav-element nav-btn">
                             <svg width="30" height="30" viewBox="0 0 30 30" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -71,7 +71,7 @@
                         </div>
                     </li>
                     <li>
-                        <div class="nav-element" id="contacts-icon">
+                        <div class="nav-element nav-btn">
                             <svg width="30" height="30" viewBox="0 0 30 30" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <mask id="mask0_69323_5230" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0"
@@ -89,9 +89,13 @@
                     </li>
                 </ul>
             </div>
-            <ul class="legal-and-policy">
-                <li onclick="changeBackground()" id="privacy-policy"><a href="../pages/privacy-notice.html">Privacy Policy</a></li>
-                <li onclick="changeBackground()" id="legal-notice"><a href="../pages/legal-notice.html">Legal notice</a></li>
-            </ul>
+            <div class="legal-and-policy">
+                <div class="nav-btn">
+                <a href="../pages/privacy-notice.html" class="li-btn"><span>Privacy Policy</span></a>
+                </div>
+                <div class="nav-btn">
+                <a href="../pages/legal-notice.html" class="li-btn"><span>Legal notice</span></a>
+                </div>
+            </div>
         </aside>
     </div>
