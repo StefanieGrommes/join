@@ -7,6 +7,7 @@
   --hover-primary-button: rgb(18, 70, 88);
   --hover-secondary-button: rgb(41, 171, 226);
   --hover-bg-color-grey: #eeeeee;
+  --hover-btn-grey: rgb(226, 230, 236);
   --navbar-color: rgba(231, 231, 231, 1);
   --active-btn-border: rgb(9, 25, 49);
   --sidebar-width: 220px;
@@ -125,7 +126,7 @@ nav p {
 }
 
 .initials-ellipse:hover {
-  fill: rgb(226, 230, 236);
+  fill: var(--hover-btn-grey);
 }
 
 .aside-blue-box-bg {
@@ -324,6 +325,12 @@ main {
   }
 
   .nav-footer-mobile {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: var(--header-height);
+    z-index: 10;
     grid-area: nav-footer;
     display: flex;
     justify-content: center;

@@ -5,7 +5,15 @@
 .info-page {
   display: flex;
   flex-direction: column;
-  padding: 116px 96px 0 96px;
+  padding: 116px 96px 96px 96px;
+}
+
+.info-intro {
+  padding-top: 6px;
+}
+
+.address {
+  padding-top: 16px;
 }
 
 .info-header {
@@ -29,6 +37,13 @@
 .info-header button {
   border-style: unset;
   background-color: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.info-header button:hover {
+  transform: scale(1.2);
+  background-color: var(--hover-btn-grey);
 }
 
 .info-title {
@@ -37,14 +52,18 @@
 }
 
 .info-intro a,
-.info-section a {
+.info-section-legal a,
+.info-section a,
+.info-subclass a {
   cursor: pointer;
   color: black;
   text-decoration: none;
 }
 
 .info-intro a:hover,
-.info-section a:hover {
+.info-section-legal a:hover,
+.info-section a:hover,
+.info-subclass a:hover {
   color: var(--hover-primary-button);
 }
 
@@ -56,19 +75,32 @@
 }
 
 .info-section {
+  padding: 35px 0 0 0;
+}
+
+.info-section-legal {
   padding: 24px 0 0 0;
 }
 
-.info-section h5 {
+.info-subclass {
+  padding: 24px 0 0 0;
+}
+
+.info-section h5,
+.info-section-legal h5 {
   padding: 0 0 24px 0;
   font-weight: 700;
 }
 
-.info-section h6 {
+.info-section h6,
+.info-subclass h6,
+.info-section-legal h6 {
   font-weight: 700;
 }
 
-.info-section ul {
+.info-section ul,
+.info-subclass ul,
+.info-section-legal ul {
    list-style-position: inside;
 }
 
@@ -88,9 +120,7 @@
   padding: 0 0 16px 0;
 }
 
-.padding-policy {
-  padding: 35px 0 0 0;
-}
+
 
 .help-manual-list {
   counter-reset: step;
@@ -133,58 +163,22 @@
 /*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
 
 @media (max-width: 1200px) {
-  .info-page {
-    padding-right: 24px;
+   h1 {
+    font-size: min(3rem,3.75rem);
   }
-
-  .info-title {
-    font-size: 54px;
-  }
-
-  .info-section h2 {
-    font-size: 34px;
-  }
-
-  .info-section h3 {
-    font-size: 28px;
-  }
-
-  .help-manual-list li::before {
-    font-size: 34px;
-  }
+   .info-page {
+     padding: 8vw 4vw 96px 4vw;
+   }
 }
 
 @media (max-width: 768px) {
   .info-page {
-    max-width: 100%;
-    padding-right: 0;
+    padding: 48px 16px 96px 16px;
   }
+}
 
-  .info-title {
-    font-size: 46px;
+@media (max-width: 428px) {
+  h1 {
+    font-size: 2.75rem;
   }
-
-  .info-section h2 {
-    font-size: 30px;
-  }
-
-  .info-section h3 {
-    font-size: 24px;
-  }
-
-  .info-section p,
-  .info-section span,
-  .info-section li {
-    font-size: 16px;
-  }
-
-  .help-manual-list li::before {
-    font-size: 28px;
-  }
-
-  .info-intro {
-    font-size: 16px;
-  }
-
-
 }
