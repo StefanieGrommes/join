@@ -13,6 +13,7 @@
 
 html,
 body {
+  display: block;
   width: 100%;
   min-width: 320px;
   min-height: 100%;
@@ -86,7 +87,8 @@ input {
 }
 
 .top-link:hover {
-  background: #415061;
+  background-color: var(--hover-bg-color-lightblue);
+  box-shadow: var(--shadow);
 }
 
 .mobile-signup-cta {
@@ -96,8 +98,6 @@ input {
 .mobile-bottom-area {
   display: contents;
 }
-
-
 
 .app-intro {
   position: fixed;
@@ -243,10 +243,6 @@ input {
   transition: opacity 0.2s ease;
 }
 
-.btn:not(:disabled):hover {
-  background-color: #5b6673;
-  color: #ffffff;
-}
 
 .btn--primary {
   width: 146px;
@@ -262,31 +258,41 @@ input {
   color: #1d2a38;
 }
 
-.btn--secondary:not(:disabled):hover {
-  background-color: #e6e8ec;
-  color: #1d2a38;
+.btn--primary:not(:disabled):hover {
+  background-color: var(--hover-bg-color-lightblue);
+  box-shadow: var(--shadow);
+  transition: background-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
 }
+
+.btn--secondary:not(:disabled):hover {
+  border: 2px var(--hover-bg-color-lightblue) solid;
+  box-shadow: var(--shadow);
+  transition: background-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
+}
+
 
 .footer {
   margin-top: 120px;
   margin-bottom: 40px;
   display: flex;
   gap: 18px;
-  font-size: 14px;
 }
-
-
 
 .footer a {
   color: var(--muted);
   text-decoration: none;
 }
 
+.footer a:hover {
+  color: var(--hover-menu);
+  font-weight: 700;
+}
+
 @media (max-width: 1450px) {
  .page-header {
     display: flex;
-    justify-content: space-around;  
-    
+    justify-content: space-around;
+
 }
 }
 
@@ -316,7 +322,7 @@ input {
     margin-top: 0;
     margin-bottom: 24px;
     display: flex;
-      justify-content: space-around;  
+      justify-content: space-around;
 
   }
 
@@ -324,10 +330,10 @@ input {
    .page-header {
     display: flex;
     justify-content: space-between;
-    
+
 }
 
-   
+
   .header-actions {
     display: none;
   }

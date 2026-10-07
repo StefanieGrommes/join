@@ -36,6 +36,18 @@
   margin: 0;
 }
 
+.info-intro a,
+.info-section a {
+  cursor: pointer;
+  color: black;
+  text-decoration: none;
+}
+
+.info-intro a:hover,
+.info-section a:hover {
+  color: var(--hover-primary-button);
+}
+
 .info-back-link {
   display: inline-flex;
   align-items: center;
@@ -173,4 +185,6 @@
   .info-intro {
     font-size: 16px;
   }
+
+
 }

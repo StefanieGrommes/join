@@ -157,6 +157,7 @@ aside li {
 
 .nav-btn {
   width: 100%;
+  cursor: pointer;
 }
 
 .nav-element {
@@ -174,15 +175,15 @@ aside li {
   flex-shrink: 0;
 }
 
-.nav-element a {
+aside .nav-element span {
   width: 80px;
+  text-align: left;
 }
 
 .nav-links {
   display: flex;
   flex-direction: column;
-  justify-content: start;
-  align-items: center;
+  align-items: start;
   width: 100%;
   gap: 8px;
 }
