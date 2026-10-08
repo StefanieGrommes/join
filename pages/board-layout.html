@@ -29,10 +29,18 @@
     -->
     <div class="page-layout">
 
-      <main class="board-content" aria-label="Board Content">
+      <main aria-label="Board Content">
+
+
         <section class="board-header-container" aria-label="Board header container">
+
+
+
+
+
           <div class="board-header-inner">
             <h1 class="board-header-title">Board</h1>
+
 
             <div class="board-header-actions" aria-label="Board actions">
               <div class="board-search-field">
@@ -45,13 +53,19 @@
                   </svg>
                 </button>
               </div>
-
               <button id="board-open-add-task-modal" class="board-add-task-button" type="button" aria-label="Add task">
                 Add task
                 <span class="board-add-task-plus" aria-hidden="true">+</span>
               </button>
+
             </div>
           </div>
+
+
+
+
+
+
 
           <div class="board-header-columns" aria-label="Board columns header">
             <div class="board-header-column">
@@ -83,17 +97,11 @@
           </div>
         </section>
 
-        <!--
-          Board-Hauptbereich:
-          Die vier Spalten sind hier als Container definiert.
-          In diesen Spalten werden die Karten später per JavaScript eingefügt.
-          Die Darstellung der Karten kommt aus templates.js.
-        -->
         <section class="board-main-container" aria-label="Board main container">
             <div class="board-main-column" data-column="todo" aria-label="Todo column"></div>
             <div class="board-main-column" data-column="in-progress" aria-label="In progress column"></div>
             <div class="board-main-column" data-column="await-feedback" aria-label="Await feedback column"></div>
-            <div class="board-main-column" data-column="done" aria-label="Done column"></div>
+            <div class="board-main-column extra-done" data-column="done" aria-label="Done column"></div>
         </section>
 
 
