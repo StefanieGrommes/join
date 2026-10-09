@@ -7,9 +7,6 @@
   --button-dark: #2d3d4d;
 }
 
-* {
-  box-sizing: border-box;
-}
 
 html,
 body {
@@ -21,18 +18,6 @@ body {
   overflow-x: hidden;
 }
 
-body {
-  min-height: 100vh;
-  font-family: "Inter", sans-serif;
-  background: var(--bg);
-  color: var(--text);
-}
-
-button,
-input {
-  font: inherit;
-}
-
 .page {
   width: 100%;
   min-height: 100vh;
@@ -41,7 +26,6 @@ input {
   align-items: center;
   justify-content: center;
   position: relative;
-  background: var(--bg);
 }
 
 .signup-page {
@@ -56,6 +40,7 @@ input {
     bottom: 0;
     left: 0;
   }
+
 .page-header {
   width: min(1400px, 100%);
   display: flex;
@@ -334,6 +319,10 @@ input {
     justify-content: center;
     gap: 12px;
   }
+
+  .auth-panel {
+    height: 595px;
+  }
 }
 
 @media (max-width: 640px) {
@@ -349,7 +338,28 @@ input {
   }
 }
 
-@media (max-width: 420px) {
+@media (max-width: 440px) {
+  .page {
+    justify-content: start;
+  }
+  .page-header {
+    position: relative;
+    padding: 24px 0 16px;
+  }
+
+  .panel-area {
+    flex: 1;
+    padding-bottom: 24px;
+  }
+
+  .auth-panel {
+    height: auto;
+    min-height: 520px;
+  }
+
+  .mobile-bottom-area {
+    position: static;
+  }
 
   .field input,
   .field input::placeholder {
@@ -359,11 +369,19 @@ input {
   .back-button {
     top: 15px;
   }
+
+  .footer {
+    padding-top: 8px;
+  }
 }
 
 @media (max-width: 320px){
  .back-button {
       top: 12px;
+  }
+
+  .auth-panel {
+    min-height: 520px;
   }
 }
 

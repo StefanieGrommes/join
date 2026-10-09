@@ -23,14 +23,8 @@ body {
 
 body {
   min-height: 100vh;
-  font-family: "Inter", sans-serif;
-  background: var(--bg);
+  font-family: var(--default-font);
   color: var(--text);
-}
-
-button,
-input {
-  font: inherit;
 }
 
 .page {
@@ -39,21 +33,28 @@ input {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: var(--bg);
   justify-content: space-between;
-
-
+  padding-top: clamp(37px, 6vw, 67px);
+  padding-left: clamp(38px, 6vw, 77px);
+  padding-right: clamp(16px, 4vw, 122px);
 }
+
 .login-page {
   flex: 1;
 }
 
+.panel-area {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .page-header {
-  width: min(1400px, 100%);
+  width: min(1440px, 100%);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-top: 48px;
 }
 
 .header-actions {
@@ -63,14 +64,18 @@ input {
 }
 
 .header-copy {
-  font-size: 20px;
+  font-size: 1.25rem;
   color: var(--text);
 }
 
+.header-icon-wrapper {
+  width: clamp(64px, 14vw, 100px);
+  height: auto;
+}
+
 .header-icon {
-  width: 100px;
-  height: 120px;
-  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 
@@ -81,8 +86,7 @@ input {
   border-radius: 10px;
   background: var(--button-dark);
   color: #fff;
-  font-size: 16px;
-  font-weight: 500;
+  font-weight: 700;
   cursor: pointer;
 }
 
@@ -131,12 +135,14 @@ input {
 }
 
 .login-shell {
-  width: min(560px, 100%);
-  margin-top: 86px;
+  max-width: 652px;
+  width: 100%;
+  height: 449px;
   display: flex;
   justify-content: center;
   border-radius: 24px;
   background: #ffffff;
+  padding: 48px 115px;
   border: 1px solid rgba(224, 230, 236, 0.9);
   box-shadow: 0 -8px 18px rgba(17, 24, 39, 0.08), 0 8px 18px rgba(17, 24, 39, 0.06), 0 16px 28px rgba(17, 24, 39, 0.04);
   opacity: 0;
@@ -151,7 +157,6 @@ input {
 
 .content-card {
   width: min(422px, 100%);
-  padding: 30px 8px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -163,7 +168,7 @@ input {
   flex-direction: column;
   text-align: center;
   font-weight: 700;
-  font-size: clamp(52px, 7vw, 61px);
+  font-size: clamp(48px, 4.5vw, 61px);
   line-height: 1;
   color: #000;
 }
@@ -178,12 +183,14 @@ input {
 }
 
 .login-form {
-  margin-top: 24px;
+  padding-top: 32px;
+  padding-bottom: 20px;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  position: relative;
+  gap: 32px;
 }
 
 .field {
@@ -215,7 +222,7 @@ input {
   border-radius: 8px;
   background: var(--input-bg);
   color: var(--text);
-  font-size: 18px;
+  font-size: 1.25rem;
   padding: 0 42px 0 12px;
   cursor: pointer;
 }
@@ -223,27 +230,28 @@ input {
 .field input::placeholder {
   color: #2f3b4a;
   opacity: 1;
-  font-size: 18px;
+  font-size: 1.25rem;
 }
 
 .button-row {
+  position: absolute;
+  top: 184px;
   margin-top: 20px;
   width: 100%;
   max-width: 422px;
   display: flex;
   justify-content: center;
-  gap: 16px;
+  gap: 35px;
 }
 
 .btn {
   height: 48px;
-  border-radius: 10px;
+  border-radius: 8px;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 1.25rem;
   cursor: pointer;
   transition: opacity 0.2s ease;
 }
-
 
 .btn--primary {
   width: 146px;
@@ -271,7 +279,6 @@ input {
   transition: background-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
 }
 
-
 .footer {
   margin-top: 120px;
   margin-bottom: 40px;
@@ -289,63 +296,40 @@ input {
   font-weight: 700;
 }
 
-@media (max-width: 1450px) {
- .page-header {
-    display: flex;
-    justify-content: space-around;
-
-}
-}
-
-@media (max-width: 992px) {
-  .header-icon {
-    width: 86px;
-    height: 102px;
-  }
-
-    .login-shell {
-    min-height: 430px;
-  }
-
-  .header-copy {
-    font-size: 18px;
-  }
-}
+/*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
 
 @media (max-width: 768px) {
   .page {
-    padding: 16px 14px 24px;
-    justify-content: flex-start;
+    padding: 37px 16px 22px 16px;
   }
-
-  .page-header {
-    width: 100%;
-    margin-top: 0;
-    margin-bottom: 24px;
-    display: flex;
-      justify-content: space-around;
-
-  }
-
-   .page-header {
-    display: flex;
-    justify-content: space-between;
-
-}
 
   .header-actions {
     display: none;
   }
 
-  .content-card {
-    padding-top: 26px;
+  .login-shell {
+    height: 475px;
+    padding-left: clamp(16px, 4vw, 115px);
+    padding-right: clamp(16px, 4vw, 115px);
+    padding-top: clamp(32px, 2.5vw, 48px);
+    padding-bottom: clamp(32px, 2.5vw, 48px);
+  }
+
+  .mobile-signup-cta {
+    display: flex;
+    align-items:center;
+    gap: 32px;
+  }
+
+  .top-link {
+    width: 104px;
   }
 
   .button-row {
     margin-top: 18px;
     flex-direction: column;
     align-items: center;
-    gap: 24px;
+    gap: 20px;
   }
 
   .btn--primary,
@@ -354,35 +338,12 @@ input {
     height: 51px;
   }
 
-  .mobile-signup-cta {
-    width: 292px;
-    min-height: 49px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
   .mobile-bottom-area {
     width: 100%;
-    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 36px;
-    padding-bottom: 24px;
-  }
-
-  .mobile-signup-copy {
-    font-size: 32px;
-    line-height: 1;
-    color: #000000;
-    white-space: nowrap;
-  }
-
-  .mobile-signup-button {
-    width: 91px;
-    height: 49px;
-    flex: 0 0 auto;
+    gap: 42px;
   }
 
   .footer {
@@ -397,78 +358,9 @@ input {
   }
 }
 
-@media (max-width: 768px) and (min-width: 578px) {
-  .mobile-bottom-area {
-    margin-top: 24px;
-  }
-
-  .mobile-signup-cta {
-    width: 292px;
-    min-height: 49px;
-    gap: 10px;
-    justify-content: space-between;
-  }
-
-  .mobile-signup-copy {
-    font-size: 20px;
-    line-height: 1.2;
-    font-weight: 400;
-  }
-}
-
-@media (max-width: 576px) {
-  .page-header {
-    width: 100%;
-  }
-
-  .header-icon {
-    width: 72px;
-    height: 84px;
-  }
-
-  .top-link {
-    width: 84px;
-    height: 42px;
-    font-size: 14px;
-  }
-
-  .mobile-signup-cta {
-    width: min(292px, 100%);
-  }
-
-  .mobile-signup-copy {
-    font-size: 18px;
-  }
-
-  .content-card {
-    padding: 22px 12px 22px;
-  }
-
-}
-
-@media (max-width: 420px) {
-  .login-title {
-    font-size: 52px;
-  }
-
-  .field input,
-  .field input::placeholder {
-    font-size: 16px;
-  }
-}
-
 @media (max-width: 360px) {
   .page {
     padding-left: 10px;
     padding-right: 10px;
-  }
-
-  .login-title {
-    font-size: 46px;
-  }
-
-  .footer {
-    font-size: 13px;
-    gap: 12px;
   }
 }
