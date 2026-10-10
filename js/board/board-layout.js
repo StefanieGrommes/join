@@ -505,13 +505,14 @@ function initAddTaskModal() {
   });
 
   saveButton.addEventListener("click", () => {
-    if (!isFormValid()) return;
+    if (saveButton.dataset.loading === "true" || !isFormValid()) return;
 
     saveButton.dataset.loading = "true";
     saveButton.disabled = true;
     saveButton.textContent = editingTaskId ? "Saving..." : "Creating...";
 
     window.setTimeout(() => {
+      saveButton.dataset.loading = "false";
       if (editingTaskId) {
         const task = Array.isArray(tasks) ? tasks.find((item) => item.id === editingTaskId) : null;
         if (task) {
