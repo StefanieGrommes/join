@@ -33,7 +33,9 @@
     min-height: 100vh;
     display: flex;
     flex-direction: row;
-    padding-left: 64px;
+    justify-content: space-evenly;
+    padding-right: 24px;
+    padding-left: 24px;
   }
 
   .sidebar {
@@ -386,7 +388,7 @@
   .board-main-container {
     min-height: 688px;
     margin-left: 0px;
-    margin-right: 24px;
+    margin-right: 0px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -751,6 +753,17 @@
       margin-top: 18px;
     }
 
+        .page-layout {
+        padding-right: 24px;
+        padding-left: 24px;
+    }
+
+            .board-header-container, .board-main-container {
+            margin-left: 0px; 
+            margin-right: 0px;
+        }
+
+
 
     main {
         flex: 1;
@@ -780,8 +793,8 @@
       margin-right: 0px;
     }
  .board-header-container, .board-main-container {
-            margin-left: 20px;
-            margin-right: 20px;
+            margin-left: 0px;
+            margin-right: 0px;
         }
 
   }
@@ -802,8 +815,8 @@
 
     .board-header-container,
     .board-main-container {
-      margin-left: 20px;
-      margin-right: 20px;
+      margin-left: 0px;
+      margin-right: 0px;
     }
 
     .board-header-inner {
@@ -819,6 +832,10 @@
     .board-header-actions {
       gap: 14px;
     }
+
+        .board-header-container, .board-main-container {
+            margin-left: 0px;
+        }
 
     .board-search-field {
       width: 280px;
@@ -840,14 +857,13 @@
       font-size: 28px;
     }
 
-    .board-header-columns,
-    .board-main-container {
-      gap: 16px;
-    }
-
   }
 
   @media (max-width: 860px) and (min-width: 769px) {
+    .board-empty-state {
+      font-size: 12px;
+    }
+
     .sidebar {
       width: 156px;
     }
@@ -890,8 +906,12 @@
       font-size: 16px;
     }
         .board-header-container, .board-main-container {
-            margin-left: 20px;
-            margin-right: 20px;
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+
+ .board-header-container, .board-main-container {
+            margin-left: 0px;
         }
 
 
@@ -905,11 +925,6 @@
 
     .board-add-task-plus {
       font-size: 24px;
-    }
-
-    .board-header-columns,
-    .board-main-container {
-      gap: 12px;
     }
 
         .board-column-title {
@@ -932,6 +947,26 @@
     aside {
       display: none !important;
     }
+
+
+    
+    .page-layout {
+       
+         padding-right: 0px; 
+    }
+
+    .board-detail-modal-body .board-detail-card {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    box-sizing: border-box;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+    padding: 28px 20px 20px 28px;
+    overflow-y: auto;
+}
+
 
     .board-mobile-top-nav,
     .board-mobile-footer-nav {
@@ -967,6 +1002,11 @@
       align-items: center;
       gap: 48px;
       margin-bottom: 12px;
+    }
+
+        .page-layout {
+        
+        padding-left: 0px; 
     }
 
     .board-header-title {
@@ -1089,6 +1129,15 @@
       border-radius: 999px;
     }
 
+
+    .board-detail-modal-dialog {
+ display: flex;
+  width: 90%;
+  height: 70%;
+  
+}
+
+
     .board-main-column-content .board-card {
       width: 220px;
       min-width: 220px;
@@ -1190,6 +1239,12 @@
      .board-main-column {
       padding-right: 0px;
     }
+
+            main {            
+            padding-left: 6px;
+            padding-right: 16px;
+        }
+
 
     .board-header-inner {
       padding-right: 0px;
@@ -1548,8 +1603,6 @@
   display: flex;
   border-radius: 18px;
   width: 525px;
-  height: auto;
-  max-height: min(931px, calc(100vh - 24px));
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -1562,11 +1615,35 @@
   background: #ffffff;
   border-radius: 18px;
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
-  padding: 26px 32px 22px;
-  width: 100%;
-  height: auto;
-  max-height: inherit;
+  padding: 48px 40px 40px 48px;
+  max-width: 525px;
   overflow-y: auto;
+}
+
+.board-detail-modal-body .board-detail-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.board-detail-modal-body .board-detail-card::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.board-detail-modal-body .board-detail-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.board-detail-modal-body .board-detail-card::-webkit-scrollbar-thumb {
+  background: #c4ccd8;
+  border-radius: 999px;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .board-detail-modal-body .board-detail-card {
+    scrollbar-width: thin;
+    scrollbar-color: #c4ccd8 transparent;
+  }
 }
 
 .board-detail-content {
@@ -1580,7 +1657,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 46px;
+  max-height: 36px;
+  max-width: 445px;
+  
 }
 
 .board-detail-modal-body .board-detail-badge {
@@ -1618,44 +1697,37 @@
 .board-detail-assignees-row {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 6px;
+ 
 }
 
 .board-detail-modal-body .board-detail-title {
   margin: 18px 0 18px;
-  font-size: clamp(3.1rem, 4.4vw, 5rem);
-  line-height: 0.92;
-  font-weight: 800;
+  font-size: 61px;
+  font-weight: 700;
   color: #111827;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  max-width: 100%;
+  max-width: 445px;
 }
 
 .board-detail-modal-body .board-detail-description {
   color: #6b7280;
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 400;
   margin: 0 0 26px;
-  line-height: 1.35;
-  overflow-wrap: anywhere;
-  word-break: break-word;
-  max-width: 100%;
+  width: 100%;
 }
 
 .board-detail-modal-body {
   display: flex;
-  align-items: stretch;
   width: 100%;
-  height: auto;
-  max-height: inherit;
+  flex-direction: column;
+  align-items: center;
 }
 
 .board-detail-modal-body .board-detail-label {
   min-width: 130px;
   color: #2f3d4c;
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1.3;
 }
 
@@ -1687,18 +1759,26 @@
 .board-detail-modal-body .board-detail-assignee {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between;
   min-height: 32px;
   color: #2f3d4c;
   font-size: 18px;
-  font-weight: 500;
-  line-height: 1.3;
+ 
 }
 
 .board-detail-modal-body .board-detail-assignee span,
 .board-detail-assignee span {
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  width: 42px;
+  height: 42px;
+}
+
+.board-detail-assignee span {
+  width: 0px;
+  height: 0px;
+}
+
+.board-detail-assignee-name {
+  margin: 0;
 }
 
 .board-detail-assignee {
@@ -1714,7 +1794,7 @@
   margin: 0 0 12px;
   color: #2f3d4c;
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .board-detail-modal-body .board-detail-subtask {

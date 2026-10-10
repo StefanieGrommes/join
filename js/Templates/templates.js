@@ -226,7 +226,7 @@ function renderTaskDetail(task) {
     .map((contact) => `
       <div class="board-detail-assignee">
         ${renderAvatar(contact)}
-        <span>${contact.name}</span>
+        <p class="board-detail-assignee-name">${contact.name}</p>
       </div>
     `)
     .join('');
@@ -262,8 +262,13 @@ function renderTaskDetail(task) {
         </div>
 
         <div class="board-detail-assignees-row">
+
           <span class="board-detail-label">Assigned To:</span>
-          <div class="board-detail-assignees">${assigned}</div>
+
+          
+          <div class="board-detail-assignees">
+          ${assigned}
+          </div>
         </div>
 
         <div class="board-detail-subtasks">
@@ -285,5 +290,4 @@ function renderTaskDetail(task) {
     </article>
   `;
 }
-
 

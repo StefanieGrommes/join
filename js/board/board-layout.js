@@ -661,7 +661,6 @@ function initTaskDetailModal() {
     detailRoot.dataset.taskId = task.id;
     detailModal.classList.add("is-open");
     detailModal.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
 
     const closeButton = detailRoot.querySelector(".board-detail-close");
     if (closeButton) {
@@ -670,7 +669,7 @@ function initTaskDetailModal() {
   };
 
   /**
-   * Schliesst das Detail-Modal und gibt Scrollen wieder frei.
+   * Schliesst das Detail-Modal und entfernt den Karteninhalt.
    *
    * @returns {void}
    */
@@ -679,7 +678,6 @@ function initTaskDetailModal() {
     detailModal.setAttribute("aria-hidden", "true");
     detailRoot.innerHTML = "";
     detailRoot.removeAttribute("data-task-id");
-    document.body.style.overflow = "";
   };
 
   detailRoot.addEventListener("click", (event) => {
