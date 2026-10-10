@@ -299,6 +299,14 @@ body {
 /*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
 
 @media (max-width: 768px) {
+  .app-intro {
+    background: #2a3647;
+  }
+
+  .join-preview {
+    width: 100px;
+  }
+
   .page {
     padding: 37px 16px 22px 16px;
   }
