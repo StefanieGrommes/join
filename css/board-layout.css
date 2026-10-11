@@ -34,8 +34,8 @@
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-    padding-right: 24px;
-    padding-left: 24px;
+    padding-right: 64px;
+    padding-left: 64px;
   }
 
   .sidebar {
@@ -453,8 +453,6 @@
     border-radius: 10px;
     background: #f9fafb;
     color: #9aa3b2;
-    font-size: 18px;
-    font-weight: 500;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -759,7 +757,7 @@
     }
 
             .board-header-container, .board-main-container {
-            margin-left: 0px; 
+            margin-left: 0px;
             margin-right: 0px;
         }
 
@@ -781,6 +779,10 @@
 
     .sidebar-footer-links {
       padding: 0 20px;
+    }
+
+    .board-empty-state {
+      min-height: 64px;
     }
 
     .board-top-inner {
@@ -860,9 +862,6 @@
   }
 
   @media (max-width: 860px) and (min-width: 769px) {
-    .board-empty-state {
-      font-size: 12px;
-    }
 
     .sidebar {
       width: 156px;
@@ -876,6 +875,10 @@
     .sidebar-nav-label,
     .sidebar-footer-links a {
       font-size: 13px;
+    }
+
+    .board-empty-state {
+      min-height: 72px;
     }
 
     .board-top-inner {
@@ -949,10 +952,10 @@
     }
 
 
-    
+
     .page-layout {
-       
-         padding-right: 0px; 
+
+         padding-right: 0px;
     }
 
     .board-detail-modal-body .board-detail-card {
@@ -1005,8 +1008,8 @@
     }
 
         .page-layout {
-        
-        padding-left: 0px; 
+
+        padding-left: 0px;
     }
 
     .board-header-title {
@@ -1134,7 +1137,7 @@
  display: flex;
   width: 90%;
   height: 70%;
-  
+
 }
 
 
@@ -1218,7 +1221,7 @@
 
             .board-main-container {
             width: 100%;
-            
+
         }
 
         .board-header-container {
@@ -1240,7 +1243,7 @@
       padding-right: 0px;
     }
 
-            main {            
+            main {
             padding-left: 6px;
             padding-right: 16px;
         }
@@ -1659,7 +1662,7 @@
   justify-content: space-between;
   max-height: 36px;
   max-width: 445px;
-  
+
 }
 
 .board-detail-modal-body .board-detail-badge {
@@ -1697,7 +1700,7 @@
 .board-detail-assignees-row {
   display: flex;
   flex-direction: column;
- 
+
 }
 
 .board-detail-modal-body .board-detail-title {
@@ -1763,7 +1766,7 @@
   min-height: 32px;
   color: #2f3d4c;
   font-size: 18px;
- 
+
 }
 
 .board-detail-modal-body .board-detail-assignee span,
