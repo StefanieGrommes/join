@@ -74,6 +74,7 @@
   "tasks": [
     {
       "title": "Add-Contact-Popup animieren",
+      "state": "todo",
       "description": "Das Popup soll laut Figma-Prototyp von rechts einfliegen und beim Schliessen wieder rausfliegen. Ein Klick auf den abgedunkelten Rand schliesst ebenfalls.",
       "dueDate": "2026-11-11",
       "priority": "low",
@@ -87,6 +88,7 @@
     },
     {
       "title": "JSDoc fuer die Board-Skripte nachziehen",
+      "state": "inprogres",
       "description": "board.js, boardEdit.js und boardTaskDialog.js sind nur teilweise dokumentiert. Alle Funktionen brauchen Beschreibung, Parameter und Rueckgabewert, damit jsdoc sauber durchlaeuft.",
       "dueDate": "2027-01-31",
       "priority": "medium",
@@ -100,6 +102,7 @@
     },
 {
   "title": "Dark Mode fuer das Dashboard implementieren",
+  "state": "done",
   "description": "Laut Figma-Prototyp soll ein Toggle im Header zwischen Light- und Dark-Theme wechseln. Farbwerte als CSS-Variablen auslagern, Praeferenz im localStorage speichern.",
   "dueDate": "2026-12-05",
   "priority": "medium",
@@ -113,6 +116,7 @@
 },
 {
   "title": "Kontaktliste nach Nachname alphabetisch sortieren",
+  "state": "awaitfeedback",
   "description": "Aktuell werden Kontakte in Einfuegereihenfolge angezeigt. Liste soll beim Laden und nach jedem Hinzufuegen automatisch nach lastName sortiert werden.",
   "dueDate": "2026-10-20",
   "priority": "low",
@@ -126,6 +130,7 @@
 },
 {
   "title": "Validierung fuer Telefonnummern-Eingabe",
+  "state":"todo",
   "description": "Das Kontaktformular soll Telefonnummern auf gueltiges Format pruefen, bevor gespeichert wird. Fehlermeldung inline unter dem Feld anzeigen.",
   "dueDate": "2026-11-25",
   "priority": "medium",
@@ -139,6 +144,7 @@
 },
 {
   "title": "Firebase-URL zentral konfigurieren",
+  "state": "inprogres",
   "description": "In firebase-config.js stehen mehrere BASE_URLs auskommentiert nebeneinander. Beim Wechsel wird regelmaessig die falsche aktiviert. Eine Quelle festlegen und dokumentieren.",
   "dueDate": "2026-09-08",
   "priority": "urgent",

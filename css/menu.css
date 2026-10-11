@@ -7,7 +7,8 @@
   --hover-primary-button: rgb(18, 70, 88);
   --hover-secondary-button: rgb(41, 171, 226);
   --hover-bg-color-grey: #eeeeee;
-  --navbar-color: #e7e7e7;
+  --hover-btn-grey: rgb(226, 230, 236);
+  --navbar-color: rgba(231, 231, 231, 1);
   --active-btn-border: rgb(9, 25, 49);
   --sidebar-width: 220px;
   --logo-size: 64px;
@@ -28,7 +29,6 @@
 html {
   scroll-behavior: smooth;
   height: 100dvh;
-  overflow: hidden;
 }
 
 body {
@@ -68,6 +68,11 @@ h5 {
 h6 {
   font-size: 1.25rem;
   font-weight: 400;
+}
+
+.is-active {
+background-color: var(--active-btn-border);
+
 }
 
 nav {
@@ -121,7 +126,7 @@ nav p {
 }
 
 .initials-ellipse:hover {
-  fill: rgb(226, 230, 236);
+  fill: var(--hover-btn-grey);
 }
 
 .aside-blue-box-bg {
@@ -151,6 +156,11 @@ aside li {
   list-style-type: none;
 }
 
+.nav-btn {
+  width: 100%;
+  cursor: pointer;
+}
+
 .nav-element {
   width: 100%;
   display: flex;
@@ -166,15 +176,15 @@ aside li {
   flex-shrink: 0;
 }
 
-.nav-element a {
+aside .nav-element span {
   width: 80px;
+  text-align: left;
 }
 
 .nav-links {
   display: flex;
   flex-direction: column;
-  justify-content: start;
-  align-items: center;
+  align-items: start;
   width: 100%;
   gap: 8px;
 }
@@ -187,7 +197,7 @@ aside li {
   background-color: var(--hover-menu);
 }
 
-.legal-and-policy li:hover a {
+.legal-and-policy a:hover {
   color: var(--hover-primary-button);
 }
 
@@ -216,14 +226,17 @@ aside li {
   justify-self: center;
 }
 
-.legal-and-policy li {
+.legal-and-policy a {
   padding: 12px;
   width: 100%;
   display: flex;
   justify-content: center;
+  color: var(--navbar-color);
+  text-decoration: none;
+  font-family: var(--default-font);
 }
 
-.legal-and-policy li a {
+.legal-and-policy a span {
   display: inline-block;
   text-align: left;
   width: 110px;
@@ -243,6 +256,10 @@ main {
   display: none;
 }
 
+.legal-and-policy-mobile {
+ display: flex;
+}
+
 /*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
 
 @media (max-width: 768px) {
@@ -250,8 +267,11 @@ main {
     display: none;
   }
 
+  .nav-btn {
+    width: auto;
+  }
+
   .nav-mobile {
-    grid-area: nav-footer;
     min-height: var(--header-height);
     top: 0;
     position: sticky;
@@ -265,6 +285,10 @@ main {
     border-width: 0;
     box-shadow: 0 0 4px 4px rgba(110, 107, 107, 0.3);
     width: 100%;
+  }
+
+  .is-active {
+    border-radius: 16px;
   }
 
   .profile-initials-btn {
@@ -286,8 +310,7 @@ main {
   }
 
   body {
-    height: 100dvh;
-    overflow: hidden;
+    min-height: 100dvh;
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: var(--header-height) 1fr var(--header-height);
     grid-template-areas: "navbar-mobile" "main" "nav-footer";
@@ -295,7 +318,6 @@ main {
 
   .nav-footer-mobile .nav-element {
     width: auto;
-    padding: 8px 4px;
   }
 
   .nav-element a {
@@ -303,6 +325,13 @@ main {
   }
 
   .nav-footer-mobile {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: var(--header-height);
+    z-index: 10;
+    grid-area: nav-footer;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -314,21 +343,23 @@ main {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    max-width: 428px;
     padding: 0 16px;
-  }
-
-  .mobile-nav-btns button {
-    width: 76px;
-    height: 76px;
-    border-style: unset;
-    background-color: transparent;
-    border-radius: 8px;
     cursor: pointer;
   }
 
-  .mobile-nav-btns button:hover {
+  .mobile-nav-btns a {
+    height: 76px;
+    color: var(--navbar-color);
+    border-radius: 16px;
+    text-decoration: none;
+  }
+
+  .mobile-nav-btns a:hover {
     background-color: var(--hover-menu);
+  }
+
+  #mobile-nav-btns-legal-policy {
+    white-space: nowrap;
   }
 
   .mobile-design {
@@ -341,6 +372,7 @@ main {
     font-family: var(--second-font);
     font-size: 16px;
     color: var(--navbar-color);
+
   }
 
   .nav-element {

@@ -9,7 +9,7 @@ h5 {
 dialog {
     border-radius: 30px;
     border-style: inherit;
-    transition: all 125ms ease-in-out;  
+    transition: all 125ms ease-in-out;
 }
 
 dialog:modal {
@@ -147,7 +147,7 @@ button {
 
 .cancel-btn:hover {
     border: 2px var(--hover-bg-color-lightblue) solid;
-    box-shadow: var(--shadow); 
+    box-shadow: var(--shadow);
     transition: background-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
 }
 
@@ -158,7 +158,7 @@ button {
 .cancel-btn h6 {
     color: var(--main-color);
     font-family: var(--default-font);
-    
+
 }
 
 .create-contact-btn h6 {
@@ -183,7 +183,7 @@ button {
     border: 1px solid #6B6B6BB6;
     border-radius: 10px;
     padding: 0 12px;
-    height: 50px; 
+    height: 50px;
 }
 
 .input-wrapper input {
@@ -262,7 +262,7 @@ button {
         margin-top: 0;
         gap: 32px;
         justify-self: center;
-    
+
     }
 
     .cancel-btn {
@@ -291,7 +291,7 @@ button {
         align-items: flex-start;
         padding-left: 16px;
     }
-    
+
     .form-logo-wrapper {
         display: none;
     }

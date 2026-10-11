@@ -1,0 +1,185 @@
+.questions-image {
+  display: none;
+}
+
+.info-page {
+  display: flex;
+  flex-direction: column;
+  padding: 116px 96px 96px 96px;
+}
+
+.info-intro {
+  padding-top: 6px;
+}
+
+.address {
+  padding-top: 16px;
+}
+
+.info-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 26px;
+}
+
+.info-header-img-wrapper {
+  width: 32px;
+  height: 32px;
+}
+
+.info-header-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.info-header button {
+  border-style: unset;
+  background-color: transparent;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.info-header button:hover {
+  transform: scale(1.2);
+  background-color: var(--hover-btn-grey);
+}
+
+.info-title {
+  display: flex;
+  margin: 0;
+}
+
+.info-intro a,
+.info-section-legal a,
+.info-section a,
+.info-subclass a {
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  color: black;
+  text-decoration: none;
+}
+
+.info-intro a:hover,
+.info-section-legal a:hover,
+.info-section a:hover,
+.info-subclass a:hover {
+  color: var(--hover-primary-button);
+}
+
+.info-back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.info-section {
+  padding: 35px 0 0 0;
+}
+
+.info-section-legal {
+  padding: 24px 0 0 0;
+}
+
+.info-subclass {
+  padding: 24px 0 0 0;
+}
+
+.info-section h5,
+.info-section-legal h5 {
+  padding: 0 0 24px 0;
+  font-weight: 700;
+}
+
+.info-section h6,
+.info-subclass h6,
+.info-section-legal h6 {
+  font-weight: 700;
+}
+
+.info-section ul,
+.info-subclass ul,
+.info-section-legal ul {
+   list-style-position: inside;
+}
+
+.imprint {
+  padding-top: 16px;
+}
+
+.imprint h5 {
+  font-weight: 700;
+}
+
+#policy-second-headline {
+  padding: 0 0 10px 0;
+}
+
+#info-section-title {
+  padding: 0 0 16px 0;
+}
+
+
+
+.help-manual-list {
+  counter-reset: step;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.help-manual-list li {
+  list-style: none;
+  counter-increment: step;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.help-manual-list li::before {
+  content: counter(step) ".";
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.help-manual-list h6 {
+  font-weight: 700;
+}
+
+.help-manual-item {   /*braucht man das???*/
+  display: flex;
+  flex-direction: column;
+}
+
+.help-manual-item span {
+  display: inline-block;
+}
+
+/*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
+
+@media (max-width: 1200px) {
+   h1 {
+    font-size: min(3rem,3.75rem);
+  }
+   .info-page {
+     padding: 8vw 4vw 96px 4vw;
+   }
+}
+
+@media (max-width: 768px) {
+  .info-page {
+    padding: 48px 16px 96px 16px;
+  }
+}
+
+@media (max-width: 428px) {
+  h1 {
+    font-size: 2.75rem;
+  }
+}

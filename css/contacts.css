@@ -39,6 +39,7 @@ main {
   width: 29px;
   height: auto;
 }
+
 .add-task-content {
   display: flex;
 }
@@ -243,6 +244,7 @@ h1 {
   flex-direction: column;
   gap: 15px;
 }
+
 .detail-label {
   font-size: 16px;
   font-weight: 700;
