@@ -55,6 +55,7 @@
 .info-section-legal a,
 .info-section a,
 .info-subclass a {
+  overflow-wrap: anywhere;
   cursor: pointer;
   color: black;
   text-decoration: none;

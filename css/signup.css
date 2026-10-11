@@ -7,7 +7,6 @@
   --button-dark: #2d3d4d;
 }
 
-
 html,
 body {
   display: block;
@@ -19,6 +18,7 @@ body {
 }
 
 .page {
+  max-width: 1440px;
   width: 100%;
   min-height: 100vh;
   display: flex;
