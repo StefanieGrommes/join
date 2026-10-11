@@ -10,6 +10,7 @@ function getInitials(name) {
   return (first + last).toUpperCase();
 }
 
+
 /**
  * Builds the HTML for a single contact in the list.
  * @param {Object} contact - Contact with name, email and color
@@ -25,6 +26,7 @@ function getContactTemplate(contact) {
       </div>
     </li>`;
 }
+
 
 /**
  * Builds the HTML for one letter group including all its contacts.
@@ -44,6 +46,7 @@ function getContactGroupTemplate(letter, groupContacts) {
     </div>`;
 }
 
+
 /**
  * Returns a copy of the contacts sorted alphabetically by name.
  * @param {Array<Object>} contacts - Unsorted list of contacts
@@ -52,6 +55,7 @@ function getContactGroupTemplate(letter, groupContacts) {
 function sortContactsByName(contacts) {
   return [...contacts].sort((a, b) => a.name.localeCompare(b.name));
 }
+
 
 /**
  * Groups contacts by the first letter of their name.
@@ -68,6 +72,7 @@ function groupContactsByLetter(contacts) {
   return groups;
 }
 
+
 /**
  * Renders the grouped contact list into the DOM.
  * @returns {void}
@@ -81,6 +86,7 @@ function renderContactList() {
   }
   wrapper.innerHTML = html;
 }
+
 
 /**
  * Builds the HTML for the detail view of a contact.
@@ -110,6 +116,7 @@ function getContactDetailTemplate(contact) {
     </div>`;
 }
 
+
 /**
  * Shows the detail view of the contact with the given email.
  * @param {string} email - Email address identifying the contact
@@ -123,6 +130,8 @@ function openContactDetail(email, element) {
   document.querySelector(".add-task-content").classList.add("detail-open");
   setActiveContact(element);
 }
+
+
 /**
  * Highlights the clicked contact and removes the previous highlight.
  * @param {HTMLElement} element - The clicked list item
@@ -132,4 +141,13 @@ function setActiveContact(element) {
   let active = document.querySelector(".contact-item-selected");
   if (active) active.classList.remove("contact-item-selected");
   element.classList.add("contact-item-selected");
+}
+
+
+/**
+ * Close the contact detail view and returns to the list.
+ * @returns {void}
+ */
+function closeContactDetail() {
+  document.querySelector(".add-task-content").classList.remove("detail-open");
 }
