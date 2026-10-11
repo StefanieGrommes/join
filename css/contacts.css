@@ -113,10 +113,11 @@ main {
 .contact-item:hover {
   background-color: rgb(245, 245, 245);
 }
-.contact-item-selected {
+
+.contact-item.contact-item-selected {
   background-color: var(--main-color);
 }
-.contact-item-selected .contact-name {
+.contact-item.contact-item-selected .contact-name {
   color: white;
 }
 
