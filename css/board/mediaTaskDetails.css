@@ -1,0 +1,14 @@
+@media (max-width: 525px) {
+  .board-detail-modal-body .board-detail-card {
+    padding: clamp(20px, 4.6vw, 24px);
+  }
+
+  .board-detail-modal-body .board-detail-badge {
+    min-width: 0;
+    font-size: 16px;
+  }
+
+  .board-detail-modal-body .board-detail-assignee {
+    gap: 12px;
+  }
+}

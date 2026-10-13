@@ -1,0 +1,87 @@
+@media (max-width: 768px) {
+
+  .btn {
+    width: 180px;
+    height: 51px;
+  }
+
+  .back-button {
+    top: 16px;
+    left: 0;
+  }
+
+  .footer {
+    width: 246px;
+    min-height: 35px;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .auth-panel {
+    height: 595px;
+  }
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding-left: clamp(16px, 3.25vw, 24px);
+    padding-right: clamp(16px, 3.25vw, 24px);
+  }
+}
+
+@media (max-width: 576px) {
+
+  .content-card {
+    padding: 32px 16px;
+  }
+}
+
+@media (max-width: 440px) {
+  .page {
+    justify-content: start;
+  }
+  .page-header {
+    position: relative;
+    padding: 24px 0 16px;
+  }
+
+  .panel-area {
+    flex: 1;
+    padding-bottom: 24px;
+  }
+
+  .auth-panel {
+    height: auto;
+    min-height: 520px;
+  }
+
+  .mobile-bottom-area {
+    position: static;
+  }
+
+  .field input,
+  .field input::placeholder {
+    font-size: 16px;
+  }
+
+  .back-button {
+    top: 15px;
+  }
+
+  .footer {
+    padding-top: 8px;
+  }
+}
+
+@media (max-width: 320px){
+ .back-button {
+      top: 12px;
+  }
+
+  .auth-panel {
+    min-height: 520px;
+  }
+}

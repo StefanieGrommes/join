@@ -14,9 +14,7 @@ let currentBoardSearchQuery = "";
 
 function syncBoardMobileNavigation() {
   const boardTopNav = document.querySelector(".board-mobile-top-nav");
-  const boardFooterNav = document.querySelector(".board-mobile-footer-nav");
   const genericHeader = document.querySelector(".nav-mobile");
-  const genericFooter = document.querySelector(".nav-footer-mobile");
 
   const isMobile = window.innerWidth <= 768;
 
@@ -33,29 +31,10 @@ function syncBoardMobileNavigation() {
     boardTopNav.style.gridArea = isMobile ? "auto" : "";
   }
 
-  if (boardFooterNav) {
-    boardFooterNav.style.display = isMobile ? "flex" : "";
-    boardFooterNav.style.width = isMobile ? "100vw" : "";
-    boardFooterNav.style.maxWidth = isMobile ? "100vw" : "";
-    boardFooterNav.style.minHeight = isMobile ? "0" : "";
-    boardFooterNav.style.padding = isMobile ? "0" : "";
-    boardFooterNav.style.position = isMobile ? "fixed" : "";
-    boardFooterNav.style.left = isMobile ? "0" : "";
-    boardFooterNav.style.right = isMobile ? "0" : "";
-    boardFooterNav.style.bottom = isMobile ? "0" : "";
-    boardFooterNav.style.zIndex = isMobile ? "8" : "";
-    boardFooterNav.style.gridArea = isMobile ? "auto" : "";
-    boardFooterNav.style.background = isMobile ? "var(--sidebar-bg)" : "";
-    boardFooterNav.style.boxShadow = isMobile ? "0 -4px 12px rgba(15, 23, 42, 0.18)" : "";
-  }
-
   if (genericHeader) {
     genericHeader.style.display = isMobile ? "none" : "";
   }
 
-  if (genericFooter) {
-    genericFooter.style.display = isMobile ? "none" : "";
-  }
 }
 
 /**

@@ -1,0 +1,27 @@
+@media (max-width: 360px) {
+  .board-task-dialog {
+    width: min(900px, calc(100vw - 24px));
+    padding: 16px 14px 14px;
+  }
+
+  .board-task-form {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 0.68fr);
+    gap: 12px;
+  }
+
+  .board-task-form-column--left .board-task-input,
+  .board-task-form-column--left .board-task-textarea,
+  .board-task-form-column--left .board-task-date-wrap {
+    width: 94%;
+  }
+
+  .board-task-form-column--left .board-task-input,
+  .board-task-form-column--left .board-task-textarea {
+    font-size: 16px;
+    padding: 10px 12px;
+  }
+
+  .board-task-form-column--left .board-task-textarea {
+    min-height: 108px;
+  }
+}
