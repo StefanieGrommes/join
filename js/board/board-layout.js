@@ -114,13 +114,131 @@ function getDefaultBoardState() {
   }, {});
 }
 
+function moveBoardTask(taskId, columnId) {
+  const task = tasks.find((item) => item.id === taskId);
+  const column = Array.from(document.querySelectorAll(".board-main-column"))
+    .find((item) => item.dataset.column === columnId);
+  if (!task || !column) {
+    console.error("Cannot move task: task or target column not found.", { taskId, columnId });
+    return false;
+  }
+
+  const state = { ...getDefaultBoardState(), ...loadBoardState(), [taskId]: columnId };
+  window.localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(state));
+  task.status = columnId;
+  return true;
+}
+
+function initBoardMoveMenu() {
+  const board = document.querySelector(".board-main-container");
+  if (!board) return;
+
+  const menu = document.createElement("div");
+  menu.id = "board-move-menu";
+  menu.className = "board-move-menu";
+  menu.setAttribute("role", "menu");
+  menu.setAttribute("aria-label", "Move to");
+  menu.hidden = true;
+  document.body.appendChild(menu);
+  let activeButton = null;
+  const columnIds = ["todo", "in-progress", "await-feedback", "done"];
+
+  const closeMenu = (restoreFocus = false) => {
+    menu.hidden = true;
+    if (activeButton) {
+      activeButton.setAttribute("aria-expanded", "false");
+      if (restoreFocus) activeButton.focus();
+    }
+    activeButton = null;
+  };
+
+  board.addEventListener("click", (event) => {
+    const button = event.target.closest(".board-card-move-button");
+    if (!button || !window.matchMedia("(max-width: 360px)").matches) return;
+    if (activeButton === button) {
+      closeMenu(true);
+      return;
+    }
+    closeMenu();
+    activeButton = button;
+    button.setAttribute("aria-expanded", "true");
+    const card = button.closest(".board-card--task");
+    const currentIndex = columnIds.indexOf(card.closest(".board-main-column").dataset.column);
+    menu.replaceChildren();
+    const heading = document.createElement("p");
+    heading.className = "board-move-menu-title";
+    heading.textContent = "Move to";
+    menu.appendChild(heading);
+
+    [currentIndex - 1, currentIndex + 1].forEach((index) => {
+      if (index < 0 || index >= columnIds.length) return;
+      const option = document.createElement("button");
+      option.type = "button";
+      option.setAttribute("role", "menuitem");
+      const arrow = document.createElement("span");
+      arrow.setAttribute("aria-hidden", "true");
+      arrow.textContent = index < currentIndex ? "\u2191" : "\u2193";
+      option.append(arrow, document.createTextNode(getColumnLabel(columnIds[index])));
+      option.addEventListener("click", () => {
+        const taskId = card.dataset.cardId;
+        if (!moveBoardTask(taskId, columnIds[index])) return;
+        closeMenu();
+        initBoardLayout();
+        const movedCard = Array.from(board.querySelectorAll(".board-card--task"))
+          .find((item) => item.dataset.cardId === taskId);
+        movedCard.querySelector(".board-card-move-button").focus();
+      });
+      menu.appendChild(option);
+    });
+
+    menu.hidden = false;
+    const rect = button.getBoundingClientRect();
+    const left = Math.max(8, Math.min(rect.right - menu.offsetWidth, window.innerWidth - menu.offsetWidth - 8));
+    const top = rect.bottom + menu.offsetHeight + 8 <= window.innerHeight
+      ? rect.bottom + 8
+      : Math.max(8, rect.top - menu.offsetHeight - 8);
+    menu.style.left = `${left}px`;
+    menu.style.top = `${top}px`;
+    menu.querySelector("button").focus();
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!menu.contains(event.target) && !event.target.closest(".board-card-move-button")) closeMenu();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (menu.hidden) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeMenu(true);
+    } else if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+      event.preventDefault();
+      const options = Array.from(menu.querySelectorAll("button"));
+      const index = options.indexOf(document.activeElement);
+      const nextIndex = event.key === "Home" ? 0 : event.key === "End" ? options.length - 1
+        : (index + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
+      options[nextIndex].focus();
+    } else if (event.key === "Tab") {
+      closeMenu(true);
+    }
+  });
+  window.addEventListener("resize", () => closeMenu());
+  document.addEventListener("scroll", (event) => {
+    if (!menu.contains(event.target)) closeMenu();
+  }, true);
+  board.addEventListener("input", () => closeMenu());
+}
+
 // ===============================
 // Drag & Drop für eine einzelne Karte
 // ===============================
 function bindCardDragEvents(card, draggedCardRef) {
   if (!card) return;
 
-  card.addEventListener("dragstart", () => {
+  card.addEventListener("dragstart", (event) => {
+    if (window.matchMedia("(max-width: 360px)").matches) {
+      event.preventDefault();
+      return;
+    }
     draggedCardRef.value = card;
     card.classList.add("is-dragging");
     card.setAttribute("data-dragging", "true");
@@ -301,13 +419,6 @@ function initBoardLayout() {
   };
 
   // ===============================
-  // Zustand speichern
-  // ===============================
-  const saveBoardState = () => {
-    window.localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(boardState));
-  };
-
-  // ===============================
   // Drop-Ziel visuell markieren
   // ===============================
   const setDropTargetState = (column, isActive) => {
@@ -315,17 +426,17 @@ function initBoardLayout() {
   };
 
   columns.forEach((column) => {
-    column.addEventListener("dragover", (event) => {
+    column.ondragover = (event) => {
       if (!draggedCardRef.value) return;
       event.preventDefault();
       setDropTargetState(column, true);
-    });
+    };
 
-    column.addEventListener("dragleave", () => {
+    column.ondragleave = () => {
       setDropTargetState(column, false);
-    });
+    };
 
-    column.addEventListener("drop", (event) => {
+    column.ondrop = (event) => {
       event.preventDefault();
 
       if (!draggedCardRef.value) return;
@@ -334,25 +445,18 @@ function initBoardLayout() {
       const draggedCard = draggedCardRef.value;
       const draggedTaskId = draggedCard.dataset.cardId;
 
+      if (!moveBoardTask(draggedTaskId, targetColumnId)) return;
       boardState[draggedTaskId] = targetColumnId;
-
-      const draggedTask = tasks.find((task) => task.id === draggedTaskId);
-      if (draggedTask) {
-        draggedTask.status = targetColumnId;
-      }
-
-      saveBoardState();
       renderBoardState();
       setDropTargetState(column, false);
-    });
+    };
   });
 
-  if (searchInput && !searchInput.dataset.searchInitialized) {
-    searchInput.dataset.searchInitialized = "true";
-    searchInput.addEventListener("input", () => {
+  if (searchInput) {
+    searchInput.oninput = () => {
       currentBoardSearchQuery = searchInput.value || "";
       renderBoardState();
-    });
+    };
   }
 
   if (searchInput) {
@@ -755,6 +859,7 @@ function initTaskDetailModal() {
 document.addEventListener("DOMContentLoaded", () => {
   syncBoardMobileNavigation();
   initBoardLayout();
+  initBoardMoveMenu();
   initAddTaskModal();
   initTaskDetailModal();
 });

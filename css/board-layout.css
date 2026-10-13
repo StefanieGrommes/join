@@ -290,6 +290,7 @@
   .board-column-title button {
     width: 22px;
     height: 22px;
+    flex-shrink: 0;
     border: 2px solid #3a4f67;
     border-radius: 50%;
     background: transparent;
@@ -510,6 +511,66 @@
     margin-bottom: 10px;
   }
 
+  .board-card-move-button {
+    display: none;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 1.5px solid #2f3d4c;
+    border-radius: 6px;
+    background: transparent;
+    color: #2f3d4c;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  .board-move-menu {
+    position: fixed;
+    z-index: 1000;
+    width: 180px;
+    max-width: calc(100vw - 16px);
+    padding: 12px;
+    border-radius: 0 18px 18px 18px;
+    background: #2a3647;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+  }
+
+  .board-move-menu-title {
+    margin: 0 0 8px;
+    padding: 0 8px;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .board-move-menu button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 6px 8px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .board-move-menu button:hover,
+  .board-move-menu button:focus-visible {
+    background: #091931;
+  }
+
+  .board-move-menu button span {
+    font-size: 22px;
+    line-height: 1;
+  }
+
   .board-card-badge {
     display: inline-flex;
     align-items: center;
@@ -686,17 +747,16 @@
   }
 
   .board-mobile-footer-links {
-    width: 100%;
-    max-width: 520px;
-    margin: 0 auto;
+    width: 90%;
     padding: 10px 12px 12px;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    display: flex;
+    justify-content: space-between;
     gap: 6px;
   }
 
   .board-mobile-nav-link {
     min-height: 56px;
+    width: 76px;
     border-radius: 12px;
     color: #cbd5e1;
     text-decoration: none;
@@ -705,8 +765,7 @@
     align-items: center;
     justify-content: center;
     gap: 4px;
-    font-size: 12px;
-    line-height: 1.1;
+    font-size: 15px;
     text-align: center;
   }
 
@@ -885,6 +944,11 @@
       padding: 0 14px 0 16px;
     }
 
+  .board-card--task {
+    padding: 4px 6px;
+  }
+
+
     .board-header-container,
     .board-main-container {
       margin-left: 12px;
@@ -957,19 +1021,6 @@
 
          padding-right: 0px;
     }
-
-    .board-detail-modal-body .board-detail-card {
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    box-sizing: border-box;
-    background: #ffffff;
-    border-radius: 18px;
-    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
-    padding: 28px 20px 20px 28px;
-    overflow-y: auto;
-}
-
 
     .board-mobile-top-nav,
     .board-mobile-footer-nav {
@@ -1133,14 +1184,6 @@
     }
 
 
-    .board-detail-modal-dialog {
- display: flex;
-  width: 90%;
-  height: 70%;
-
-}
-
-
     .board-main-column-content .board-card {
       width: 220px;
       min-width: 220px;
@@ -1176,7 +1219,7 @@
 
     .board-mobile-nav-link {
       min-height: 52px;
-      font-size: 10px;
+      width: 76px;
     }
 
     .board-mobile-nav-icon,
@@ -1202,6 +1245,15 @@
   }
 
   @media (max-width: 360px) {
+    .board-card-header {
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .board-card-move-button {
+      display: inline-flex;
+    }
+
     .board-header-container,
     .board-main-container {
       margin-left: 0;
@@ -1255,6 +1307,35 @@
   }
 
   line-height: 1;
+}
+
+
+@media (max-width: 360px) {
+  .board-task-dialog {
+    width: min(900px, calc(100vw - 24px));
+    padding: 16px 14px 14px;
+  }
+
+  .board-task-form {
+    grid-template-columns: minmax(0, 0.82fr) minmax(0, 0.68fr);
+    gap: 12px;
+  }
+
+  .board-task-form-column--left .board-task-input,
+  .board-task-form-column--left .board-task-textarea,
+  .board-task-form-column--left .board-task-date-wrap {
+    width: 94%;
+  }
+
+  .board-task-form-column--left .board-task-input,
+  .board-task-form-column--left .board-task-textarea {
+    font-size: 0.94rem;
+    padding: 10px 12px;
+  }
+
+  .board-task-form-column--left .board-task-textarea {
+    min-height: 108px;
+  }
 }
 
 .board-contact-avatar + .board-contact-avatar {
@@ -1398,19 +1479,7 @@
   fill: currentColor;
 }
 
-@media (max-width: 768px) {
-  .nav-mobile,
-  .nav-footer-mobile,
-  .aside-blue-box-bg,
-  aside {
-    display: none !important;
-  }
 
-  .board-mobile-top-nav,
-  .board-mobile-footer-nav {
-    display: flex !important;
-  }
-}
 
 /* =====================================================
    Modal-Dialog für Add Task
@@ -1556,33 +1625,6 @@
   cursor: not-allowed;
 }
 
-@media (max-width: 360px) {
-  .board-task-dialog {
-    width: min(900px, calc(100vw - 24px));
-    padding: 16px 14px 14px;
-  }
-
-  .board-task-form {
-    grid-template-columns: minmax(0, 0.82fr) minmax(0, 0.68fr);
-    gap: 12px;
-  }
-
-  .board-task-form-column--left .board-task-input,
-  .board-task-form-column--left .board-task-textarea,
-  .board-task-form-column--left .board-task-date-wrap {
-    width: 94%;
-  }
-
-  .board-task-form-column--left .board-task-input,
-  .board-task-form-column--left .board-task-textarea {
-    font-size: 0.94rem;
-    padding: 10px 12px;
-  }
-
-  .board-task-form-column--left .board-task-textarea {
-    min-height: 108px;
-  }
-}
 
 /* =====================================================
    Detail-Modal fuer grosse Kartenansicht
@@ -1605,7 +1647,7 @@
 .board-detail-modal-dialog {
   display: flex;
   border-radius: 18px;
-  width: 525px;
+  width: min(525px, calc(100% - 32px));
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -1619,6 +1661,7 @@
   border-radius: 18px;
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
   padding: 48px 40px 40px 48px;
+  width: 100%;
   max-width: 525px;
   overflow-y: auto;
 }
@@ -1662,6 +1705,8 @@
   justify-content: space-between;
   max-height: 36px;
   max-width: 445px;
+  gap: 12px;
+  flex-shrink: 0;
 
 }
 
@@ -1682,6 +1727,7 @@
 .board-detail-modal-body .board-detail-close {
   width: 30px;
   height: 30px;
+  flex-shrink: 0;
   border: none;
   background: transparent;
   color: #2f3d4c;
@@ -1705,18 +1751,20 @@
 
 .board-detail-modal-body .board-detail-title {
   margin: 18px 0 18px;
-  font-size: 61px;
+  font-size: clamp(32px, 8vw, 61px);
   font-weight: 700;
   color: #111827;
   max-width: 445px;
+  overflow-wrap: anywhere;
 }
 
 .board-detail-modal-body .board-detail-description {
   color: #6b7280;
-  font-size: 20px;
+  font-size: clamp(16px, 3vw, 20px);
   font-weight: 400;
   margin: 0 0 26px;
   width: 100%;
+  overflow-wrap: anywhere;
 }
 
 .board-detail-modal-body {
@@ -1727,20 +1775,33 @@
 }
 
 .board-detail-modal-body .board-detail-label {
-  min-width: 130px;
+  min-width: clamp(96px, 20vw, 130px);
   color: #2f3d4c;
-  font-size: 20px;
+  font-size: clamp(16px, 3vw, 20px);
   font-weight: 400;
   line-height: 1.3;
 }
 
 .board-detail-modal-body .board-detail-value {
   color: #2f3d4c;
-  font-size: 20px;
+  font-size: clamp(16px, 3vw, 20px);
   font-weight: 400;
   line-height: 1.3;
   overflow-wrap: anywhere;
   word-break: break-word;
+}
+
+.board-detail-modal-body .board-detail-priority {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: #111827;
+}
+
+.board-detail-priority-icon {
+  width: 20px;
+  height: auto;
+  flex-shrink: 0;
 }
 
 .board-detail-modal-body .board-detail-assignees {
@@ -1773,6 +1834,7 @@
 .board-detail-assignee span {
   width: 42px;
   height: 42px;
+  flex-shrink: 0;
 }
 
 .board-detail-assignee span {
@@ -1782,6 +1844,8 @@
 
 .board-detail-assignee-name {
   margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .board-detail-assignee {
@@ -1808,6 +1872,11 @@
   color: #2f3d4c;
   font-size: 18px;
   line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.board-detail-modal-body .board-detail-subtask span {
+  min-width: 0;
 }
 
 .board-detail-modal-body .board-detail-subtask input[type="checkbox"] {
@@ -1852,4 +1921,19 @@
 .board-detail-modal-body .board-detail-button-text {
   font-size: 14px;
   line-height: 1;
+}
+
+@media (max-width: 525px) {
+  .board-detail-modal-body .board-detail-card {
+    padding: clamp(20px, 4.6vw, 24px);
+  }
+
+  .board-detail-modal-body .board-detail-badge {
+    min-width: 0;
+    font-size: 16px;
+  }
+
+  .board-detail-modal-body .board-detail-assignee {
+    gap: 12px;
+  }
 }
