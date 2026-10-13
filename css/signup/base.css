@@ -107,7 +107,8 @@ body {
 }
 
 .auth-panel {
-  height: 630px;
+  min-height: 630px;
+  height: auto;
   width: min(600px, 100%);
   display: flex;
   justify-content: center;
@@ -132,6 +133,7 @@ body {
 }
 
 .signup-form {
+  padding: 24px 0;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -163,13 +165,13 @@ body {
   object-fit: cover;
 }
 
-.signup-form button {
+.signup-form .back-button {
   border-style: unset;
   background-color: transparent;
   cursor: pointer;
 }
 
-.signup-form button:hover {
+.signup-form .back-button:hover {
   transform: scale(1.2);
   background-color: var(--hover-btn-grey);
 }
@@ -295,4 +297,60 @@ body {
 .footer a:hover {
   color: var(--hover-menu);
   font-weight: 700;
+}
+
+.signup-password-feedback {
+  width: 100%;
+  margin-top: -12px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.signup-password-feedback p {
+  margin: 0;
+}
+
+.signup-password-feedback .is-invalid,
+.signup-password-error {
+  color: #c62828;
+}
+
+.signup-password-error:not(:empty) {
+  margin-top: 8px;
+}
+
+.field input[aria-invalid="true"] {
+  border-color: #c62828;
+}
+
+.signup-success-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.signup-success-overlay[hidden] {
+  display: none;
+}
+
+.signup-success-message {
+  width: 326px;
+  max-width: calc(100vw - 32px);
+  height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border-radius: 20px;
+  background: #2a3647;
+  color: #ffffff;
+  font-size: 20px;
+  text-align: center;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.15);
 }

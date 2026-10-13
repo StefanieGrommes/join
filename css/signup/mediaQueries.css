@@ -21,7 +21,8 @@
   }
 
   .auth-panel {
-    height: 595px;
+    min-height: 595px;
+    height: auto;
   }
 }
 
