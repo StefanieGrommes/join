@@ -56,10 +56,20 @@ function getSubtaskItemTemplate(text) {
                               </div> </li>`
 }
 
+/**
+ * adds event-listener to the subTaskList Item and decides which action is used based on the clicked element
+ *
+ */
+subtaskInput.addEventListener("keydown", (event) => {
+  if (event.key !== "Enter") return;
+  event.preventDefault();
+  saveSubtask();
+});
+
 subTaskList.addEventListener("click", (event) => {
   const item  = event.target.closest(".subtask-list-item"); //findet das Element, oder Elternelement, das zu dem Item gehört, auf das geklickt wurde
   if (!item || item.classList.contains("editing")) return;
-  if (event.target.closest(".delete-submask-item-btn")) {
+  if (event.target.closest(".delete-subtask-item-btn")) {
     item.remove();
     return;
   } else {
@@ -67,48 +77,42 @@ subTaskList.addEventListener("click", (event) => {
   }
 });
 
-
-
-function rejectSubtask() {
-  subtaskInput.value = "";
-}
-
-
-
 function startEditSubtask(item) {
-  if (item.classList.contains("editing")) return;
-  const text = item.querySelector(".subtask-text").textContent;
+  const span = item.querySelector(".subtask-text");
+  const input = document.createElement("input");
+  input.type = "text";
+  input.classList.add("subtask-edit-input");
+  input.value = span.textContent;
+  span.replaceWith(input);
   item.classList.add("editing");
-  item.innerHTML = getSubtaskEditTemplate(text);
-  item.querySelector("input").focus;
-
-  subTaskList.innerHTML += `<div class="subtask-list-item-wrapper">
-                              <input type="text" id="subtask-list-item" value="${subtaskInput.value}">
-                              <div class="subtask-list-buttons">
-                              <button type="button"><img src="../assets/delete-subtask.png" alt="delete subtask item"> </button>
-                              <span class="action-divider"></span>
-                              <button type="button"><img src="../assets/edit-subtask.png" alt="edit subtask item"></button>
-                              </div>
-                            </div>`
-
+  input.focus(); // setzt den Cursor auf das Input Feld
+  input.addEventListener("blur", () => finishEditSubtask(item, input));
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {event.preventDefault(); input.blur();
+    }
+  });
 }
 
-/*
-const editSubtaskItemBtns = document.getElementsByClassName("edit-subtask-item-btn");
-for (let i = 0; i < editSubtaskItemBtns.length; i++) {
-  editSubtaskItemBtns[i].addEventListener("click",() => editSubtaskListItem(editSubtaskItemBtns[i]));
+function finishEditSubtask(item, input) {
+  if (!item.classList.contains("editing")) return;
+  item.classList.remove("editing");
+  const newText = input.value.trim();
+  if(!newText) {
+    item.remove();
+    return;
+  } else {
+    const span = document.createElement("span");
+    span.classList.add("subtask-text");
+    span.textContent = newText;
+    input.replaceWith(span);
+  }
 }
 
-const deleteSubtaskItemBtns = document.getElementsByClassName("delete-subtask-item-btn");
-for (let i = 0; i < deleteSubtaskItemBtns.length; i++) {
-  deleteSubtaskItemBtns[i].addEventListener("click", () => deleteSubtaskListItem(deleteSubtaskItemBtns[i]));
-}
-
-function deleteSubtaskListItem(thisBtn){
+function rejectSubtask(){
   subtaskInput.value = "";
+  showSubtaskActions();
 }
-
-
+/*
 function getDueDate(){
 
 }

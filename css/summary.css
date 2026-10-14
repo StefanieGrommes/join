@@ -87,7 +87,7 @@ h5 {
 
 .grey-boxes-task:hover,
 .grey-boxes-task:focus-visible {
-    box-shadow: var(--shadow);
+    box-shadow: var(--box-shadow-default);
     transform: scale(1.03);
     cursor: pointer;
     background-color: var(--main-color);
