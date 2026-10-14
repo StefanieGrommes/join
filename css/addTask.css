@@ -106,6 +106,8 @@
   right: 14px;
   transform: translateY(-50%);
   pointer-events: none;
+  width: 24px;
+  height: 24px;
 }
 
 input[type="date"]::-webkit-inner-spin-button,
@@ -177,7 +179,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .dropdown-toggle,
-.input-with-icon {
+.input-with-icon,
+.subtask-list-item-wrapper {
   position: relative;
 }
 
@@ -260,8 +263,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   gap: 10px;
 }
 
-.subtask-actions {
-  visibility: hidden;
+.subtask-list-item-wrapper {
+  border-bottom: 1px solid var(--hover-primary-button);
+}
+
+.subtask-actions,
+.subtask-list-buttons {
   position: absolute;
   top: 50%;
   right: 21px;
@@ -271,16 +278,39 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   gap: 8px;
 }
 
-.subtask-list-item {
-  transform: translateY(-50%);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+.subtask-actions {
+  visibility: hidden;
+}
+
+.subtask-list-buttons button {
+  background: transparent;
+  border: unset;
+}
+
+.subtask-list-buttons img {
+  width: 24px;
+  height: 24px;
 }
 
 .subtask-list-buttons {
-  display: flex;
+  visibility: hidden;
+}
+
+.subtask-list-item:hover .subtask-list-buttons {
+  visibility: visible;
+}
+
+.subtask-list-item {
+  font-size: 1rem;
+  border-radius: 10px;
+  border: none;
+  padding: 6.5px 16px;
+  height: 32px;
+  position: relative;
+}
+
+.subtask-list-item:hover {
+  background-color: var( --navbar-color);
 }
 
 .subtask-list-item button {
@@ -291,11 +321,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
+.subtask-list {
+  list-style-position: inside;
+}
+
 .subtask-actions img {
   position: static;
   transform: none;
 }
-
 
 .subtask-actions button {
   display: flex;

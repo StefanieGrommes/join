@@ -33,6 +33,7 @@ main {
 .add-contact-btn:hover {
   background-color: var(--hover-secondary-button);
   border-color: var(--hover-secondary-button);
+  box-shadow: var(--shadow-stronger);
 }
 
 .icon-add {

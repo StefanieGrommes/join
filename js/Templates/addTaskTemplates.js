@@ -13,15 +13,15 @@ function getContactOptionTemplate(contact) {
   `;
 }
 
-const priorityBtn = document.getElementsByClassName("priority-btn");
-for (let i = 0; i < priorityBtn.length; i++) {
-  priorityBtn[i].addEventListener("click", () => changePriority(priorityBtn[i]));
+const priorityBtns = document.getElementsByClassName("priority-btn");
+for (let i = 0; i < priorityBtns.length; i++) {
+  priorityBtns[i].addEventListener("click", () => changePriority(priorityBtns[i]));
 }
 
 function changePriority(thisBtn){
-  for (let i = 0; i < priorityBtn.length; i++) {
-    priorityBtn[i].classList.remove("priority-active");
-     const priorityBtnsSvg = priorityBtn[i].querySelector("svg");
+  for (let i = 0; i < priorityBtns.length; i++) {
+    priorityBtns[i].classList.remove("priority-active");
+     const priorityBtnsSvg = priorityBtns[i].querySelector("svg");
   priorityBtnsSvg.classList.remove("priority-active-svg");
   }
   thisBtn.classList.add("priority-active");
@@ -37,23 +37,80 @@ function showSubtaskActions(){
 }
 
 const subTaskList = document.querySelector(".subtask-list");
+
 function saveSubtask(){
-  subTaskList.innerHTML += `<li class="subtask-list-item">
-                              <span>${subtaskInput.value}</span>
-                              <div class="subtask-list-buttons">
-                              <button type="button" onclick="editSubtaskListItem()"><img src="../assets/edit-subtask.png" alt="edit subtask item"></button>
-                              <span class="action-divider"></span>
-                              <button type="button" onclick="deleteSubtaskListItem()"><img src="../assets/delete-subtask.png" alt="delete subtask item"> </button>
-                              </div> </li>`
+  const text = subtaskInput.value.trim();
+  if (!text) return;
+  subTaskList.insertAdjacentHTML("beforeend", getSubtaskItemTemplate(text));
   subtaskInput.value = "";
   showSubtaskActions();
 }
 
-function rejectSubtask(){
+function getSubtaskItemTemplate(text) {
+  return  `<li class="subtask-list-item">
+                              <span class="subtask-text">${text}</span>
+                              <div class="subtask-list-buttons">
+                              <button type="button" class="edit-subtask-item-btn"><img src="../assets/edit-subtask.png" alt="edit subtask item"></button>
+                              <span class="action-divider"></span>
+                              <button type="button" class="delete-subtask-item-btn"><img src="../assets/delete-subtask.png" alt="delete subtask item"> </button>
+                              </div> </li>`
+}
+
+subTaskList.addEventListener("click", (event) => {
+  const item  = event.target.closest(".subtask-list-item"); //findet das Element, oder Elternelement, das zu dem Item gehört, auf das geklickt wurde
+  if (!item || item.classList.contains("editing")) return;
+  if (event.target.closest(".delete-submask-item-btn")) {
+    item.remove();
+    return;
+  } else {
+  startEditSubtask(item);
+  }
+});
+
+
+
+function rejectSubtask() {
   subtaskInput.value = "";
 }
+
+
+
+function startEditSubtask(item) {
+  if (item.classList.contains("editing")) return;
+  const text = item.querySelector(".subtask-text").textContent;
+  item.classList.add("editing");
+  item.innerHTML = getSubtaskEditTemplate(text);
+  item.querySelector("input").focus;
+
+  subTaskList.innerHTML += `<div class="subtask-list-item-wrapper">
+                              <input type="text" id="subtask-list-item" value="${subtaskInput.value}">
+                              <div class="subtask-list-buttons">
+                              <button type="button"><img src="../assets/delete-subtask.png" alt="delete subtask item"> </button>
+                              <span class="action-divider"></span>
+                              <button type="button"><img src="../assets/edit-subtask.png" alt="edit subtask item"></button>
+                              </div>
+                            </div>`
+
+}
+
+/*
+const editSubtaskItemBtns = document.getElementsByClassName("edit-subtask-item-btn");
+for (let i = 0; i < editSubtaskItemBtns.length; i++) {
+  editSubtaskItemBtns[i].addEventListener("click",() => editSubtaskListItem(editSubtaskItemBtns[i]));
+}
+
+const deleteSubtaskItemBtns = document.getElementsByClassName("delete-subtask-item-btn");
+for (let i = 0; i < deleteSubtaskItemBtns.length; i++) {
+  deleteSubtaskItemBtns[i].addEventListener("click", () => deleteSubtaskListItem(deleteSubtaskItemBtns[i]));
+}
+
+function deleteSubtaskListItem(thisBtn){
+  subtaskInput.value = "";
+}
+
 
 function getDueDate(){
 
 }
 
+*/

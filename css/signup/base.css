@@ -267,7 +267,7 @@ body {
 
 .btn:not(:disabled):hover {
   background-color: var(--hover-bg-color-lightblue);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-stronger);
   transition: background-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
 }
 

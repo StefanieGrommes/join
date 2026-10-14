@@ -130,7 +130,7 @@ button {
 
 .create-contact-btn:hover {
     background-color: var(--hover-bg-color-lightblue);
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-stronger);
 }
 
 .create-contact-btn:active {
@@ -147,7 +147,7 @@ button {
 
 .cancel-btn:hover {
     border: 2px var(--hover-bg-color-lightblue) solid;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-stronger);
     transition: background-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
 }
 

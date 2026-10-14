@@ -103,19 +103,22 @@
               </div>
               <div class="form-field">
                 <p class="field-label">Subtasks</p>
+                <div class="subtask-wrapper">
                 <div class="input-with-icon">
                   <input id="subtaskInput" type="text" placeholder="Add new subtask" oninput="showSubtaskActions()" />
                   <div class="subtask-actions">
-                    <button type="button" onclick="saveSubtask()"><img src="../assets/check.svg" alt="save subtask"></button>
-                    <span class="action-divider"></span>
                     <button type="button" onclick="rejectSubtask()"> <img src="../assets/close.svg" alt="reject subtask"> </button>
+                    <span class="action-divider"></span>
+                    <button type="button" onclick="saveSubtask()"><img src="../assets/check.svg" alt="save subtask"></button>
                   </div>
                 </div>
-                <ul class="subtask-list"></ul>
-              </div>
+                <ul class="subtask-list">
+
+                </ul>
+                </div>
+                </div>
             </div>
           </div>
-
           <div class="form-footer">
             <p class="required-hint">
               <span class="required-star">*</span>This field is required
