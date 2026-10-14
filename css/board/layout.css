@@ -36,13 +36,16 @@
 
 
   .page-layout {
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    padding-right: 64px;
-    padding-left: 64px;
+  grid-area: main;
+  width: 100%;
+  min-width: 0;
+  max-width: calc(1440px - var(--sidebar-width));
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding-right: 64px;
+  padding-left: 64px;
   }
 
 
@@ -159,6 +162,7 @@
   main {
     display: flex;
     flex-direction: column;
+    justify-content:start;
     flex: 1;
     width: 100%;
     background: var(--content-bg);

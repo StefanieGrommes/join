@@ -76,6 +76,12 @@ function rejectSubtask() {
 
 
 function startEditSubtask(item) {
+  if (item.classList.contains("editing")) return;
+  const text = item.querySelector(".subtask-text").textContent;
+  item.classList.add("editing");
+  item.innerHTML = getSubtaskEditTemplate(text);
+  item.querySelector("input").focus;
+
   subTaskList.innerHTML += `<div class="subtask-list-item-wrapper">
                               <input type="text" id="subtask-list-item" value="${subtaskInput.value}">
                               <div class="subtask-list-buttons">

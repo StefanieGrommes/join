@@ -80,6 +80,12 @@
   }
 
 
+  .board-add-task-button:hover {
+    background-color: var(--hover-secondary-button);
+    box-shadow: var(--shadow-stronger);
+  }
+
+
   .board-add-task-plus {
     font-size: 32px;
     font-weight: 300;
