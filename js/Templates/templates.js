@@ -135,10 +135,16 @@ function renderInfoPage(pageData) {
 // Diese Funktionen lesen die Kontakte aus db.js und
 // wandeln sie für die Karten-Renderung in kleine Avatar-Elemente um.
 // ===============================
+function getBoardContactInitials(contact) {
+  if (contact.initials) return contact.initials;
+  const parts = contact.name.trim().split(/\s+/);
+  return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+}
+
 function getContactById(contactId) {
   const contactList = typeof contacts !== 'undefined' ? contacts : (joinDb?.contacts || []);
   if (!Array.isArray(contactList)) return null;
-  return contactList.find((contact) => contact.id === contactId) || null;
+  return contactList.find((contact) => (contact.id || getBoardContactInitials(contact)) === contactId) || null;
 }
 
 function renderAvatar(contact) {
@@ -146,7 +152,7 @@ function renderAvatar(contact) {
 
   return `
     <span class="board-contact-avatar" style="background:${contact.color};">
-      ${contact.initials}
+      ${getBoardContactInitials(contact)}
     </span>
   `;
 }
@@ -168,8 +174,18 @@ function renderAssignedContacts(assignedIds) {
 // Diese Funktion erzeugt die kleine Task-Karte wie im Board.
 // Sie wird in board-layout.js bzw. beim Rendern des Boards verwendet.
 // ===============================
+function getTaskPriorityIcon(priority) {
+  const priorityIcons = {
+    Urgent: 'priorityUrgent.svg',
+    Medium: 'medium.svg',
+    Low: 'low.svg',
+  };
+  return priorityIcons[priority];
+}
+
 function renderTaskCard(task) {
   const assigned = renderAssignedContacts(task.assignedTo || []);
+  const priorityIcon = getTaskPriorityIcon(task.priority);
   const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
   const doneSubtasks = subtasks.filter((subtask) => subtask.done).length;
   const totalSubtasks = subtasks.length;
@@ -209,6 +225,7 @@ function renderTaskCard(task) {
 
       <div class="board-card-footer">
         ${assigned}
+        ${priorityIcon ? `<img src="../assets/${priorityIcon}" alt="${task.priority}" class="board-card-priority-icon" />` : ''}
       </div>
 
 
@@ -225,12 +242,7 @@ function renderTaskCard(task) {
 // Assignees und Subtasks.
 // ===============================
 function renderTaskDetail(task) {
-  const priorityIcons = {
-    Urgent: 'priorityUrgent.svg',
-    Medium: 'medium.svg',
-    Low: 'low.svg',
-  };
-  const priorityIcon = priorityIcons[task.priority];
+  const priorityIcon = getTaskPriorityIcon(task.priority);
 
   const assigned = (task.assignedTo || [])
     .map((contactId) => getContactById(contactId))

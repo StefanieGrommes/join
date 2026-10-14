@@ -15,10 +15,61 @@ async function fetchFooterHeader() {
     const headerResponse = await fetch('../templates/header.txt');
     const headerHtml = await headerResponse.text();
     document.body.insertAdjacentHTML('afterbegin', headerHtml);
+    updateSessionHeader();
     const footerResponse = await fetch('../templates/footer.txt');
     const footerHtml = await footerResponse.text();
     document.body.insertAdjacentHTML('beforeend', footerHtml);
 }
+
+/**
+ * Zeigt Gast- oder Demoinitialen in den vorhandenen Profilkreisen an.
+ *
+ * @returns {void}
+ */
+function updateSessionHeader() {
+    const mode = window.sessionStorage.getItem("join-session-mode");
+    const name = window.sessionStorage.getItem("join-demo-name");
+    if (mode !== "guest" && (mode !== "demo" || !name)) return;
+    const initials = mode === "guest" ? "G" : getDemoInitials(name);
+    const label = mode === "guest" ? "Guest profile" : `${name} (demo profile)`;
+    document.querySelectorAll(".profile-initials-btn, .board-mobile-profile-button")
+        .forEach(button => showProfileInitials(button, initials, label));
+}
+
+
+/**
+ * Ermittelt bis zu zwei Initialen aus dem Demo-Anzeigenamen.
+ *
+ * @param {string} name - Der eingegebene Anzeigename.
+ * @returns {string} Die Initialen fuer den Profilkreis.
+ */
+function getDemoInitials(name) {
+    const parts = name.trim().split(/\s+/);
+    const selected = parts.length > 1 ? [parts[0], parts[parts.length - 1]] : parts;
+    return selected.map(part => Array.from(part)[0]).join("").toUpperCase();
+}
+
+
+/**
+ * Ergaenzt den Profilkreis eines Buttons um Initialen.
+ *
+ * @param {HTMLButtonElement} button - Der vorhandene Profilbutton.
+ * @param {string} initials - Die sichtbaren Initialen.
+ * @param {string} label - Der zugaengliche Profilname.
+ * @returns {void}
+ */
+function showProfileInitials(button, initials, label) {
+    const svg = button.querySelector("svg");
+    if (!svg || svg.querySelector(".guest-profile-initial")) return;
+    const initial = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    const attributes = {x: "28", y: "28", "text-anchor": "middle", "dominant-baseline": "central", fill: "#2A3647", "font-size": "20", "font-weight": "700", "font-family": "Inter, sans-serif", class: "guest-profile-initial"};
+    Object.entries(attributes).forEach(([name, value]) => initial.setAttribute(name, value));
+    initial.textContent = initials;
+    svg.appendChild(initial);
+    button.setAttribute("aria-label", label);
+    button.setAttribute("title", label);
+}
+
 
 /**
  * this is a function that checks which html path is active and sets the background-color of the navbar

@@ -13,6 +13,14 @@
     justify-content: space-between;
   }
 
+  .board-card-priority-icon {
+    width: 20px;
+    height: 20px;
+    margin-left: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
 
   .board-assigned-contacts {
     display: flex;
@@ -32,6 +40,7 @@
     font-size: 16px;
     font-weight: 600;
     line-height: 1;
+    flex-shrink: 0;
   }
 
 

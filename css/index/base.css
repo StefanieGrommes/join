@@ -123,6 +123,16 @@ body {
   pointer-events: none;
 }
 
+.login-intro-seen .app-intro {
+  display: none;
+}
+
+.login-intro-seen .login-shell {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
 .join-logo {
   display: flex;
   align-items: center;
@@ -199,6 +209,28 @@ body {
 .field {
   width: 100%;
   max-width: 422px;
+}
+
+.demo-login-feedback {
+  width: 100%;
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+#demo-login-form {
+  gap: 16px;
+}
+
+#demo-login-form .button-row {
+  position: static;
+  margin-top: 0;
+}
+
+.login-shell:has(#demo-login-form) {
+  height: auto;
+  min-height: 449px;
 }
 
 .input-with-icon {
