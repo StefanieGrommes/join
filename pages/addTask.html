@@ -32,7 +32,7 @@
               <div class="form-field">
                 <label for="taskDueDate">Due date<span class="required-star">*</span></label>
                 <div class="input-with-icon">
-                  <input id="taskDueDate" type="date" placeholder="dd/mm/yyyy" min="2026-01-01"
+                  <input onfocus="getTodaysDate()" id="taskDueDate" type="date" placeholder="dd/mm/yyyy"
   max="2030-12-31" />
                   <img src="../assets/calendar.svg" alt="" />
                 </div>
@@ -75,30 +75,24 @@
               </div>
               <div class="form-field">
                 <p class="field-label">Assigned to</p>
-                <div class="dropdown">
-                  <div class="dropdown-toggle">
-                    <input
-                      id="assignedToInput"
-                      type="text"
-                      placeholder="Select contacts to assign"
-                    />
-                    <img src="../assets/arrowdropdown.svg" alt="" />
-                  </div>
-                  <ul class="dropdown-list"></ul>
+                <div class="dropdown-container">
+                   <select name="task-assigned" class="toggle-task">
+                  <option value="none" selected disabled hidden>Select task category</option>
+                  <option value="technical">Technical Task</option>
+                  <option value="user">User Story</option>
+                </select>
+                <button><img src="../assets/arrowdropdown.svg" alt="Dropdown arrow"></button>
                 </div>
-                <div class="assigned-avatars"></div>
               </div>
               <div class="form-field">
                 <p class="field-label">Category<span class="required-star">*</span></p>
-                <div class="dropdown">
-                  <div class="dropdown-toggle">
-                    <input id="categoryInput" type="text" placeholder="Select task category" />
-                    <img src="../assets/arrowdropdown.svg" alt="" />
-                  </div>
-                  <ul class="dropdown-list">
-                    <li>Technical Task</li>
-                    <li>User Story</li>
-                  </ul>
+                <div class="dropdown-container">
+                  <select name="task-category" class="toggle-task">
+                  <option value="none" selected disabled hidden>Select task category</option>
+                  <option value="technical">Technical Task</option>
+                  <option value="user">User Story</option>
+                </select>
+                <button><img src="../assets/arrowdropdown.svg" alt="Dropdown arrow"></button>
                 </div>
               </div>
               <div class="form-field">

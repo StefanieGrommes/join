@@ -29,6 +29,12 @@ function changePriority(thisBtn){
   thisBtnSvg.classList.add("priority-active-svg");
 }
 
+function getTodaysDate(){
+  const taskDate = document.getElementById("taskDueDate");
+  const today = new Date().toISOString().split("T")[0];
+  taskDate.setAttribute("min", today);
+}
+
 const subtaskInput = document.getElementById("subtaskInput");
 
 function showSubtaskActions(){
