@@ -9,10 +9,6 @@ function syncBoardMobileNavigation() {
 
   if (boardTopNav) {
     boardTopNav.style.display = isMobile ? "flex" : "";
-    boardTopNav.style.width = isMobile ? "100vw" : "";
-    boardTopNav.style.maxWidth = isMobile ? "100vw" : "";
-    boardTopNav.style.minHeight = isMobile ? "64px" : "";
-    boardTopNav.style.padding = isMobile ? "12px 14px" : "";
     boardTopNav.style.position = isMobile ? "fixed" : "";
     boardTopNav.style.top = isMobile ? "0" : "";
     boardTopNav.style.left = isMobile ? "0" : "";

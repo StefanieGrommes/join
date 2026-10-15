@@ -22,7 +22,6 @@
   body {
     margin: 0;
     width: 100%;
-    min-width: 320px;
     min-height: 100%;
   }
 
@@ -36,11 +35,8 @@
 
 
   .page-layout {
-  grid-area: main;
   width: 100%;
-  min-width: 0;
   max-width: calc(1440px - var(--sidebar-width));
-  min-height: 100vh;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;

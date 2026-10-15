@@ -20,16 +20,23 @@
     gap: 12px;
   }
 
-  .auth-panel {
-    min-height: 595px;
-    height: auto;
-  }
+ 
+    .auth-panel {
+            height: auto;
+    width: min(600px, 100%);
+    }
+
 }
 
 @media (max-width: 640px) {
   .page {
     padding-left: clamp(16px, 3.25vw, 24px);
     padding-right: clamp(16px, 3.25vw, 24px);
+  }
+
+   .auth-panel {
+    max-height: 595px;
+    width: 100%;
   }
 }
 

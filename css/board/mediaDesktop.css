@@ -44,7 +44,7 @@
     }
 
     .board-empty-state {
-      min-height: 64px;
+      min-height: 48px;
     }
 
     .board-top-inner {
@@ -122,6 +122,12 @@
       font-size: 28px;
     }
 
+    .board-column-title {
+      
+        font-size: 16px;
+        
+    }
+
   }
 
 
@@ -142,7 +148,7 @@
     }
 
     .board-empty-state {
-      min-height: 72px;
+      min-height: 48px;
     }
 
     .board-top-inner {
@@ -186,7 +192,10 @@
       margin-left: 0px;
     }
 
-
+    .board-main-container {
+        
+        gap: 18px;
+    }
 
     .board-add-task-button {
       min-width: 132px;

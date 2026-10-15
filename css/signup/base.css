@@ -107,7 +107,6 @@ body {
 }
 
 .auth-panel {
-  min-height: 630px;
   height: auto;
   width: min(600px, 100%);
   display: flex;

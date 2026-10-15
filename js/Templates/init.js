@@ -60,7 +60,8 @@ function getDemoInitials(name) {
  */
 function showProfileInitials(button, initials, label) {
     const svg = button.querySelector("svg");
-    if (!svg || svg.querySelector(".guest-profile-initial")) return;
+    if (!svg) return;
+    if (svg.querySelector(".guest-profile-initial")) return;
     const initial = document.createElementNS("http://www.w3.org/2000/svg", "text");
     const attributes = {x: "28", y: "28", "text-anchor": "middle", "dominant-baseline": "central", fill: "#2A3647", "font-size": "20", "font-weight": "700", "font-family": "Inter, sans-serif", class: "guest-profile-initial"};
     Object.entries(attributes).forEach(([name, value]) => initial.setAttribute(name, value));

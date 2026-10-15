@@ -89,15 +89,8 @@
   .board-mobile-top-nav {
     align-items: center;
     justify-content: space-between;
-    min-height: 72px;
-    padding: 14px 20px;
     background: #ffffff;
     box-shadow: 0 0 4px 4px rgba(110, 107, 107, 0.2);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 8;
   }
 
 
