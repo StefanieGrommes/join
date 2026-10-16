@@ -4,6 +4,7 @@ button {
 
 main {
   padding: 0px 24px 12px 0px;
+  justify-content: flex-start;
 }
 
 .add-contact-btn {
