@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Join - Login</title>
-    <link rel="shortcut icon" href="../assets/join-favicon.svg" type="image/x-icon">
-    <link rel="stylesheet" href="../css/fonts.css">
-    <link rel="stylesheet" href="../css/menu.css">
+    <link rel="shortcut icon" href="./assets/join-favicon.svg" type="image/x-icon">
+    <link rel="stylesheet" href="./css/fonts.css">
+    <link rel="stylesheet" href="./css/menu.css">
     <link rel="stylesheet" href="./css/index/style.css"/>
-    <script src="../js/Templates/init.js"></script>
+    <script src="./js/Templates/init.js"></script>
     <script src="./js/login/login.js"></script>
   </head>
 
@@ -33,32 +33,30 @@
         </div>
       </header>
 
+      <div class="panel-area">
+        <main class="login-shell">
+          <section class="content-card" aria-labelledby="login-title">
+            <h1 id="login-title" class="login-title">Log in</h1>
 
-<div class="panel-area">
-  <main class="login-shell">
-        <section class="content-card" aria-labelledby="login-title">
-          <h1 id="login-title" class="login-title">Log in</h1>
+            <form id="demo-login-form" class="login-form" novalidate>
+              <div class="field input-with-icon">
+                <input id="demo-login-name" type="text" placeholder="Name" aria-label="Name for demo login" aria-describedby="demo-login-feedback" autocomplete="name" />
+                <img src="./img/icons/mail.png" alt="Mail icon" class="input-icon" />
+              </div>
+              <div class="field input-with-icon">
+                <input type="password" placeholder="Password" aria-label="Password (not checked or saved in demo)" autocomplete="off" />
+                <img src="./img/icons/lock.png" alt="Lock icon" class="input-icon" />
+              </div>
+              <p id="demo-login-feedback" class="demo-login-feedback" aria-live="polite"></p>
 
-          <form id="demo-login-form" class="login-form" novalidate>
-            <div class="field input-with-icon">
-              <input id="demo-login-name" type="text" placeholder="Name" aria-label="Name for demo login" aria-describedby="demo-login-feedback" autocomplete="name" />
-              <img src="./img/icons/mail.png" alt="Mail icon" class="input-icon" />
-            </div>
-            <div class="field input-with-icon">
-              <input type="password" placeholder="Password" aria-label="Password (not checked or saved in demo)" autocomplete="off" />
-              <img src="./img/icons/lock.png" alt="Lock icon" class="input-icon" />
-            </div>
-
-            <div class="button-row">
-              <button type="submit" class="btn btn--primary">Log in</button>
-              <button id="guest-login-button" type="button" class="btn btn--secondary">Guest Log in</button>
+              <div class="button-row">
+                <button type="submit" class="btn btn--primary">Log in</button>
+                <button id="guest-login-button" type="button" class="btn btn--secondary">Guest Log in</button>
+              </div>
             </form>
-          </div>
-        </section>
-      </main>
-</div>
-
-
+          </section>
+        </main>
+      </div>
 
       <div class="mobile-bottom-area">
         <section class="mobile-signup-cta" aria-label="Signup Hinweis mobil">
@@ -71,6 +69,7 @@
           <a href="./pages/legal-notice.html">Legal notice</a>
         </footer>
       </div>
+    </div>
 
 
 
