@@ -71,6 +71,10 @@
   font-size: 20px;
 }
 
+.toggle-task:focus {
+  outline: none;
+}
+
 .form-field input {
   height: 48px;
 }
@@ -219,6 +223,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .input-with-icon,
 .subtask-list-item-wrapper {
   position: relative;
+}
+.contact-list {
+  border-radius: 10px;
+}
+
+.contact-option {
+  display: flex;
+  align-items: center;
+    background-color: rgba(255, 255, 255, 1);
+    font-family: var(--default-font);
+    box-sizing: border-box;
+    width: 100%;
+    transition: border-color 100ms;
+    font-size: 20px;
 }
 
 .contact-avatar {

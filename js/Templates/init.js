@@ -3,9 +3,6 @@
     await fetchFooterHeader();
     renderNavFooterMobile2();
     initNavbarButtonsBackground();
-    const { userArray, taskArray } = await fetchTemplateData();
-    createAlphabeticalList(userArray);
-    sortTasks(taskArray);
 }
 /**
  * this is a function that fetches the footer and header templates and inserts them into the pages
@@ -130,14 +127,32 @@ function displayNavFooterMobilePolicy() {
             </div>`;
 }
 
+async function initSessionData() {
+  if (sessionStorage.getItem("session-initialized")) return;
+  const { userArray, taskArray } = await fetchTemplateData();
+  if(!userArray) return;
+  sessionStorage.setItem("session-contacts", JSON.stringify(Object.values(userArray || {})));
+  sessionStorage.setItem("session-tasks", JSON.stringify(Object.values(taskArray || {})));
+  sessionStorage.setItem("session-initialized", "true");
+}
+
 const BASE_URL = "https://join--testuser-default-rtdb.europe-west1.firebasedatabase.app/";
 
 async function fetchTemplateData(){
    let response = await fetch(BASE_URL + ".json");
    let data = await response.json();
+   console.log(data);
    const userArray = data.contacts;
    const taskArray = data.tasks;
    return { userArray, taskArray };
+}
+
+function getSessionData(key) {
+return JSON.parse(sessionStorage.getItem(key) || "[]");
+}
+
+function saveSessionData(key, items) {
+sessionStorage.setItem(key, JSON.stringify(items));
 }
 
 function createAlphabeticalList(userArray) {
@@ -149,7 +164,6 @@ function sortTasks(taskArray) {
     const sortedTasks = taskArray.sort((a, b) => a.state.localeCompare(b.state));
     console.log(sortedTasks);
 }
-
 
 async function postData(path="", data={}){
     let response = await fetch(BASE_URL + path + ".json", {
