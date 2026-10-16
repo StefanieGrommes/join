@@ -14,6 +14,7 @@ async function fetchFooterHeader() {
     const headerResponse = await fetch('../templates/header.txt');
     const headerHtml = await headerResponse.text();
     document.body.insertAdjacentHTML('afterbegin', headerHtml);
+    // Gast-/Demo-Initialen in den Profilkreis des gerade eingefügten Headers schreiben.
     updateSessionHeader();
     const footerResponse = await fetch('../templates/footer.txt');
     const footerHtml = await footerResponse.text();
@@ -26,11 +27,17 @@ async function fetchFooterHeader() {
  * @returns {void}
  */
 function updateSessionHeader() {
+    // Sitzungsmodus ("guest" oder "demo"), gesetzt in login.js.
     const mode = window.sessionStorage.getItem("join-session-mode");
+    // Beim Demo-Login eingegebener Name, gesetzt in login.js.
     const name = window.sessionStorage.getItem("join-demo-name");
+    // Weder Gast noch Demo mit Namen -> nichts anzeigen.
     if (mode !== "guest" && (mode !== "demo" || !name)) return;
+    // Gast -> "G", Demo -> Initialen aus dem Namen.
     const initials = mode === "guest" ? "G" : getDemoInitials(name);
+    // Text für Tooltip und Screenreader.
     const label = mode === "guest" ? "Guest profile" : `${name} (demo profile)`;
+    // Alle Profil-Buttons (Desktop-Header + Board-Mobile-Leiste) mit den Initialen befüllen.
     document.querySelectorAll(".profile-initials-btn, .board-mobile-profile-button")
         .forEach(button => showProfileInitials(button, initials, label));
 }
@@ -43,8 +50,11 @@ function updateSessionHeader() {
  * @returns {string} Die Initialen fuer den Profilkreis.
  */
 function getDemoInitials(name) {
+    // Namen an Leerzeichen in Teile zerlegen.
     const parts = name.trim().split(/\s+/);
+    // Mehrere Teile -> erster + letzter, sonst nur der eine Teil.
     const selected = parts.length > 1 ? [parts[0], parts[parts.length - 1]] : parts;
+    // Jeweils ersten Buchstaben nehmen (Array.from unterstützt auch Emojis/Umlaute) und groß schreiben.
     return selected.map(part => Array.from(part)[0]).join("").toUpperCase();
 }
 
@@ -58,15 +68,24 @@ function getDemoInitials(name) {
  * @returns {void}
  */
 function showProfileInitials(button, initials, label) {
+    // Kreis-SVG im Button.
     const svg = button.querySelector("svg");
+    // Kein SVG -> nichts zu tun.
     if (!svg) return;
+    // Initialen schon vorhanden -> nicht doppelt einfügen.
     if (svg.querySelector(".guest-profile-initial")) return;
+    // Neues SVG-<text>-Element (muss mit SVG-Namespace erstellt werden).
     const initial = document.createElementNS("http://www.w3.org/2000/svg", "text");
     const attributes = {x: "28", y: "28", "text-anchor": "middle", "dominant-baseline": "central", fill: "#2A3647", "font-size": "20", "font-weight": "700", "font-family": "Inter, sans-serif", class: "guest-profile-initial"};
+    // Alle Attribute (Position, Zentrierung, Farbe, Klasse ...) auf das <text>-Element setzen.
     Object.entries(attributes).forEach(([name, value]) => initial.setAttribute(name, value));
+    // Initialen als Text eintragen.
     initial.textContent = initials;
+    // <text> in den Kreis einfügen.
     svg.appendChild(initial);
+    // Beschriftung für Screenreader.
     button.setAttribute("aria-label", label);
+    // Tooltip beim Hovern.
     button.setAttribute("title", label);
 }
 

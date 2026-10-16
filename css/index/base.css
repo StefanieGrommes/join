@@ -123,16 +123,6 @@ body {
   pointer-events: none;
 }
 
-.login-intro-seen .app-intro {
-  display: none;
-}
-
-.login-intro-seen .login-shell {
-  opacity: 1;
-  transform: none;
-  transition: none;
-}
-
 .join-logo {
   display: flex;
   align-items: center;
