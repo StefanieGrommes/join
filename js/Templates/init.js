@@ -4,7 +4,7 @@
     renderNavFooterMobile2();
     initNavbarButtonsBackground();
     const { userArray, taskArray } = await fetchTemplateData();
-    createAlphabeticalList(userArray);
+    renderContactList(userArray);
     sortTasks(taskArray);
 }
 /**
@@ -88,10 +88,8 @@ async function fetchTemplateData(){
    return { userArray, taskArray };
 }
 
-function createAlphabeticalList(userArray) {
-    const sortedUsers = userArray.sort((a, b) => a.firstName.localeCompare(b.firstName));
-    console.log(sortedUsers);
-}
+
+
 
 function sortTasks(taskArray) {
     const sortedTasks = taskArray.sort((a, b) => a.state.localeCompare(b.state));

@@ -71,8 +71,7 @@ h6 {
 }
 
 .is-active {
-background-color: var(--active-btn-border);
-
+  background-color: var(--active-btn-border);
 }
 
 nav {
@@ -257,7 +256,7 @@ main {
 }
 
 .legal-and-policy-mobile {
- display: flex;
+  display: flex;
 }
 
 /*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
@@ -372,7 +371,6 @@ main {
     font-family: var(--second-font);
     font-size: 16px;
     color: var(--navbar-color);
-
   }
 
   .nav-element {

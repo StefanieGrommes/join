@@ -1,32 +1,60 @@
+const CONTACT_COLORS = [
+  "#FF7A00",
+  "#1FD7C1",
+  "#462F8A",
+  "#6E52FF",
+  "#9327FF",
+  "#FFC701",
+  "#FF745E",
+  "#FFA35E",
+  "#FC71FF",
+  "#FFBB2B",
+  "#FF4646",
+  "#00BEE8",
+  "#C3FF2B",
+  "#FF5EB3",
+  "#0038FF",
+  "#FFE62B",
+];
+
+let allContacts = [];
+
 /**
- * Creates the initials from a full name.
- * @param {string} name - Full name, e.g. "Anton Mayer"
+ * Picks a stable color for a contact based on its id.
+ * @param {string} id - Contact id
+ * @returns {string} Hex color
+ */
+function getContactColor(id) {
+  return CONTACT_COLORS[Number(id) % CONTACT_COLORS.length];
+}
+
+/**
+ * Creates the initials from a contact's first and last name.
+ * @param {string} firstName - First name, e.g. "Anton"
+ * @param {string} lastName - Last name, e.g. "Mayer"
  * @returns {string} Initials in uppercase, e.g. "AM"
  */
-function getInitials(name) {
-  let parts = name.split(" ");
-  let first = parts[0].charAt(0);
-  let last = parts[parts.length - 1].charAt(0);
+function getInitials(firstName, lastName) {
+  let first = firstName.charAt(0);
+  let last = lastName.charAt(0);
   return (first + last).toUpperCase();
 }
 
-
 /**
  * Builds the HTML for a single contact in the list.
- * @param {Object} contact - Contact with name, email and color
+ * @param {Object} contact - Contact with id, firstName, lastName and email
  * @returns {string} HTML string of the list item
  */
 function getContactTemplate(contact) {
   return `
-    <li class="contact-item" onclick="openContactDetail('${contact.email}', this)">
-      <div class="contact-avatar" style="background-color: ${contact.color}">${getInitials(contact.name)}</div>
+    <li class="contact-item" onclick="openContactDetail('${contact.id}', this)">
+      <div class="contact-avatar" style="background-color: ${getContactColor(contact.id)}">${getInitials(contact.firstName, contact.lastName)}</div>
       <div class="contact-info">
-        <p class="contact-name">${contact.name}</p>
+        <p class="contact-name">${contact.firstName} ${contact.lastName}</p>
         <p class="contact-email">${contact.email}</p>
       </div>
     </li>`;
 }
-
 
 /**
  * Builds the HTML for one letter group including all its contacts.
@@ -46,16 +74,14 @@ function getContactGroupTemplate(letter, groupContacts) {
     </div>`;
 }
 
-
 /**
  * Returns a copy of the contacts sorted alphabetically by name.
  * @param {Array<Object>} contacts - Unsorted list of contacts
  * @returns {Array<Object>} New array sorted by name
  */
 function sortContactsByName(contacts) {
-  return [...contacts].sort((a, b) => a.name.localeCompare(b.name));
+  return [...contacts].sort((a, b) => a.firstName.localeCompare(b.firstName));
 }
-
 
 /**
  * Groups contacts by the first letter of their name.
@@ -65,19 +91,21 @@ function sortContactsByName(contacts) {
 function groupContactsByLetter(contacts) {
   let groups = {};
   for (let contact of contacts) {
-    let letter = contact.name.charAt(0).toUpperCase();
+    let letter = contact.firstName.charAt(0).toUpperCase();
     if (!groups[letter]) groups[letter] = [];
     groups[letter].push(contact);
   }
   return groups;
 }
 
-
 /**
  * Renders the grouped contact list into the DOM.
+ * @param {Array<Object>} contacts - Contacts to render
  * @returns {void}
  */
-function renderContactList() {
+function renderContactList(contacts) {
+  if (!contacts) return;
+  allContacts = contacts;
   let wrapper = document.getElementById("contactListWrapper");
   let groups = groupContactsByLetter(sortContactsByName(contacts));
   let html = "";
@@ -87,21 +115,28 @@ function renderContactList() {
   wrapper.innerHTML = html;
 }
 
-
 /**
  * Builds the HTML for the detail view of a contact.
- * @param {Object} contact - Contact with name, email, phone and color
+ * @param {Object} contact - Contact with id, firstName, lastName, email and phone
  * @returns {string} HTML string of the detail view
  */
 function getContactDetailTemplate(contact) {
-  return `   
-   <div class="contact-detail">
-      <div class="contact-avatar-large" style="background-color: ${contact.color}">${getInitials(contact.name)}</div>
+  return /* HTML */ ` <div class="contact-detail">
+      <div
+        class="contact-avatar-large"
+        style="background-color: ${getContactColor(contact.id)}"
+      >
+        ${getInitials(contact.firstName, contact.lastName)}
+      </div>
       <div class="contact-detail-head">
-        <p class="contact-detail-name">${contact.name}</p>
+        <p class="contact-detail-name">${contact.firstName} ${contact.lastName}</p>
         <div class="contact-detail-actions">
-          <button class="detail-action-btn"><img src="../assets/edit.svg" alt="" /> Edit</button>
-          <button class="detail-action-btn"><img src="../assets/delete.svg" alt="" /> Delete</button>
+          <button class="detail-action-btn">
+            <img src="../assets/edit.svg" alt="" /> Edit
+          </button>
+          <button class="detail-action-btn">
+            <img src="../assets/delete.svg" alt="" /> Delete
+          </button>
         </div>
       </div>
     </div>
@@ -113,24 +148,39 @@ function getContactDetailTemplate(contact) {
     <div class="contact-detail-field">
       <p class="detail-label">Phone</p>
       <p>${contact.phone}</p>
+    </div>
+    <button class="detail-menu-btn" onclick="toggleDetailMenu()">
+      <img src="../assets/more-vert.svg" alt="More options" />
+    </button>
+    <div class="detail-menu" id="detailMenu">
+      <button class="detail-action-btn"><img src="../assets/edit.svg" alt="" />Edit</button>
+      <button class="detail-action-btn">
+        <img src="../assets/delete.svg" alt="" />Delete
+      </button>
     </div>`;
 }
 
-
 /**
- * Shows the detail view of the contact with the given email.
- * @param {string} email - Email address identifying the contact
+ * Toggles the mobile edit/delete menu in the contact detail view.
  * @returns {void}
  */
+function toggleDetailMenu() {
+  document.getElementById("detailMenu").classList.toggle("open");
+}
 
-function openContactDetail(email, element) {
-  let contact = contacts.find((c) => c.email === email);
+/**
+ * Shows the detail view of the contact with the given id.
+ * @param {string} id - Id identifying the contact
+ * @param {HTMLElement} element - The clicked list item
+ * @returns {void}
+ */
+function openContactDetail(id, element) {
+  let contact = allContacts.find((c) => c.id === id);
   if (!contact) return;
   document.getElementById("contactDetail").innerHTML = getContactDetailTemplate(contact);
   document.querySelector(".add-task-content").classList.add("detail-open");
   setActiveContact(element);
 }
-
 
 /**
  * Highlights the clicked contact and removes the previous highlight.
@@ -143,11 +193,26 @@ function setActiveContact(element) {
   element.classList.add("contact-item-selected");
 }
 
-
 /**
  * Close the contact detail view and returns to the list.
  * @returns {void}
  */
 function closeContactDetail() {
   document.querySelector(".add-task-content").classList.remove("detail-open");
+  let menu = document.getElementById("detailMenu");
+  if (menu) menu.classList.remove("open");
 }
+
+/**
+ * Close the detail menu when clicking outside of it.
+ * @param {MouseEvent} event - The click event
+ * @returns {void}
+ */
+function closeMenuOnOutsideClick(event) {
+  let menu = document.getElementById("detailMenu");
+  if (!menu) return;
+  if (event.target.closest(".detail-menu") || event.target.closest(".detail-menu-btn")) return;
+  menu.classList.remove("open");
+}
+
+document.addEventListener("click", closeMenuOnOutsideClick);
