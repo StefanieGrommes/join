@@ -1,8 +1,11 @@
 .add-task-content {
-  padding-left: 56px;
   height: 100%;
+  width: 100%;
+  padding-left: clamp(20px, 3vw, 96px);
+  padding-right: clamp(20px, 3vw, 96px);
   display: flex;
   flex-direction: column;
+
 }
 
 .add-task-content h1 {
@@ -504,8 +507,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
   .form-footer {
     margin: 12px 0 12px;
-    flex-direction: column;
-    gap: 20px;
+
   }
   .required-hint {
     font-size: 1rem;
