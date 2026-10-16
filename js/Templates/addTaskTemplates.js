@@ -1,16 +1,46 @@
+async function initAddTask(){
+  await initSessionData();
+}
+
+
 /**
  * Returns the HTML for one contact entry in the assigned-to dropdown.
  * @param {Object} contact - Contact with initials and name.
  * @returns {string} HTML string of the list item
  */
+
+function openContactList() {
+ const contacts = getSessionData("session-contacts");
+ renderContactOptions(contacts);
+ document.getElementById("assigned-to-dropdown").classList.add("open");
+}
+
+
+function getFullUserName(contact) {
+return `${contact.firstName} ${contact.lastName}`;
+}
+
+function getUserInitials(contact){
+  if (!contact.firstName || !contact.lastName) return "";
+  return (contact.firstName.charAt(0) + contact.lastName.charAt(0)).toUpperCase();
+}
+
 function getContactOptionTemplate(contact) {
-  return /* HTML */ `
+  return`
     <li class="contact-option">
-      <span class="contact-avatar">${contact.initials}</span>
-      <span class="contact-name">${contact.name}</span>
+      <span class="contact-avatar">${getUserInitials(contact)}</span>
+      <span class="contact-name">${getFullUserName(contact)}</span>
       <img src="../assets/checkbox.svg" alt="" />
     </li>
-  `;
+  `
+}
+
+function renderContactOptions(userArray){
+  const list = document.getElementById("assigned-to-list");
+  list.innerHTML = "";
+  userArray.forEach((contact) => {
+    list.insertAdjacentHTML("beforeend",getContactOptionTemplate(contact))
+  });
 }
 
 const priorityBtns = document.getElementsByClassName("priority-btn");
@@ -27,6 +57,12 @@ function changePriority(thisBtn){
   thisBtn.classList.add("priority-active");
   const thisBtnSvg = thisBtn.querySelector("svg");
   thisBtnSvg.classList.add("priority-active-svg");
+}
+
+function getTodaysDate(){
+  const taskDate = document.getElementById("taskDueDate");
+  const today = new Date().toISOString().split("T")[0];
+  taskDate.setAttribute("min", today);
 }
 
 const subtaskInput = document.getElementById("subtaskInput");
