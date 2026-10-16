@@ -1,0 +1,361 @@
+:root {
+  .board-search-field {
+    width: 312px;
+    height: 48px;
+    border: 1px solid #a8afb8;
+    border-radius: 10px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 8px 0 14px;
+    min-width: 0;
+  }
+
+
+  .board-search-field input {
+    width: 100%;
+    min-width: 0;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 20px;
+    color: #2d3d4d;
+  }
+
+
+  .board-search-field input::placeholder {
+    color: #7f8896;
+  }
+
+
+  .board-search-divider {
+    width: 1px;
+    height: 32px;
+    background: #d2d6dc;
+    margin: 0 10px;
+    flex-shrink: 0;
+  }
+
+
+  .board-search-button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: transparent;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #2d3d4d;
+  }
+
+
+  .board-search-button svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+
+  .board-add-task-button {
+    min-width: 160px;
+    height: 48px;
+    border: none;
+    border-radius: 10px;
+    background: #2d3d4d;
+    color: #fff;
+    font-size: 21px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 0 14px;
+  }
+
+
+  .board-add-task-button:hover {
+    background-color: var(--hover-secondary-button);
+    box-shadow: var(--shadow-stronger);
+  }
+
+
+  .board-add-task-plus {
+    font-size: 32px;
+    font-weight: 300;
+  }
+
+
+  .board-main-container {
+    min-height: 688px;
+    margin-left: 0px;
+    margin-right: 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 26px;
+
+  }
+
+
+  .board-main-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+
+  .board-main-column-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+  }
+
+
+  .board-main-column-header {
+    display: none;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 10px;
+  }
+
+
+  .board-main-column-title {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #2f3d4c;
+  }
+
+
+  .board-main-column-add-button {
+    width: 22px;
+    height: 22px;
+    border: 2px solid #3a4f67;
+    border-radius: 50%;
+    background: transparent;
+    color: #3a4f67;
+    font-size: 20px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+
+  .board-empty-state {
+    min-height: 46px;
+    width: 100%;
+    border: 1px dashed #a8afb8;
+    border-radius: 10px;
+    background: #f9fafb;
+    color: #9aa3b2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+
+  .board-card {
+    width: 100%;
+    min-height: 160px;
+    border-radius: 18px;
+    box-shadow: 0 6px 18px rgba(17, 24, 39, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.78);
+    cursor: grab;
+    position: relative;
+    overflow: hidden;
+  }
+
+
+  .board-card + .board-card {
+    margin-top: 14px;
+  }
+
+
+  .board-main-column-content .board-card {
+    flex: 0 0 auto;
+  }
+
+
+  .board-card--todo {
+    background: linear-gradient(135deg, #6fa8ff 0%, #d9e7ff 100%);
+  }
+
+
+  .board-card--in-progress {
+    background: linear-gradient(135deg, #43c7ff 0%, #c5efff 100%);
+  }
+
+
+  .board-card--await-feedback {
+    background: linear-gradient(135deg, #43d3b3 0%, #c8f5e9 100%);
+  }
+
+
+  .board-card--done {
+    background: linear-gradient(135deg, #ff8eb0 0%, #ffd4e2 100%);
+  }
+
+
+  .board-card--task {
+    background: #ffffff;
+    border: 1px solid #e6eaf0;
+    border-radius: 20px;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+    padding: 12px 14px;
+    width: 100%;
+  }
+
+
+  .board-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+  }
+
+
+  .board-card-move-button {
+    display: none;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 1.5px solid #2f3d4c;
+    border-radius: 6px;
+    background: transparent;
+    color: #2f3d4c;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+
+  .board-move-menu {
+    position: fixed;
+    z-index: 1000;
+    width: 180px;
+    max-width: calc(100vw - 16px);
+    padding: 12px;
+    border-radius: 0 18px 18px 18px;
+    background: #2a3647;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+  }
+
+
+  .board-move-menu-title {
+    margin: 0 0 8px;
+    padding: 0 8px;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+
+  .board-move-menu button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 6px 8px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+
+  .board-move-menu button:hover,
+  .board-move-menu button:focus-visible {
+    background: #091931;
+  }
+
+
+  .board-move-menu button span {
+    font-size: 22px;
+    line-height: 1;
+  }
+
+
+  .board-card-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 24px;
+    padding: 2px 12px;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+
+  .board-card-title {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.1;
+    font-weight: 700;
+    color: #111827;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+
+  .board-card-description {
+    margin: 10px 0 12px;
+    font-size: 16px;
+    line-height: 1.3;
+    color: #6b7280;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+
+  .board-card-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+
+  .board-progress-bar {
+    flex: 1;
+    height: 8px;
+    border-radius: 99px;
+    background: #e5e7eb;
+    overflow: hidden;
+  }
+
+
+  .board-progress-bar span {
+    display: block;
+    height: 100%;
+    background: #4589ff;
+    border-radius: 99px;
+  }
+}

@@ -3,9 +3,8 @@
     await fetchFooterHeader();
     renderNavFooterMobile2();
     initNavbarButtonsBackground();
-    const { userArray, taskArray } = await fetchTemplateData();
-    renderContactList(userArray);
-    sortTasks(taskArray);
+    await initSessionData();
+    renderContactList(getSessionData("session-contacts"));
 }
 /**
  * this is a function that fetches the footer and header templates and inserts them into the pages
@@ -15,10 +14,62 @@ async function fetchFooterHeader() {
     const headerResponse = await fetch('../templates/header.txt');
     const headerHtml = await headerResponse.text();
     document.body.insertAdjacentHTML('afterbegin', headerHtml);
+    updateSessionHeader();
     const footerResponse = await fetch('../templates/footer.txt');
     const footerHtml = await footerResponse.text();
     document.body.insertAdjacentHTML('beforeend', footerHtml);
 }
+
+/**
+ * Zeigt Gast- oder Demoinitialen in den vorhandenen Profilkreisen an.
+ *
+ * @returns {void}
+ */
+function updateSessionHeader() {
+    const mode = window.sessionStorage.getItem("join-session-mode");
+    const name = window.sessionStorage.getItem("join-demo-name");
+    if (mode !== "guest" && (mode !== "demo" || !name)) return;
+    const initials = mode === "guest" ? "G" : getDemoInitials(name);
+    const label = mode === "guest" ? "Guest profile" : `${name} (demo profile)`;
+    document.querySelectorAll(".profile-initials-btn, .board-mobile-profile-button")
+        .forEach(button => showProfileInitials(button, initials, label));
+}
+
+
+/**
+ * Ermittelt bis zu zwei Initialen aus dem Demo-Anzeigenamen.
+ *
+ * @param {string} name - Der eingegebene Anzeigename.
+ * @returns {string} Die Initialen fuer den Profilkreis.
+ */
+function getDemoInitials(name) {
+    const parts = name.trim().split(/\s+/);
+    const selected = parts.length > 1 ? [parts[0], parts[parts.length - 1]] : parts;
+    return selected.map(part => Array.from(part)[0]).join("").toUpperCase();
+}
+
+
+/**
+ * Ergaenzt den Profilkreis eines Buttons um Initialen.
+ *
+ * @param {HTMLButtonElement} button - Der vorhandene Profilbutton.
+ * @param {string} initials - Die sichtbaren Initialen.
+ * @param {string} label - Der zugaengliche Profilname.
+ * @returns {void}
+ */
+function showProfileInitials(button, initials, label) {
+    const svg = button.querySelector("svg");
+    if (!svg) return;
+    if (svg.querySelector(".guest-profile-initial")) return;
+    const initial = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    const attributes = {x: "28", y: "28", "text-anchor": "middle", "dominant-baseline": "central", fill: "#2A3647", "font-size": "20", "font-weight": "700", "font-family": "Inter, sans-serif", class: "guest-profile-initial"};
+    Object.entries(attributes).forEach(([name, value]) => initial.setAttribute(name, value));
+    initial.textContent = initials;
+    svg.appendChild(initial);
+    button.setAttribute("aria-label", label);
+    button.setAttribute("title", label);
+}
+
 
 /**
  * this is a function that checks which html path is active and sets the background-color of the navbar
@@ -78,24 +129,43 @@ function displayNavFooterMobilePolicy() {
             </div>`;
 }
 
+async function initSessionData() {
+  if (sessionStorage.getItem("session-initialized")) return;
+  const { userArray, taskArray } = await fetchTemplateData();
+  if(!userArray) return;
+  sessionStorage.setItem("session-contacts", JSON.stringify(Object.values(userArray || {})));
+  sessionStorage.setItem("session-tasks", JSON.stringify(Object.values(taskArray || {})));
+  sessionStorage.setItem("session-initialized", "true");
+}
+
 const BASE_URL = "https://join--testuser-default-rtdb.europe-west1.firebasedatabase.app/";
 
 async function fetchTemplateData(){
    let response = await fetch(BASE_URL + ".json");
    let data = await response.json();
+   console.log(data);
    const userArray = data.contacts;
    const taskArray = data.tasks;
    return { userArray, taskArray };
 }
 
+function getSessionData(key) {
+return JSON.parse(sessionStorage.getItem(key) || "[]");
+}
 
+function saveSessionData(key, items) {
+sessionStorage.setItem(key, JSON.stringify(items));
+}
 
+function createAlphabeticalList(userArray) {
+    const sortedUsers = userArray.sort((a, b) => a.firstName.localeCompare(b.firstName));
+    console.log(sortedUsers);
+}
 
 function sortTasks(taskArray) {
     const sortedTasks = taskArray.sort((a, b) => a.state.localeCompare(b.state));
     console.log(sortedTasks);
 }
-
 
 async function postData(path="", data={}){
     let response = await fetch(BASE_URL + path + ".json", {

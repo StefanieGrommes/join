@@ -164,7 +164,7 @@ button {
   width: min(100%, 850px);
   background: rgba(255, 255, 255, 0.7);
   border-radius: 16px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--box-shadow-default);
   padding: 24px 24px 18px;
 }
 

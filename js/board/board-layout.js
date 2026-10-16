@@ -1,31 +1,14 @@
-// ==========================================
-// BOARD LOGIC / LAYOUT-LOGIK
-// ==========================================
-// Diese Datei steuert das Board-Verhalten:
-// - Aufgaben aus db.js laden
-// - initial nur in To-do rendern
-// - Karten flexibel zwischen Spalten verschieben
-// - Add-Task-Dialog öffnen und speichern
-// - Zustand im LocalStorage persistieren
-// ==========================================
-
 const BOARD_STORAGE_KEY = "join-board-layout-state";
 let currentBoardSearchQuery = "";
 
 function syncBoardMobileNavigation() {
   const boardTopNav = document.querySelector(".board-mobile-top-nav");
-  const boardFooterNav = document.querySelector(".board-mobile-footer-nav");
   const genericHeader = document.querySelector(".nav-mobile");
-  const genericFooter = document.querySelector(".nav-footer-mobile");
 
   const isMobile = window.innerWidth <= 768;
 
   if (boardTopNav) {
     boardTopNav.style.display = isMobile ? "flex" : "";
-    boardTopNav.style.width = isMobile ? "100vw" : "";
-    boardTopNav.style.maxWidth = isMobile ? "100vw" : "";
-    boardTopNav.style.minHeight = isMobile ? "64px" : "";
-    boardTopNav.style.padding = isMobile ? "12px 14px" : "";
     boardTopNav.style.position = isMobile ? "fixed" : "";
     boardTopNav.style.top = isMobile ? "0" : "";
     boardTopNav.style.left = isMobile ? "0" : "";
@@ -33,37 +16,12 @@ function syncBoardMobileNavigation() {
     boardTopNav.style.gridArea = isMobile ? "auto" : "";
   }
 
-  if (boardFooterNav) {
-    boardFooterNav.style.display = isMobile ? "flex" : "";
-    boardFooterNav.style.width = isMobile ? "100vw" : "";
-    boardFooterNav.style.maxWidth = isMobile ? "100vw" : "";
-    boardFooterNav.style.minHeight = isMobile ? "0" : "";
-    boardFooterNav.style.padding = isMobile ? "0" : "";
-    boardFooterNav.style.position = isMobile ? "fixed" : "";
-    boardFooterNav.style.left = isMobile ? "0" : "";
-    boardFooterNav.style.right = isMobile ? "0" : "";
-    boardFooterNav.style.bottom = isMobile ? "0" : "";
-    boardFooterNav.style.zIndex = isMobile ? "8" : "";
-    boardFooterNav.style.gridArea = isMobile ? "auto" : "";
-    boardFooterNav.style.background = isMobile ? "var(--sidebar-bg)" : "";
-    boardFooterNav.style.boxShadow = isMobile ? "0 -4px 12px rgba(15, 23, 42, 0.18)" : "";
-  }
-
   if (genericHeader) {
     genericHeader.style.display = isMobile ? "none" : "";
   }
 
-  if (genericFooter) {
-    genericFooter.style.display = isMobile ? "none" : "";
-  }
 }
 
-/**
- * Liefert den leeren Hinweistext passend zur Spalte.
- *
- * @param {string} columnId - Der Spalten-Schluessel aus data-column.
- * @returns {string} Hinweistext fuer leere Spalten.
- */
 function getEmptyColumnMessage(columnId) {
   const messageMap = {
     "todo": "No tasks To do",
@@ -75,12 +33,6 @@ function getEmptyColumnMessage(columnId) {
   return messageMap[columnId] || "No tasks";
 }
 
-/**
- * Liefert die sichtbare Spaltenbezeichnung fuer die Board-Ansicht.
- *
- * @param {string} columnId - Der technische Spalten-Schluessel.
- * @returns {string} Angezeigter Titel der Spalte.
- */
 function getColumnLabel(columnId) {
   const labelMap = {
     "todo": "To do",
@@ -92,10 +44,6 @@ function getColumnLabel(columnId) {
   return labelMap[columnId] || "Board";
 }
 
-// ===============================
-// Board-Zustand aus LocalStorage laden
-// Wenn noch kein Zustand gespeichert ist, werden alle Aufgaben standardmäßig in "todo" gesetzt.
-// ===============================
 function loadBoardState() {
   try {
     const storedState = window.localStorage.getItem(BOARD_STORAGE_KEY);
@@ -114,13 +62,131 @@ function getDefaultBoardState() {
   }, {});
 }
 
-// ===============================
-// Drag & Drop für eine einzelne Karte
-// ===============================
+function moveBoardTask(taskId, columnId) {
+  const task = tasks.find((item) => item.id === taskId);
+  const column = Array.from(document.querySelectorAll(".board-main-column"))
+    .find((item) => item.dataset.column === columnId);
+  if (!task || !column) {
+    console.error("Cannot move task: task or target column not found.", { taskId, columnId });
+    return false;
+  }
+
+  const state = { ...getDefaultBoardState(), ...loadBoardState(), [taskId]: columnId };
+  window.localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(state));
+  task.status = columnId;
+  return true;
+}
+
+function initBoardMoveMenu() {
+  const board = document.querySelector(".board-main-container");
+  if (!board) return;
+
+  const menu = document.createElement("div");
+  menu.id = "board-move-menu";
+  menu.className = "board-move-menu";
+  menu.setAttribute("role", "menu");
+  menu.setAttribute("aria-label", "Move to");
+  menu.hidden = true;
+
+  document.body.appendChild(menu);
+  let activeButton = null;
+  const columnIds = ["todo", "in-progress", "await-feedback", "done"];
+
+  const closeMenu = (restoreFocus = false) => {
+    menu.hidden = true;
+    if (activeButton) {
+      activeButton.setAttribute("aria-expanded", "false");
+      if (restoreFocus) activeButton.focus();
+    }
+    activeButton = null;
+  };
+
+  board.addEventListener("click", (event) => {
+    const button = event.target.closest(".board-card-move-button");
+    if (!button || !window.matchMedia("(max-width: 360px)").matches) return;
+    if (activeButton === button) {
+      closeMenu(true);
+      return;
+    }
+    closeMenu();
+    activeButton = button;
+    button.setAttribute("aria-expanded", "true");
+    const card = button.closest(".board-card--task");
+    const currentIndex = columnIds.indexOf(card.closest(".board-main-column").dataset.column);
+    menu.replaceChildren();
+    const heading = document.createElement("p");
+    heading.className = "board-move-menu-title";
+    heading.textContent = "Move to";
+    menu.appendChild(heading);
+
+    [currentIndex - 1, currentIndex + 1].forEach((index) => {
+      if (index < 0 || index >= columnIds.length) return;
+      const option = document.createElement("button");
+      option.type = "button";
+      option.setAttribute("role", "menuitem");
+      const arrow = document.createElement("span");
+      arrow.setAttribute("aria-hidden", "true");
+      arrow.textContent = index < currentIndex ? "\u2191" : "\u2193";
+      option.append(arrow, document.createTextNode(getColumnLabel(columnIds[index])));
+      option.addEventListener("click", () => {
+        const taskId = card.dataset.cardId;
+        if (!moveBoardTask(taskId, columnIds[index])) return;
+        closeMenu();
+        initBoardLayout();
+        const movedCard = Array.from(board.querySelectorAll(".board-card--task"))
+          .find((item) => item.dataset.cardId === taskId);
+        movedCard.querySelector(".board-card-move-button").focus();
+      });
+      menu.appendChild(option);
+    });
+
+    menu.hidden = false;
+
+    const rect = button.getBoundingClientRect();
+    const left = Math.max(8, Math.min(rect.right - menu.offsetWidth, window.innerWidth - menu.offsetWidth - 8));
+    const top = rect.bottom + menu.offsetHeight + 8 <= window.innerHeight
+      ? rect.bottom + 8
+      : Math.max(8, rect.top - menu.offsetHeight - 8);
+    menu.style.left = `${left}px`;
+    menu.style.top = `${top}px`;
+    menu.querySelector("button").focus();
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!menu.contains(event.target) && !event.target.closest(".board-card-move-button")) closeMenu();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (menu.hidden) return;
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeMenu(true);
+    } else if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+      event.preventDefault();
+      const options = Array.from(menu.querySelectorAll("button"));
+      const index = options.indexOf(document.activeElement);
+
+      const nextIndex = event.key === "Home" ? 0 : event.key === "End" ? options.length - 1
+        : (index + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
+      options[nextIndex].focus();
+    } else if (event.key === "Tab") {
+      closeMenu(true);
+    }
+  });
+  window.addEventListener("resize", () => closeMenu());
+  document.addEventListener("scroll", (event) => {
+    if (!menu.contains(event.target)) closeMenu();
+  }, true);
+  board.addEventListener("input", () => closeMenu());
+}
+
 function bindCardDragEvents(card, draggedCardRef) {
   if (!card) return;
 
-  card.addEventListener("dragstart", () => {
+  card.addEventListener("dragstart", (event) => {
+    if (window.matchMedia("(max-width: 360px)").matches) {
+      event.preventDefault();
+      return;
+    }
     draggedCardRef.value = card;
     card.classList.add("is-dragging");
     card.setAttribute("data-dragging", "true");
@@ -136,9 +202,6 @@ function bindCardDragEvents(card, draggedCardRef) {
   });
 }
 
-// ===============================
-// Initialisierung des Boards
-// ===============================
 function initBoardLayout() {
   const columns = Array.from(document.querySelectorAll(".board-main-column"));
   const searchInput = document.querySelector(".board-search-field input");
@@ -149,6 +212,7 @@ function initBoardLayout() {
   const defaultState = getDefaultBoardState();
   const savedState = loadBoardState();
   const boardState = { ...defaultState, ...savedState };
+
   const draggedCardRef = { value: null };
 
   if (boardMainContainer && !boardMainContainer.dataset.columnButtonDelegation) {
@@ -163,11 +227,6 @@ function initBoardLayout() {
     });
   }
 
-  /**
-   * Rendert den leeren Zustand fuer Spalten ohne Karten.
-   *
-   * @returns {void}
-   */
   const renderEmptyStateForColumns = () => {
     columns.forEach((column) => {
       const content = column.querySelector(".board-main-column-content");
@@ -187,11 +246,6 @@ function initBoardLayout() {
     });
   };
 
-  /**
-   * Rendert einen Hinweis, wenn die Suche keine Treffer liefert.
-   *
-   * @returns {void}
-   */
   const renderSearchEmptyState = () => {
     if (!boardMainContainer) return;
 
@@ -205,12 +259,6 @@ function initBoardLayout() {
     boardMainContainer.appendChild(emptyState);
   };
 
-  /**
-   * Baut die mobile Spaltenueberschrift mit Plus-Button.
-   *
-   * @param {string} columnId - Der technische Spalten-Schluessel.
-   * @returns {HTMLElement} Kopfbereich der Spalte.
-   */
   const createColumnHeader = (columnId) => {
     const header = document.createElement("div");
     header.className = "board-main-column-header";
@@ -232,22 +280,12 @@ function initBoardLayout() {
     return header;
   };
 
-  /**
-   * Baut den Container fuer die Karten innerhalb einer Spalte.
-   *
-   * @returns {HTMLElement} Karten-Container der Spalte.
-   */
   const createColumnContent = () => {
     const content = document.createElement("div");
     content.className = "board-main-column-content";
     return content;
   };
 
-  // ===============================
-  // Board rendern
-  // Jede Aufgabe wird anhand ihres Saved-State in die passende Spalte gesetzt.
-  // Wenn noch kein Status existiert, landet sie in "todo".
-  // ===============================
   const renderBoardState = () => {
     columns.forEach((column) => {
       column.innerHTML = "";
@@ -300,32 +338,23 @@ function initBoardLayout() {
     renderEmptyStateForColumns();
   };
 
-  // ===============================
-  // Zustand speichern
-  // ===============================
-  const saveBoardState = () => {
-    window.localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(boardState));
-  };
-
-  // ===============================
-  // Drop-Ziel visuell markieren
-  // ===============================
   const setDropTargetState = (column, isActive) => {
     column.classList.toggle("is-drop-target", isActive);
   };
 
   columns.forEach((column) => {
-    column.addEventListener("dragover", (event) => {
+    column.ondragover = (event) => {
       if (!draggedCardRef.value) return;
+
       event.preventDefault();
       setDropTargetState(column, true);
-    });
+    };
 
-    column.addEventListener("dragleave", () => {
+    column.ondragleave = () => {
       setDropTargetState(column, false);
-    });
+    };
 
-    column.addEventListener("drop", (event) => {
+    column.ondrop = (event) => {
       event.preventDefault();
 
       if (!draggedCardRef.value) return;
@@ -334,25 +363,18 @@ function initBoardLayout() {
       const draggedCard = draggedCardRef.value;
       const draggedTaskId = draggedCard.dataset.cardId;
 
+      if (!moveBoardTask(draggedTaskId, targetColumnId)) return;
       boardState[draggedTaskId] = targetColumnId;
-
-      const draggedTask = tasks.find((task) => task.id === draggedTaskId);
-      if (draggedTask) {
-        draggedTask.status = targetColumnId;
-      }
-
-      saveBoardState();
       renderBoardState();
       setDropTargetState(column, false);
-    });
+    };
   });
 
-  if (searchInput && !searchInput.dataset.searchInitialized) {
-    searchInput.dataset.searchInitialized = "true";
-    searchInput.addEventListener("input", () => {
+  if (searchInput) {
+    searchInput.oninput = () => {
       currentBoardSearchQuery = searchInput.value || "";
       renderBoardState();
-    });
+    };
   }
 
   if (searchInput) {
@@ -362,11 +384,6 @@ function initBoardLayout() {
   renderBoardState();
 }
 
-// ===============================
-// Add-Task-Modal-Steuerung
-// Dieses Modal öffnet sich beim Klick auf den Button
-// und bleibt leer, bis alle Pflichtfelder ausgefüllt sind.
-// ===============================
 function initAddTaskModal() {
   const openButton = document.getElementById("board-open-add-task-modal");
   const closeButton = document.getElementById("board-task-close-button");
@@ -404,12 +421,6 @@ function initAddTaskModal() {
     modal.setAttribute("aria-hidden", "false");
   };
 
-  /**
-   * Oeffnet das Add-Task-Modal mit vorgewähltem Status.
-   *
-   * @param {string} status - Zielspalte fuer den neuen Task.
-   * @returns {void}
-   */
   const openModalForColumn = (status) => {
     resetModalState();
     defaultStatus = status || "todo";
@@ -424,12 +435,6 @@ function initAddTaskModal() {
     resetModalState();
   };
 
-  /**
-   * Oeffnet das vorhandene Add-Task-Modal im Bearbeitungsmodus.
-   *
-   * @param {object} task - Die Task mit den vorhandenen Werten.
-   * @returns {void}
-   */
   const openEditModal = (task) => {
     if (!task) return;
 
@@ -568,12 +573,6 @@ function initAddTaskModal() {
   window.closeBoardTaskModal = closeModal;
 }
 
-/**
- * Initialisiert das Detail-Modal fuer Board-Karten.
- * Das Modal wird nur geoeffnet, wenn auf die Aufgabenbeschreibung geklickt wird.
- *
- * @returns {void}
- */
 function initTaskDetailModal() {
   const boardMainContainer = document.querySelector(".board-main-container");
   const detailModal = document.getElementById("board-task-detail-modal");
@@ -581,23 +580,11 @@ function initTaskDetailModal() {
 
   if (!boardMainContainer || !detailModal || !detailRoot) return;
 
-  /**
-   * Liefert ein Task-Objekt anhand der ID.
-   *
-   * @param {string} taskId - Die eindeutige Task-ID.
-   * @returns {object|null} Gefundene Task oder null.
-   */
   const getTaskById = (taskId) => {
     if (!taskId || !Array.isArray(tasks)) return null;
     return tasks.find((task) => task.id === taskId) || null;
   };
 
-  /**
-   * Aktualisiert den Karteninhalt im Board nach Edit/Subtask-Aenderungen.
-   *
-   * @param {object} task - Das geaenderte Task-Objekt.
-   * @returns {void}
-   */
   const syncCardContent = (task) => {
     if (!task) return;
 
@@ -627,12 +614,6 @@ function initTaskDetailModal() {
     }
   };
 
-  /**
-   * Entfernt eine Task aus Daten, Board-Zustand und DOM.
-   *
-   * @param {string} taskId - Die zu loeschende Task-ID.
-   * @returns {void}
-   */
   const deleteTask = (taskId) => {
     const taskIndex = Array.isArray(tasks) ? tasks.findIndex((task) => task.id === taskId) : -1;
     if (taskIndex === -1) return;
@@ -649,12 +630,6 @@ function initTaskDetailModal() {
     initBoardLayout();
   };
 
-  /**
-   * Oeffnet das Detail-Modal und rendert die grosse Kartenansicht.
-   *
-   * @param {object} task - Das Task-Objekt aus der Datenbank.
-   * @returns {void}
-   */
   const openDetailModal = (task) => {
     if (!task) return;
 
@@ -669,11 +644,6 @@ function initTaskDetailModal() {
     }
   };
 
-  /**
-   * Schliesst das Detail-Modal und entfernt den Karteninhalt.
-   *
-   * @returns {void}
-   */
   const closeDetailModal = () => {
     detailModal.classList.remove("is-open");
     detailModal.setAttribute("aria-hidden", "true");
@@ -749,12 +719,10 @@ function initTaskDetailModal() {
   });
 }
 
-// ===============================
-// Initiales Booten der Seite
-// ===============================
 document.addEventListener("DOMContentLoaded", () => {
   syncBoardMobileNavigation();
   initBoardLayout();
+  initBoardMoveMenu();
   initAddTaskModal();
   initTaskDetailModal();
 });

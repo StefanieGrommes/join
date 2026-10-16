@@ -7,8 +7,9 @@
     <link rel="shortcut icon" href="../assets/join-favicon.svg" type="image/x-icon">
     <link rel="stylesheet" href="../css/fonts.css">
     <link rel="stylesheet" href="../css/menu.css">
-    <link rel="stylesheet" href="./css/login.css"/>
+    <link rel="stylesheet" href="./css/index/style.css"/>
     <script src="../js/Templates/init.js"></script>
+    <script src="./js/login/login.js"></script>
   </head>
 
   <body>
@@ -38,20 +39,20 @@
         <section class="content-card" aria-labelledby="login-title">
           <h1 id="login-title" class="login-title">Log in</h1>
 
-          <div class="login-form">
+          <form id="demo-login-form" class="login-form" novalidate>
             <div class="field input-with-icon">
-              <input type="email" placeholder="Email" />
+              <input id="demo-login-name" type="text" placeholder="Name" aria-label="Name for demo login" aria-describedby="demo-login-feedback" autocomplete="name" />
               <img src="./img/icons/mail.png" alt="Mail icon" class="input-icon" />
             </div>
             <div class="field input-with-icon">
-              <input type="password" placeholder="Password" />
+              <input type="password" placeholder="Password" aria-label="Password (not checked or saved in demo)" autocomplete="off" />
               <img src="./img/icons/lock.png" alt="Lock icon" class="input-icon" />
             </div>
 
             <div class="button-row">
               <button type="submit" class="btn btn--primary">Log in</button>
-              <button type="button" class="btn btn--secondary">Guest Log in</button>
-            </div>
+              <button id="guest-login-button" type="button" class="btn btn--secondary">Guest Log in</button>
+            </form>
           </div>
         </section>
       </main>
@@ -82,7 +83,6 @@
 
 
 
-    <script src="./js/login/login.js"></script>
 
 
 

@@ -14,8 +14,8 @@
   --logo-size: 64px;
   --header-height: 80px;
   --logo-zone-height: 180px;
-  --shadow: 0 4px 4px 0px rgba(82, 82, 82, 0.4);
-  --box-shadow-default: 0 0 4px 0px rgba(82, 82, 82, 0.4);
+  --shadow-stronger: 0 4px 4px 0px rgba(0, 0, 0, 0.25);
+  --box-shadow-default: 0 0 4px 0px rgba(0, 0, 0, 0.4);
   --default-font: "Inter", sans-serif;
   --second-font: "Open Sans", sans-serif;
 }
@@ -242,6 +242,8 @@ aside .nav-element span {
 }
 
 main {
+  display: flex;
+  justify-content: center;
   grid-area: main;
   min-width: 0;
   max-width: calc(1440px - var(--sidebar-width));
@@ -264,6 +266,7 @@ main {
 @media (max-width: 768px) {
   nav {
     display: none;
+    padding: 0;
   }
 
   .nav-btn {

@@ -1,9 +1,11 @@
-
 .add-task-content {
-  padding-left: 56px;
   height: 100%;
+  width: 100%;
+  padding-left: clamp(20px, 3vw, 96px);
+  padding-right: clamp(20px, 3vw, 96px);
   display: flex;
   flex-direction: column;
+
 }
 
 .add-task-content h1 {
@@ -53,17 +55,24 @@
   font-size: 20px;
   color: var(--main-color);
 }
+
 .form-field input,
-.form-field textarea {
+.form-field textarea,
+.toggle-task
+ {
   border: 1px solid rgba(209, 209, 209, 1);
   background-color: rgba(255, 255, 255, 1);
   border-radius: 10px;
   padding: 12px 21px;
-  font-family: inherit;
+  font-family: var(--default-font);
   box-sizing: border-box;
   width: 100%;
   transition: border-color 100ms;
   font-size: 20px;
+}
+
+.toggle-task:focus {
+  outline: none;
 }
 
 .form-field input {
@@ -74,6 +83,7 @@
   min-height: 120px;
   padding: 18px 16px;
   resize: vertical;
+  font-family: var(--default-font);
 }
 
 .form-field input:focus,
@@ -106,6 +116,54 @@
   right: 14px;
   transform: translateY(-50%);
   pointer-events: none;
+  width: 24px;
+  height: 24px;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0;
+    -webkit-appearance: none;
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+}
+
+.dropdown-container {
+  display: flex;
+  position: relative;
+}
+
+.dropdown-container button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: unset;
+  background-color: transparent;
+  right: 14px;
+  cursor: pointer;
+}
+
+.dropdown-container button:hover {
+   background-color: var(--hover-bg-color-grey);
+}
+
+.dropdown-container.open button {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.dropdown-container select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+
+.dropdown-container select::-ms-expand {
+  display: none;
 }
 
 .priority-options {
@@ -129,18 +187,18 @@
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.4);
   cursor: pointer;
   border: 1px solid rgb(209, 209, 209);
-  transition:
-    box-shadow 100ms,
-    background-color 100ms;
+  transition: box-shadow 100ms,
+              background-color 100ms;
 }
 
 .priority-btn:hover {
   box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.4);
 }
 
-.priority-btn img {
+.priority-btn svg {
   width: 20px;
   height: auto;
+  flex-shrink: 0;
 }
 
 .priority-urgent.priority-active {
@@ -148,74 +206,37 @@
   color: white;
 }
 
+.priority-active-svg path {
+  fill: white;
+}
+
 .priority-medium.priority-active {
   background-color: rgb(255, 168, 0);
   color: white;
 }
+
 .priority-low.priority-active {
   background-color: rgb(122, 226, 41);
   color: white;
 }
 
-.dropdown {
+.input-with-icon,
+.subtask-list-item-wrapper {
   position: relative;
 }
-
-.dropdown-toggle,
-.input-with-icon {
-  position: relative;
-}
-
-.dropdown-toggle img {
-  position: absolute;
-  top: 50%;
-  right: 14px;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-
-.dropdown-list {
-  padding: 0 12px;
-  list-style: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  z-index: 10;
-  max-height: 297px;
-  overflow-y: auto;
-  background-color: white;
-  border-radius: 0 0 10px 10px;
-  box-shadow: 0 0 14px 3px rgba(0, 0, 0, 0.14);
-  display: none;
-}
-
-.dropdown-list li {
-  padding: 12px 16px;
-  cursor: pointer;
+.contact-list {
   border-radius: 10px;
-  transition: background-color 100ms;
-  gap: 16px;
-  font-size: 20px;
 }
 
-.dropdown-list li:hover {
-  background-color: var(--hover-bg-color-grey);
-}
-
-.dropdown.open .dropdown-toggle img {
-  transform: translateY(-50%) rotate(180deg);
-}
-
-.dropdown-list .contact-option {
+.contact-option {
   display: flex;
   align-items: center;
-  padding: 7px 16px;
-  border-radius: 10px;
-}
-
-.contact-option img {
-  margin-left: auto;
+    background-color: rgba(255, 255, 255, 1);
+    font-family: var(--default-font);
+    box-sizing: border-box;
+    width: 100%;
+    transition: border-color 100ms;
+    font-size: 20px;
 }
 
 .contact-avatar {
@@ -245,7 +266,35 @@
   gap: 10px;
 }
 
-.subtask-actions {
+.subtask-list-item.editing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  border-bottom: 1px solid var(--hover-primary-button);
+  border-radius: 0;
+}
+
+.subtask-list-item.editing .subtask-list-buttons {
+  visibility: visible;
+}
+
+.subtask-list-item.editing .subtask-edit-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  background: transparent;
+  box-shadow: none;
+  font: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+.subtask-actions,
+.subtask-list-buttons {
   position: absolute;
   top: 50%;
   right: 21px;
@@ -254,11 +303,67 @@
   align-items: center;
   gap: 8px;
 }
+
+.subtask-actions {
+  visibility: hidden;
+}
+
+.subtask-list-buttons button {
+  background: transparent;
+  border: unset;
+}
+
+.subtask-list-buttons img {
+  width: 24px;
+  height: 24px;
+}
+
+.subtask-list-buttons {
+  visibility: hidden;
+}
+
+.subtask-list-item:hover .subtask-list-buttons {
+  visibility: visible;
+}
+
+.subtask-list-item {
+  font-size: 1rem;
+  border-radius: 10px;
+  border: none;
+  padding: 6.5px 16px;
+  height: 32px;
+  position: relative;
+}
+
+.subtask-list-item:not(.editing):hover {
+  background-color: var( --navbar-color);
+}
+
+.subtask-list-item button {
+  display: flex;
+  align-items: center;
+  border: unset;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.subtask-list {
+  list-style-position: inside;
+}
+
 .subtask-actions img {
   position: static;
   transform: none;
-  pointer-events: auto;
 }
+
+.subtask-actions button {
+  display: flex;
+  align-items: center;
+  border: unset;
+  background-color: transparent;
+  cursor: pointer;
+}
+
 .action-divider {
   width: 1px;
   height: 24px;
@@ -271,8 +376,10 @@
   align-items: center;
   margin-top: 124px;
 }
+
 .required-hint {
-  font-size: 20px;
+  display: flex;
+  font-size: 1.25rem;
 }
 
 .form-actions {
@@ -300,24 +407,28 @@
   border: 1px solid var(--main-color);
   width: 110px;
   height: 56px;
-  font-size: 20px;
+  font-size: 1.25rem;
   background-color: white;
   color: var(--main-color);
 }
+
 .btn-create {
   border: unset;
   width: 183px;
   height: 56px;
-  font-size: 21px;
+  font-size: 1.25rem;
   font-weight: 700;
   background-color: var(--main-color);
   color: white;
   white-space: nowrap;
 }
+
 .btn-clear:hover {
-  box-shadow: inset 0 0 0 1px var(--hover-bg-color-lightblue);
-  color: var(--hover-bg-color-lightblue);
+  border: 2px var(--hover-bg-color-lightblue) solid;
+  box-shadow: var(--shadow);
+  transition: background-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
 }
+
 .btn-clear:active {
   border: 1px solid var(--active-btn-border);
   color: var(--active-btn-border);
@@ -339,16 +450,17 @@
   height: 24px;
   transform: translateY(1px);
   background-color: currentColor;
-  -webkit-mask: url(./assets/close.svg) no-repeat center / contain;
-  mask: url(./assets/close.svg) no-repeat center / contain;
+  -webkit-mask: url('../assets/close.svg') no-repeat center / contain;
+  mask: url('../assets/close.svg') no-repeat center / contain;
 }
+
 .icon-check {
   width: 24px;
   height: 24px;
   transform: translateY(1px);
   background-color: currentColor;
-  -webkit-mask: url(./assets/checkWhite.svg) no-repeat center / contain;
-  mask: url(./assets/checkWhite.svg) no-repeat center / contain;
+  -webkit-mask: url('../assets/checkWhite.svg') no-repeat center / contain;
+  mask: url('../assets/checkWhite.svg') no-repeat center / contain;
 }
 
 .toast {
@@ -365,7 +477,7 @@
   border-radius: 20px;
   background-color: var(--main-color);
   color: white;
-  font-size: 20px;
+  font-size: 1.25rem;
   box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.15);
   opacity: 0;
   transition:
@@ -373,6 +485,7 @@
     opacity 100ms ease-in-out;
   z-index: 100;
 }
+
 .toast.toast-visible {
   transform: translate(-50%, calc(-50vh + 50%));
   opacity: 1;
@@ -383,9 +496,11 @@
   height: 25px;
 }
 
+/*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
+
 @media (max-width: 1280px) {
   .add-task-content {
-    padding-left: 0px;
+    padding-left: 20px;
     padding-right: 20px;
   }
 }
@@ -410,15 +525,16 @@
 
   .form-footer {
     margin: 12px 0 12px;
+
   }
   .required-hint {
-    font-size: 16px;
+    font-size: 1rem;
   }
 }
 
 @media (max-width: 768px) {
   .add-task-content h1 {
-    font-size: 47px;
+    font-size: 3rem;
     margin: 28px 0 40px;
   }
 
@@ -429,31 +545,35 @@
     padding-right: 0px;
     height: auto;
   }
+
   .form-field label {
-    font-size: 16px;
+    font-size: 1rem;
   }
+
   .form-field input {
-    font-size: 16px;
+    font-size: 1rem;
   }
 
   .form-field input,
   .form-field textarea {
     padding: 10px 21px;
   }
+
   .form-field textarea {
     min-height: 88px;
   }
   .form-field input::placeholder,
   .form-field textarea::placeholder {
-    font-size: 16px;
+    font-size: 1rem;
   }
 
   .form-field label,
   .field-label {
-    font-size: 16px;
+    font-size: 1rem;
   }
+
   .priority-btn {
-    font-size: 16px;
+    font-size: 1rem;
     padding: 18px 10px;
     height: 41px;
     width: 121px;
@@ -462,6 +582,7 @@
   .required-hint {
     display: none;
   }
+
   .form-footer {
     justify-content: flex-end;
   }
@@ -471,26 +592,32 @@
   main {
     padding: 20px 16px 0 16px;
   }
+
   .form-columns {
     gap: 24px;
   }
+
   .priority-options {
     gap: 4px;
   }
+
   .priority-btn {
     height: 31px;
     width: 95px;
     gap: 4px;
   }
-  .priority-btn img {
+
+  .priority-btn svg {
     width: 16px;
   }
+
   .form-actions {
     gap: 8px;
   }
+
   .btn-clear,
   .btn-create {
-    font-size: 16px;
+    font-size: 1rem;
     justify-content: center;
   }
 
@@ -503,14 +630,17 @@
     width: 150px;
     height: 44px;
   }
+
   .icon-close {
     width: 10.5px;
     height: 10.5px;
   }
+
   .icon-check {
     width: 10.5px;
     height: 10.5px;
   }
+
   .form-footer {
     margin: 12px 0 10px;
   }

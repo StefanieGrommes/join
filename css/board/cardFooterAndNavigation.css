@@ -1,0 +1,136 @@
+:root {
+  .board-progress-label {
+    font-size: 16px;
+    font-weight: 400;
+    color: #111827;
+    white-space: nowrap;
+  }
+
+
+  .board-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .board-card-priority-icon {
+    width: 20px;
+    height: 20px;
+    margin-left: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+
+  .board-assigned-contacts {
+    display: flex;
+    align-items: center;
+  }
+
+
+  .board-contact-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+
+  .board-contact-avatar + .board-contact-avatar {
+    margin-left: -8px;
+  }
+
+
+  .board-card:active {
+    cursor: grabbing;
+  }
+
+
+  .board-card.is-dragging {
+    opacity: 0.5;
+  }
+
+
+  .board-main-column.is-drop-target {
+    background: rgba(111, 168, 255, 0.08);
+    border-radius: 18px;
+  }
+
+
+  .board-search-empty-state {
+    width: 100%;
+    grid-column: 1 / -1;
+    margin: 28px 0 0;
+    padding: 22px 24px;
+    border: 1px dashed #a8afb8;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #556070;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(17, 24, 39, 0.06);
+  }
+
+
+  .board-mobile-top-nav {
+    display: none;
+  }
+
+
+  .board-mobile-top-nav {
+    align-items: center;
+    justify-content: space-between;
+    background: #ffffff;
+    box-shadow: 0 0 4px 4px rgba(110, 107, 107, 0.2);
+  }
+
+
+  .board-mobile-logo-wrapper {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+  .board-mobile-logo-wrapper img {
+    width: 32px;
+    height: 39px;
+    object-fit: contain;
+  }
+
+
+  .board-mobile-profile-button {
+    border: none;
+    background: transparent;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+
+  .board-mobile-profile-circle {
+    display: block;
+  }
+
+
+  .board-mobile-profile-circle{
+    width: 40px;
+    height: 40px;
+
+
+
+  }
+}

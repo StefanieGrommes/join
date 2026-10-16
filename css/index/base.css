@@ -13,7 +13,8 @@
 
 html,
 body {
-  display: block;
+  display: flex;
+  justify-content: space-evenly;
   width: 100%;
   min-width: 320px;
   min-height: 100%;
@@ -83,6 +84,7 @@ body {
 .top-link {
   width: 91px;
   height: 49px;
+  font-size: 16px;
   border: none;
   border-radius: 10px;
   background: var(--button-dark);
@@ -119,6 +121,16 @@ body {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+}
+
+.login-intro-seen .app-intro {
+  display: none;
+}
+
+.login-intro-seen .login-shell {
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 
 .join-logo {
@@ -197,6 +209,28 @@ body {
 .field {
   width: 100%;
   max-width: 422px;
+}
+
+.demo-login-feedback {
+  width: 100%;
+  margin: 0;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+#demo-login-form {
+  gap: 16px;
+}
+
+#demo-login-form .button-row {
+  position: static;
+  margin-top: 32px;
+}
+
+.login-shell:has(#demo-login-form) {
+  height: auto;
+  min-height: 449px;
 }
 
 .input-with-icon {
@@ -295,81 +329,4 @@ body {
 .footer a:hover {
   color: var(--hover-menu);
   font-weight: 700;
-}
-
-/*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
-
-@media (max-width: 768px) {
-  .app-intro {
-    background: #2a3647;
-  }
-
-  .join-preview {
-    width: 100px;
-  }
-
-  .page {
-    padding: 37px 16px 22px 16px;
-  }
-
-  .header-actions {
-    display: none;
-  }
-
-  .login-shell {
-    height: 475px;
-    padding-left: clamp(16px, 4vw, 115px);
-    padding-right: clamp(16px, 4vw, 115px);
-    padding-top: clamp(32px, 2.5vw, 48px);
-    padding-bottom: clamp(32px, 2.5vw, 48px);
-  }
-
-  .mobile-signup-cta {
-    display: flex;
-    align-items:center;
-    gap: 32px;
-  }
-
-  .top-link {
-    width: 104px;
-  }
-
-  .button-row {
-    margin-top: 18px;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .btn--primary,
-  .btn--secondary {
-    width: 180px;
-    height: 51px;
-  }
-
-  .mobile-bottom-area {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 42px;
-  }
-
-  .footer {
-    width: 246px;
-    min-height: 35px;
-    margin-top: auto;
-    margin-bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-  }
-}
-
-@media (max-width: 360px) {
-  .page {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
 }

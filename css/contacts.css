@@ -33,6 +33,7 @@ main {
 .add-contact-btn:hover {
   background-color: var(--hover-secondary-button);
   border-color: var(--hover-secondary-button);
+  box-shadow: var(--shadow-stronger);
 }
 
 .icon-add {
@@ -456,6 +457,7 @@ h1 {
   .detail-open .form-column-right {
     display: flex;
     width: 100%;
+    flex: 1;
     position: relative;
   }
   .back-btn {
@@ -506,6 +508,10 @@ h1 {
     border-radius: 20px 20px 0 20px;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     z-index: 20;
+  }
+  .add-task-content {
+    height: 100%;
+    width: 100%;
   }
 }
 

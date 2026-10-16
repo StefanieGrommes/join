@@ -1,0 +1,124 @@
+.board-detail-priority-icon {
+  width: 20px;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.board-detail-modal-body .board-detail-assignees {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+
+.board-detail-assignees {
+  display: flex;
+}
+
+.board-detail-modal-body .board-detail-assignee {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 32px;
+  color: #2f3d4c;
+  font-size: 18px;
+
+}
+
+.board-detail-modal-body .board-detail-assignee span,
+.board-detail-assignee span {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+}
+
+.board-detail-assignee span {
+  width: 0px;
+  height: 0px;
+}
+
+.board-detail-assignee-name {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.board-detail-assignee {
+  display: flex;
+  margin: 0;
+}
+
+.board-detail-modal-body .board-detail-subtasks {
+  margin-top: 12px;
+}
+
+.board-detail-modal-body .board-detail-subtasks h4 {
+  margin: 0 0 12px;
+  color: #2f3d4c;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.board-detail-modal-body .board-detail-subtask {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: #2f3d4c;
+  font-size: 18px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.board-detail-modal-body .board-detail-subtask span {
+  min-width: 0;
+}
+
+.board-detail-modal-body .board-detail-subtask input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #4589ff;
+  flex-shrink: 0;
+}
+
+.board-detail-modal-body .board-detail-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.board-detail-modal-body .board-detail-button {
+  border: none;
+  background: none;
+  padding: 0;
+  min-width: auto;
+  height: auto;
+  color: #2f3d4c;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.board-detail-modal-body .board-detail-button:hover {
+  color: #1b66d1;
+}
+
+.board-detail-modal-body .board-detail-button-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.board-detail-modal-body .board-detail-button-text {
+  font-size: 16px;
+  line-height: 1;
+}

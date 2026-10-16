@@ -9,7 +9,8 @@
 
 html,
 body {
-  display: block;
+  display: flex;
+  justify-content: space-evenly;
   width: 100%;
   min-width: 320px;
   min-height: 100%;
@@ -32,7 +33,7 @@ body {
   flex: 1;
 }
 
- .mobile-bottom-area {
+.mobile-bottom-area {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -106,7 +107,7 @@ body {
 }
 
 .auth-panel {
-  height: 630px;
+  height: auto;
   width: min(600px, 100%);
   display: flex;
   justify-content: center;
@@ -131,6 +132,7 @@ body {
 }
 
 .signup-form {
+  padding: 24px 0;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -162,13 +164,13 @@ body {
   object-fit: cover;
 }
 
-.signup-form button {
+.signup-form .back-button {
   border-style: unset;
   background-color: transparent;
   cursor: pointer;
 }
 
-.signup-form button:hover {
+.signup-form .back-button:hover {
   transform: scale(1.2);
   background-color: var(--hover-btn-grey);
 }
@@ -264,7 +266,7 @@ body {
 
 .btn:not(:disabled):hover {
   background-color: var(--hover-bg-color-lightblue);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-stronger);
   transition: background-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
 }
 
@@ -296,93 +298,58 @@ body {
   font-weight: 700;
 }
 
-/*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
-
-@media (max-width: 768px) {
-
-  .btn {
-    width: 180px;
-    height: 51px;
-  }
-
-  .back-button {
-    top: 16px;
-    left: 0;
-  }
-
-  .footer {
-    width: 246px;
-    min-height: 35px;
-    margin-top: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-  }
-
-  .auth-panel {
-    height: 595px;
-  }
+.signup-password-feedback {
+  width: 100%;
+  margin-top: -12px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
-@media (max-width: 640px) {
-  .page {
-    padding-left: clamp(16px, 3.25vw, 24px);
-    padding-right: clamp(16px, 3.25vw, 24px);
-  }
-}
-@media (max-width: 576px) {
-
-  .content-card {
-    padding: 32px 16px;
-  }
+.signup-password-feedback p {
+  margin: 0;
 }
 
-@media (max-width: 440px) {
-  .page {
-    justify-content: start;
-  }
-  .page-header {
-    position: relative;
-    padding: 24px 0 16px;
-  }
-
-  .panel-area {
-    flex: 1;
-    padding-bottom: 24px;
-  }
-
-  .auth-panel {
-    height: auto;
-    min-height: 520px;
-  }
-
-  .mobile-bottom-area {
-    position: static;
-  }
-
-  .field input,
-  .field input::placeholder {
-    font-size: 16px;
-  }
-
-  .back-button {
-    top: 15px;
-  }
-
-  .footer {
-    padding-top: 8px;
-  }
+.signup-password-feedback .is-invalid,
+.signup-password-error {
+  color: #c62828;
 }
 
-@media (max-width: 320px){
- .back-button {
-      top: 12px;
-  }
-
-  .auth-panel {
-    min-height: 520px;
-  }
+.signup-password-error:not(:empty) {
+  margin-top: 8px;
 }
 
+.field input[aria-invalid="true"] {
+  border-color: #c62828;
+}
 
+.signup-success-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.signup-success-overlay[hidden] {
+  display: none;
+}
+
+.signup-success-message {
+  width: 326px;
+  max-width: calc(100vw - 32px);
+  height: 74px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  border-radius: 20px;
+  background: #2a3647;
+  color: #ffffff;
+  font-size: 20px;
+  text-align: center;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.15);
+}

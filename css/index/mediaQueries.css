@@ -1,0 +1,74 @@
+@media (max-width: 768px) {
+  .app-intro {
+    background: #2a3647;
+  }
+
+  .join-preview {
+    width: 100px;
+  }
+
+  .page {
+    padding: 37px 16px 22px 16px;
+  }
+
+  .header-actions {
+    display: none;
+  }
+
+  .login-shell {
+    height: 475px;
+    padding-left: clamp(16px, 4vw, 115px);
+    padding-right: clamp(16px, 4vw, 115px);
+    padding-top: clamp(32px, 2.5vw, 48px);
+    padding-bottom: clamp(32px, 2.5vw, 48px);
+  }
+
+  .mobile-signup-cta {
+    display: flex;
+    align-items:center;
+    gap: 32px;
+  }
+
+  .top-link {
+    width: 104px;
+  }
+
+  .button-row {
+    margin-top: 18px;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .btn--primary,
+  .btn--secondary {
+    width: 180px;
+    height: 51px;
+  }
+
+  .mobile-bottom-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 42px;
+  }
+
+  .footer {
+    width: 246px;
+    min-height: 35px;
+    margin-top: auto;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .page {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}

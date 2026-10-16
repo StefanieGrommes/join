@@ -1,0 +1,215 @@
+:root {
+  @media (max-width: 1280px) and (min-width: 769px) {
+    .sidebar {
+      width: 204px;
+      padding: 24px 0 22px;
+    }
+
+    .sidebar-logo {
+      width: 86px;
+    }
+
+    .sidebar-nav {
+      margin-top: 18px;
+    }
+
+    .page-layout {
+      padding-right: 24px;
+      padding-left: 24px;
+    }
+
+    .board-header-container, .board-main-container {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+
+
+
+    main {
+      flex: 1;
+      min-width: 0;
+      min-height: 100vh;
+      background: var(--content-bg);
+      border-left: 1px solid var(--frame-border);
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-nav-item {
+      gap: 10px;
+      padding: 10px 20px;
+    }
+
+    .sidebar-footer-links {
+      padding: 0 20px;
+    }
+
+    .board-empty-state {
+      min-height: 48px;
+    }
+
+    .board-top-inner {
+      padding: 0 20px 0 32px;
+    }
+
+    .board-header-container,
+    .board-main-container {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+    .board-header-container, .board-main-container {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+
+  }
+
+
+  @media (max-width: 1040px) and (min-width: 769px) {
+    .sidebar {
+      width: 172px;
+    }
+
+    .sidebar-nav-item {
+      padding: 9px 14px;
+    }
+
+    .sidebar-nav-label,
+    .sidebar-footer-links a {
+      font-size: 16px;
+    }
+
+    .board-header-container,
+    .board-main-container {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+
+    .board-header-inner {
+      min-height: 64px;
+      margin-bottom: 32px;
+      gap: 14px;
+    }
+
+    .board-header-title {
+      font-size: clamp(34px, 4.8vw, 50px);
+    }
+
+    .board-header-actions {
+      gap: 14px;
+    }
+
+    .board-header-container, .board-main-container {
+      margin-left: 0px;
+    }
+
+    .board-search-field {
+      width: 280px;
+      height: 44px;
+    }
+
+    .board-search-field input {
+      font-size: 18px;
+    }
+
+    .board-add-task-button {
+      min-width: 144px;
+      height: 44px;
+      font-size: 19px;
+      padding: 0 12px;
+    }
+
+    .board-add-task-plus {
+      font-size: 28px;
+    }
+
+    .board-column-title {
+      
+        font-size: 16px;
+        
+    }
+
+  }
+
+
+  @media (max-width: 860px) and (min-width: 769px) {
+
+    .sidebar {
+      width: 156px;
+    }
+
+    .sidebar-nav-item {
+      padding: 8px 10px;
+      gap: 8px;
+    }
+
+    .sidebar-nav-label,
+    .sidebar-footer-links a {
+      font-size: 16px;
+    }
+
+    .board-empty-state {
+      min-height: 48px;
+    }
+
+    .board-top-inner {
+      padding: 0 14px 0 16px;
+    }
+
+    .board-card--task {
+      padding: 4px 6px;
+    }
+
+
+    .board-header-container,
+    .board-main-container {
+      margin-left: 12px;
+      margin-right: 12px;
+    }
+
+    .board-header-inner {
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+
+    .board-header-actions {
+      gap: 10px;
+    }
+
+    .board-search-field {
+      width: 240px;
+      height: 42px;
+    }
+
+    .board-search-field input {
+      font-size: 16px;
+    }
+    .board-header-container, .board-main-container {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+
+    .board-header-container, .board-main-container {
+      margin-left: 0px;
+    }
+
+    .board-main-container {
+        
+        gap: 18px;
+    }
+
+    .board-add-task-button {
+      min-width: 132px;
+      height: 42px;
+      font-size: 17px;
+      padding: 0 10px;
+    }
+
+    .board-add-task-plus {
+      font-size: 24px;
+    }
+
+    .board-column-title {
+      font-size: 16px;
+    }
+  }
+}

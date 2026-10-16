@@ -8,8 +8,11 @@ manage their tasks and projects in an intuitive, visual interface.
 
 In Join you can create a board, fill it with tasks and assign it to your collegues.
 
+On screens up to 360px wide, use the arrow button in a task card to open the
+"Move to" menu and move the task to the previous or next board column. The
+column assignment is saved locally and remains after reloading the page.
+On larger screens, tasks can be moved using drag and drop.
+
 It is important to note that Join is designed as an educational exercise and is not intended for extensive
 business usage. While we strive to ensure the best possible user experience, we cannot guarantee consistent
 availability, reliability, accuracy, or other aspects of quality regarding Join.
-
-
