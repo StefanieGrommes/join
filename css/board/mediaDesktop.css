@@ -175,6 +175,12 @@
       gap: 10px;
     }
 
+
+    .board-card--task {
+
+        border-radius: 12px;
+
+    }
     .board-search-field {
       width: 240px;
       height: 42px;
