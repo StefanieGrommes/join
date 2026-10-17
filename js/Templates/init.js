@@ -16,9 +16,64 @@ async function fetchFooterHeader() {
     document.body.insertAdjacentHTML('afterbegin', headerHtml);
     // Gast-/Demo-Initialen in den Profilkreis des gerade eingefügten Headers schreiben.
     updateSessionHeader();
+    initProfileMenu();
     const footerResponse = await fetch('../templates/footer.txt');
     const footerHtml = await footerResponse.text();
     document.body.insertAdjacentHTML('beforeend', footerHtml);
+}
+
+/**
+ * Verbindet die Profilkreise mit dem gemeinsamen Desktop-/Mobile-Menue.
+ */
+function initProfileMenu() {
+    const menu = document.getElementById("profile-menu");
+    if (!menu || menu.dataset.initialized) return;
+    menu.dataset.initialized = "true";
+    const buttons = document.querySelectorAll(".profile-initials-btn, .board-mobile-profile-button");
+    let activeButton = null;
+
+    const closeMenu = (restoreFocus = false) => {
+        menu.hidden = true;
+        if (activeButton) {
+            activeButton.setAttribute("aria-expanded", "false");
+            if (restoreFocus) activeButton.focus();
+        }
+        activeButton = null;
+    };
+
+    buttons.forEach((button) => {
+        button.type = "button";
+        if (!button.hasAttribute("aria-label")) button.setAttribute("aria-label", "Profile");
+        button.setAttribute("aria-controls", menu.id);
+        button.setAttribute("aria-expanded", "false");
+        button.addEventListener("click", () => {
+            const wasOpen = activeButton === button;
+            closeMenu();
+            if (wasOpen) return;
+            activeButton = button;
+            menu.hidden = false;
+            button.setAttribute("aria-expanded", "true");
+            const rect = button.getBoundingClientRect();
+            menu.style.left = `${Math.max(8, Math.min(rect.right - menu.offsetWidth, window.innerWidth - menu.offsetWidth - 8))}px`;
+            menu.style.top = `${Math.max(8, Math.min(rect.bottom + 8, window.innerHeight - menu.offsetHeight - 8))}px`;
+            menu.querySelector("a").focus();
+        });
+    });
+
+    document.addEventListener("click", (event) => {
+        if (!menu.contains(event.target) && !Array.from(buttons).some(button => button.contains(event.target))) closeMenu();
+    });
+    document.addEventListener("keydown", (event) => {
+        if (!menu.hidden && event.key === "Escape") {
+            event.preventDefault();
+            closeMenu(true);
+        }
+    });
+    document.addEventListener("focusin", (event) => {
+        if (!menu.contains(event.target) && !Array.from(buttons).some(button => button.contains(event.target))) closeMenu();
+    });
+    window.addEventListener("resize", () => closeMenu());
+    document.addEventListener("scroll", () => closeMenu(), true);
 }
 
 /**
