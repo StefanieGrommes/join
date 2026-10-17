@@ -46,15 +46,15 @@ function isValidSignupEmail(value) {
 
 
 /**
- * Prüft die Passwortregeln: mind. 8 Zeichen, ein Groß-, ein Kleinbuchstabe und eine Ziffer.
+ * Prüft die Passwortregeln: mind. 8 Zeichen, ein Groß- und ein Kleinbuchstabe.
  *
  * @param {string} value - Eingegebenes Passwort.
  * @returns {boolean} True, wenn das Passwort alle Regeln erfüllt.
  */
 function isValidSignupPassword(value) {
 
-  // Länge >= 8 UND Großbuchstabe UND Kleinbuchstabe UND Ziffer.
-  return value.length >= 8 && /[A-Z]/.test(value) && /[a-z]/.test(value) && /\d/.test(value);
+  // Unicode-Kategorien erkennen auch Buchstaben wie Ä und ü.
+  return value.length >= 8 && /\p{Lu}/u.test(value) && /\p{Ll}/u.test(value);
 }
 
 
@@ -297,6 +297,10 @@ function initSignupPage() {
 
       // Kurze Verzögerung simuliert das Speichern (kein echtes Backend).
       window.setTimeout(() => {
+        // Vorhandenen Demo-Sitzungsmodus nutzen, damit der Header die Initialen anzeigt.
+        const name = form.querySelector("#signup-name").value.trim();
+        window.sessionStorage.setItem("join-demo-name", name);
+        window.sessionStorage.setItem("join-session-mode", "demo");
         // Button-Text auf "Signed up" ändern.
         signupButton.textContent = "Signed up";
         // Erfolgs-Overlay anzeigen und danach weiterleiten.
