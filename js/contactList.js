@@ -216,3 +216,53 @@ function closeMenuOnOutsideClick(event) {
 }
 
 document.addEventListener("click", closeMenuOnOutsideClick);
+
+/**
+ * Splits a full name into first and last nameat the last space
+ * @param {string} fullNmae - The entered full name
+ * @returns {Object}Object with firstName and lastName
+ */
+function splitName(fullName) {
+  let parts = fullName.trim().split(" ");
+  lastName = parts.pop();
+  return { firstName: parts.join(" "), lastName: lastName };
+}
+
+/**
+ * Return the next free contact id as a string.
+ * @returns {Object}Object with firstName and lastName
+ */
+function getNextContactId() {
+  let numbers = allContacts.map((c) => Number(c.id));
+  return String(Math.max(...numbers) + 1);
+}
+
+/**
+ * Builds a contact object from the form values.
+ * @param {HTMLFormElement} form - The add contact form
+ * @returns {Object} The new contact
+ */
+function buildContactFromForm(form) {
+  let name = splitName(form.querySelector('[name="name"]').value);
+  return {
+    id: getNextContactId(),
+    firstName: name.firstName,
+    lastName: name.lastName,
+    email: form.querySelector('[name="email"]').value.trim(),
+    phone: form.querySelector('[name="phone"]').value.trim(),
+  };
+}
+
+/**
+ * Creates a new contact from the form and updates list and storage.
+ * @param {HTMLFormElement} from - The add contact form
+ * @returns {void}
+ */
+function addNewContact(form) {
+let contact = buildContactFromForm(form);
+allContacts.push(contact);
+saveSessionData("session-contacts", allContacts);
+renderContactList(allContacts);
+form.reset();
+closeDialog();
+}

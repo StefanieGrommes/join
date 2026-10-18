@@ -62,14 +62,14 @@ function showToastMessage(message, input = null) {
 }
 
 /**
- * Prüft den Namen auf gültige Länge.
+ * Prüft, ob der Name aus Vor- und Nachname besteht.
  *
  * @param {string} value - Der eingegebene Name.
  * @returns {boolean} True, wenn der Name gültig ist.
  */
 function isValidName(value) {
-  // Mindestens 2 Zeichen ohne Leerzeichen am Rand.
-  return value.trim().length >= 2;
+  // Mindestens 2 Zeichen und mindestens zwei durch Leerzeichen getrennte Teile.
+  return value.trim().length >= 2 && value.trim().split(" ").length >= 2;
 }
 
 /**
@@ -97,6 +97,23 @@ function isValidPhoneNr(phoneNr) {
 }
 
 /**
+ * Checks a field without changing its visual state.
+ * @param {HTMLInputElement} input  - The field to check
+ * @returns {boolean} True if the value is valid
+ */
+function isFieldValid(input) {
+  let value = input.value.trim();
+  let placeholder = (input.placeholder || "").toLocaleLowerCase();
+  if (placeholder.includes("name")) return isValidName(value);
+  if (placeholder.includes("email")) return isValidEmail(value);
+  if (placeholder.includes("phone")) return isValidPhoneNr(value);
+  return true;
+}
+
+
+
+
+/**
  * Validiert ein Formularfeld und setzt den Fehlerzustand.
  *
  * @param {HTMLInputElement|null} input - Das zu prüfende Feld.
@@ -117,7 +134,7 @@ function validateContactField(input) {
     input.setAttribute("aria-invalid", String(!isValid));
     input.classList.toggle("is-invalid", !isValid);
     if (!isValid) {
-      showToastMessage("Please enter a valid name with at least 2 characters.", input);
+      showToastMessage("Please enter first and last name", input);
     }
     return isValid;
   }
@@ -169,7 +186,7 @@ function initAddContactForm() {
   const submitButton = form.querySelector(".create-contact-btn");
 
   // Formular gültig, wenn jedes Feld gültig ist.
-  const isFormValid = () => fields.every((field) => validateContactField(field));
+  const isFormValid = () => fields.every((field) => isFieldValid(field));
 
   // Button nur aktivieren, wenn das Formular gültig ist.
   const updateSubmitButtonState = () => {
@@ -198,35 +215,18 @@ function initAddContactForm() {
     });
   });
 
-  // Formular absenden.
+
+
   form.addEventListener("submit", (event) => {
-    // Seiten-Reload verhindern.
-    event.preventDefault();
-
-    // Alle Felder prüfen; ungültig -> Button aktualisieren und abbrechen.
-    const isValid = fields.every((field) => validateContactField(field));
-    if (!isValid) {
-      updateSubmitButtonState();
-      return;
-    }
-
-    if (!submitButton) return;
-
-    // Ladezustand anzeigen.
-    submitButton.disabled = true;
-    submitButton.textContent = "Saving...";
-
-    // Speichern simulieren, danach Button und Formular zurücksetzen.
-    setTimeout(() => {
-      submitButton.disabled = false;
-      submitButton.textContent = "Create contact";
-      form.reset();
-      fields.forEach((field) => {
-        field.setAttribute("aria-invalid", "false");
-        field.classList.remove("is-invalid");
-      });
-    }, 600);
+  event.preventDefault();
+  const isValid = fields.every((field) => validateContactField(field));
+  if (!isValid) {
+    updateSubmitButtonState();
+    return; 
+  }
+  addNewContact(form); 
   });
+
 
   // Button-Zustand beim Start einmal setzen.
   updateSubmitButtonState();

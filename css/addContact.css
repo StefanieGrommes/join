@@ -1,314 +1,326 @@
 h1 {
-    font-size: clamp(3rem, 5vw, 3.75rem)
-   }
+  font-size: clamp(3rem, 5vw, 3.75rem);
+}
 
 h5 {
-    font-size: clamp(1.25rem, 2.5vw, 1.75rem )
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
 }
 
 dialog {
-    border-radius: 30px;
-    border-style: inherit;
-    transition: all 125ms ease-in-out;
+  border-radius: 30px;
+  border-style: inherit;
+  transition: all 125ms ease-in-out;
 }
 
 dialog:modal {
-    margin: auto;
-    width: min(85vw, 1212px);
+  margin: auto;
+  width: min(85vw, 1212px);
 }
 
 button {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .dialog-grid-area {
-    width: 100%;
-    max-width: 1212px;
-    height: 100%;
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: repeat(5,  1fr);
-    grid-template-areas: "aside aside form form form";
+  width: 100%;
+  max-width: 1212px;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-areas: "aside aside form form form";
 }
 
 .dialog-aside {
-    grid-area: aside;
-    background-color: var(--main-color);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    line-height: 1.2;
+  grid-area: aside;
+  background-color: var(--main-color);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  line-height: 1.2;
 }
 
 .form-logo-wrapper {
-    position: absolute;
-    bottom: 100%;
-    left: 0;
-    width: 56px;
-    height: 66px;
-    margin-bottom: 12px;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  width: 56px;
+  height: 66px;
+  margin-bottom: 12px;
 }
 
 .headlines-and-slogan {
-    position: relative;
-    gap: 8px;
+  position: relative;
+  gap: 8px;
 }
 
 .add-contact-wrapper {
-    grid-area: form;
+  grid-area: form;
 }
 
 .right-side-add-contact {
-    position: relative;
-    width: 100%;
+  position: relative;
+  width: 100%;
 }
 
 .add-contact-form {
-    position: relative;
-    padding-bottom: 48px;
-    width: 100%
+  position: relative;
+  padding-bottom: 48px;
+  width: 100%;
 }
 
 .add-contact-form:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .initials-and-form-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 48px;
-    height: 100%;
-    width: 100%;
-    padding: 32px;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  height: 100%;
+  width: 100%;
+  padding: 32px;
 }
 
 .close-dialog-btn {
-    border-style: inherit;
-    border-radius: 50%;
-    background-color: transparent;
+  border-style: inherit;
+  border-radius: 50%;
+  background-color: transparent;
 }
 
 .close-dialog-btn:hover {
-    cursor: pointer;
-    background-color: var(--hover-bg-color-grey);
+  cursor: pointer;
+  background-color: var(--hover-bg-color-grey);
 }
 
 .close-dialog-btn svg:active path {
-    fill: white;
+  fill: white;
 }
 
 .close-dialog-wrapper {
-    display: flex;
-    justify-content: flex-end;
-    padding-bottom: 56px;
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 56px;
 }
 
 .dialog-profile-initials-btn {
-    flex-shrink: 1;
-    width: 120px;
-    height: 120px;
-    max-width: 100%;
-    aspect-ratio: 1;
-    margin-bottom: 80px;
+  flex-shrink: 1;
+  width: 120px;
+  height: 120px;
+  max-width: 100%;
+  aspect-ratio: 1;
+  margin-bottom: 80px;
 }
 
 .dialog-profile-initials-btn img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
 }
 
 .create-contact-btn {
-    height: 56px;
-    width: 214px;
-    background-color: var(--main-color);
-    border: inherit;
-    transition: background-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
+  height: 56px;
+  width: 214px;
+  background-color: var(--main-color);
+  border: inherit;
+  transition:
+    background-color 100ms ease-in-out,
+    box-shadow 100ms ease-in-out;
 }
 
 .create-contact-btn:hover {
-    background-color: var(--hover-bg-color-lightblue);
-    box-shadow: var(--shadow-stronger);
+  background-color: var(--hover-bg-color-lightblue);
+  box-shadow: var(--shadow-stronger);
 }
 
 .create-contact-btn:active {
-    background-color: var(--active-btn-border);
+  background-color: var(--active-btn-border);
 }
 
+.create-contact-btn:disabled {
+  background-color: #a8a8a8;
+  border-color: #a8a8a8;
+  cursor: not-allowed;
+}
 .cancel-btn {
-    border: 1px solid var(--main-color);
-    width: 126px;
-    height: 56px;
-    background-color: white;
-    color: var(--main-color);
+  border: 1px solid var(--main-color);
+  width: 126px;
+  height: 56px;
+  background-color: white;
+  color: var(--main-color);
 }
 
 .cancel-btn:hover {
-    border: 2px var(--hover-bg-color-lightblue) solid;
-    box-shadow: var(--shadow-stronger);
-    transition: background-color 100ms ease-in-out, box-shadow 100ms ease-in-out;
+  border: 2px var(--hover-bg-color-lightblue) solid;
+  box-shadow: var(--shadow-stronger);
+  transition:
+    background-color 100ms ease-in-out,
+    box-shadow 100ms ease-in-out;
 }
 
 .cancel-btn:active {
-    border: 1px var(--active-btn-border) solid;
+  border: 1px var(--active-btn-border) solid;
 }
 
 .cancel-btn h6 {
-    color: var(--main-color);
-    font-family: var(--default-font);
-
+  color: var(--main-color);
+  font-family: var(--default-font);
 }
 
 .create-contact-btn h6 {
-    color: white;
-    font-family: var(--default-font);
-    font-weight: 700;
+  color: white;
+  font-family: var(--default-font);
+  font-weight: 700;
 }
 
 .contact-form-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-    padding: 16px;
-    border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 16px;
+  border-radius: 10px;
 }
 
 .input-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border: 1px solid #6B6B6BB6;
-    border-radius: 10px;
-    padding: 0 12px;
-    height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #6b6b6bb6;
+  border-radius: 10px;
+  padding: 0 12px;
+  height: 50px;
 }
 
 .input-wrapper input {
-    width: 100%;
-    border: none;
-    outline: none;
-    padding: 8px 0;
-    font-size: 1.25rem;
-    font-family: var(--default-font);
-    line-height: 1.2;
-    cursor: pointer;
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 8px 0;
+  font-size: 1.25rem;
+  font-family: var(--default-font);
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.input-wrapper:has(input.is-invalid) {
+  border-color: #ff8190;
 }
 
 .form-input-fields {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .form-btn-wrapper {
-    margin-top: 48px;
-    display: flex;
-    gap: 24px;
+  margin-top: 48px;
+  display: flex;
+  gap: 24px;
 }
 
 .dialog-aside img {
-    height: 66px;
-    width: 56px;
-    object-fit: fill;
+  height: 66px;
+  width: 56px;
+  object-fit: fill;
 }
 
 .blue-horizontal-separator {
-    height: 3px;
-    width: 90px;
-    background-color: rgb(40,171,226);
-    border-radius: 30px;
-    margin-top: 16px;
+  height: 3px;
+  width: 90px;
+  background-color: rgb(40, 171, 226);
+  border-radius: 30px;
+  margin-top: 16px;
 }
 
 .toast-wrapper {
-    min-height: 32px;
-    font-size: 16px;
-    color: var(--main-color);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 200ms ease-in-out, transform 200ms ease-in-out;
-    z-index: 1000;
+  min-height: 32px;
+  font-size: 16px;
+  color: var(--main-color);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 200ms ease-in-out,
+    transform 200ms ease-in-out;
+  z-index: 1000;
 }
 
 .toast-wrapper.show {
-    opacity: 1;
+  opacity: 1;
 }
 
 /*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
 
 @media (max-width: 1180px) {
-    .dialog-grid-area {
-        grid-template-rows: 352px 1fr ;
-        grid-template-columns: 1fr;
-        grid-template-areas: "aside" "form";
-        position: relative;
-    }
+  .dialog-grid-area {
+    grid-template-rows: 352px 1fr;
+    grid-template-columns: 1fr;
+    grid-template-areas: "aside" "form";
+    position: relative;
+  }
 
-    .initials-and-form-wrapper {
-        flex-direction: column;
-        padding: 16px;
-    }
+  .initials-and-form-wrapper {
+    flex-direction: column;
+    padding: 16px;
+  }
 
-    .dialog-profile-initials-btn {
-        z-index: 100;
-        margin-bottom: 0;
-        position: absolute;
-        top: 292px;
-    }
+  .dialog-profile-initials-btn {
+    z-index: 100;
+    margin-bottom: 0;
+    position: absolute;
+    top: 292px;
+  }
 
-    .form-btn-wrapper {
-        margin-top: 0;
-        gap: 32px;
-        justify-self: center;
+  .form-btn-wrapper {
+    margin-top: 0;
+    gap: 32px;
+    justify-self: center;
+  }
 
-    }
+  .cancel-btn {
+    display: none;
+  }
 
-    .cancel-btn {
-        display: none;
-    }
+  .right-side-add-contact {
+    position: static;
+    padding-top: 60px;
+  }
 
-    .right-side-add-contact {
-        position: static;
-        padding-top: 60px;
-    }
+  .close-dialog-wrapper {
+    position: absolute;
+    top: 24px;
+    right: 16px;
+    padding-bottom: 0;
+  }
 
-    .close-dialog-wrapper {
-        position: absolute;
-        top: 24px;
-        right: 16px;
-        padding-bottom: 0;
-    }
-
-    .close-dialog-btn svg path {
-        fill: white;
-    }
+  .close-dialog-btn svg path {
+    fill: white;
+  }
 }
 
 @media (max-width: 428px) {
-    .dialog-aside {
-        align-items: flex-start;
-        padding-left: 16px;
-    }
+  .dialog-aside {
+    align-items: flex-start;
+    padding-left: 16px;
+  }
 
-    .form-logo-wrapper {
-        display: none;
-    }
+  .form-logo-wrapper {
+    display: none;
+  }
 
-    h1 {
-        font-size: clamp(2.5rem, 4vw, 3rem);
-    }
-    h5 {
-        font-size: clamp(1.15rem, 5vw, 1.25rem);
-    }
+  h1 {
+    font-size: clamp(2.5rem, 4vw, 3rem);
+  }
+  h5 {
+    font-size: clamp(1.15rem, 5vw, 1.25rem);
+  }
 
-    h6 {
-        font-size: clamp(1rem, 5.5vw, 1.15rem);
-    }
+  h6 {
+    font-size: clamp(1rem, 5.5vw, 1.15rem);
+  }
 
-    .input-wrapper input {
-        font-size: 1rem;
-    }
+  .input-wrapper input {
+    font-size: 1rem;
+  }
 }
-
