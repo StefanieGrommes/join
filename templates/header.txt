@@ -22,6 +22,12 @@
         </button>
 
     </div>
+    <div id="profile-menu" class="profile-menu" role="group" aria-label="Profile navigation" hidden>
+        <a href="../pages/help.html">Help</a>
+        <a href="../pages/legal-notice.html">Legal Notice</a>
+        <a href="../pages/privacy-notice.html">Privacy Policy</a>
+        <button type="button" disabled>Log out</button>
+    </div>
     <div class="aside-blue-box-bg">
         <aside>
             <div class="logo-and-nav-links">

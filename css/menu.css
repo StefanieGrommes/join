@@ -128,6 +128,54 @@ nav p {
   fill: var(--hover-btn-grey);
 }
 
+.profile-initials-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.profile-menu {
+  position: fixed;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 160px;
+  padding: 12px 8px;
+  border-radius: 20px 0 20px 20px;
+  background-color: var(--main-color);
+  box-shadow: var(--shadow-stronger);
+}
+
+.profile-menu[hidden] {
+  display: none;
+}
+
+.profile-menu a,
+.profile-menu button {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--navbar-color);
+  font: inherit;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.profile-menu a:hover,
+.profile-menu a:focus-visible {
+  background-color: var(--hover-menu);
+}
+
+.profile-menu button:disabled {
+  cursor: not-allowed;
+}
+
 .aside-blue-box-bg {
   grid-area: sidebar;
   background-color: var(--main-color);
