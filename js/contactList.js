@@ -218,9 +218,9 @@ function closeMenuOnOutsideClick(event) {
 document.addEventListener("click", closeMenuOnOutsideClick);
 
 /**
- * Splits a full name into first and last nameat the last space
- * @param {string} fullNmae - The entered full name
- * @returns {Object}Object with firstName and lastName
+ * Splits a full name into first and last name at the last space
+ * @param {string} fullName - The entered full name
+ * @returns {Object} Object with firstName and lastName
  */
 function splitName(fullName) {
   let parts = fullName.trim().split(" ");

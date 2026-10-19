@@ -2,41 +2,84 @@ async function initAddTask(){
   await initSessionData();
 }
 
-
-/**
- * Returns the HTML for one contact entry in the assigned-to dropdown.
- * @param {Object} contact - Contact with initials and name.
- * @returns {string} HTML string of the list item
- */
-
-function openContactList() {
- const contacts = getSessionData("session-contacts");
- renderContactOptions(contacts);
- document.getElementById("assigned-to-dropdown").classList.add("open");
+function toggleContactList() {
+  const dropdown = document.getElementById("assigned-to-dropdown");
+  if (dropdown.classList.contains("open")) {
+    dropdown.classList.remove("open");
+    list.style.display = "none";
+    renderAssignedAvatars();
+    return;
+  }
+  if (!list.children.length) {
+    renderContactOptions(getSessionData("session-contacts"));
+  }
+  dropdown.classList.add("open");
+  list.style.display = "block";
 }
 
+function renderAssignedAvatars() {
+  const container = document.getElementById("assigned-avatars");
+  const selectedOptions = document.querySelectorAll(".contact-option.selected");
+  container.innerHTML = "";
+  selectedOptions.forEach((option) => {
+    const avatar = option.querySelector(".contact-avatar");
+    const initials = avatar.textContent;
+    const avatarColor = avatar.style.backgroundColor;
+    container.insertAdjacentHTML("beforeend", getAvatarTemplate(initials, avatarColor));
+  });
+}
+
+function getAvatarTemplate(initials, avatarColor) {
+  return `<span class="contact-avatar" style="background-color: ${avatarColor}">${initials}</span>`;
+}
 
 function getFullUserName(contact) {
 return `${contact.firstName} ${contact.lastName}`;
 }
 
 function getUserInitials(contact){
-  if (!contact.firstName || !contact.lastName) return "";
+  if (!contact.firstName  || !contact.lastName) return "";
   return (contact.firstName.charAt(0) + contact.lastName.charAt(0)).toUpperCase();
 }
 
+/**
+ * Returns the HTML for one contact entry in the assigned-to dropdown.
+ * @param {Object} contact - Contact with initials and name.
+ * @returns {string} HTML string of the list item
+ */
 function getContactOptionTemplate(contact) {
   return`
     <li class="contact-option">
-      <span class="contact-avatar">${getUserInitials(contact)}</span>
+    <div class="name-and-initials">
+      <span class="contact-avatar" style="background-color: ${getContactColor(contact.id)}">${getUserInitials(contact)}</span>
       <span class="contact-name">${getFullUserName(contact)}</span>
-      <img src="../assets/checkbox.svg" alt="" />
-    </li>
-  `
+      </div>
+      <button class="checked-btn" type="button">
+      <img src="../assets/checkbox.svg" alt="checkbox" data-checked="false"/>
+      </button>
+    </li>`
+}
+
+const list = document.getElementById("assigned-to-list");
+list.addEventListener("click", (event) => {
+  const option = event.target.closest(".contact-option");
+  if (option) toggleContactSelection(option);
+});
+
+function toggleContactSelection(option) {
+  const checkboxImg = option.querySelector("img[data-checked]");
+  if (checkboxImg.dataset.checked === "true"){
+    option.classList.remove("selected");
+    checkboxImg.src = "../assets/checkbox.svg";
+    checkboxImg.dataset.checked = "false";
+  } else {
+  checkboxImg.src="../assets/checkbox-checked.svg";
+  checkboxImg.dataset.checked = "true";
+  option.classList.add("selected")
+  }
 }
 
 function renderContactOptions(userArray){
-  const list = document.getElementById("assigned-to-list");
   list.innerHTML = "";
   userArray.forEach((contact) => {
     list.insertAdjacentHTML("beforeend",getContactOptionTemplate(contact))
