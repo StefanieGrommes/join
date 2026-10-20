@@ -1,12 +1,3 @@
-// ==========================================
-// SIGNUP-SEITE (pages/signup.html)
-// ==========================================
-// Validiert das Registrierungsformular (Name, E-Mail, Passwort,
-// Passwort-Wiederholung, Datenschutz-Checkbox), aktiviert den
-// Sign-up-Button nur bei gültigen Eingaben und zeigt nach dem
-// Absenden eine Erfolgsmeldung mit Weiterleitung zur Summary-Seite.
-// ==========================================
-
 /**
  * Prüft, ob der Name mindestens 2 Zeichen lang ist.
  *
@@ -17,10 +8,6 @@ function isValidSignupName(value) {
   // Leerzeichen entfernen und Länge prüfen.
   return value.trim().length >= 2;
 }
-
-
-
-
 
 
 /**
@@ -35,16 +22,6 @@ function isValidSignupEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
-
-
-
-
-
-
-
-
-
-
 /**
  * Prüft die Passwortregeln: mind. 8 Zeichen, ein Groß- und ein Kleinbuchstabe.
  *
@@ -57,43 +34,114 @@ function isValidSignupPassword(value) {
   return value.length >= 8 && /\p{Lu}/u.test(value) && /\p{Ll}/u.test(value);
 }
 
-
-
-
-
-
-
-
+/** Current email error message; only updated on blur. */
+let signupEmailMessage = "";
 
 /**
- * Aktualisiert die sichtbaren Hinweise zum Passwort:
- * markiert unerfüllte Passwortregeln und zeigt eine Meldung,
- * wenn die Passwort-Wiederholung nicht übereinstimmt.
+ * Collects all currently active feedback messages for the signup form.
+ *
+ * @returns {string[]} Messages in display order, empty if everything is valid.
  */
-function updateSignupPasswordFeedback() {
-  // Passwortfeld.
+function getSignupFeedbackMessages() {
   const password = document.getElementById("signup-password");
-  // Feld "Passwort bestätigen".
   const confirmation = document.getElementById("signup-confirm-password");
-  // Ungültig nur, wenn schon etwas eingegeben wurde und die Regeln nicht erfüllt sind.
-  const invalid = password.value.length > 0 && !isValidSignupPassword(password.value);
-  // Abweichung nur, wenn die Bestätigung schon ausgefüllt ist und nicht übereinstimmt.
+  const missing = password.value.length > 0 ? getMissingPasswordRules(password.value) : [];
   const mismatch = confirmation.value.length > 0 && confirmation.value !== password.value;
+  const messages = [];
+  if (signupEmailMessage) messages.push(signupEmailMessage);
+  if (missing.length) messages.push(`Password needs: ${missing.join(", ")}.`);
+  if (mismatch) messages.push("Passwords don't match. Please try again.");
+  return messages;
+}
 
-  // Anforderungs-Liste unter dem Passwort rot markieren (CSS-Klasse "is-invalid").
-  document.getElementById("signup-password-requirements").classList.toggle("is-invalid", invalid);
-  // Fehlermeldung bei Abweichung einblenden, sonst leeren.
-  document.getElementById("signup-password-error").textContent = mismatch ? "Passwords don't match. Please try again." : "";
-  // Zustand für Screenreader am Passwortfeld setzen.
-  password.setAttribute("aria-invalid", String(invalid));
-  // Zustand für Screenreader am Bestätigungsfeld setzen.
+/**
+ * Sets the aria-invalid state on the email, password and confirmation fields.
+ *
+ * @returns {void}
+ */
+function updateSignupAriaState() {
+  const password = document.getElementById("signup-password");
+  const confirmation = document.getElementById("signup-confirm-password");
+  const invalidPassword = password.value.length > 0 && !isValidSignupPassword(password.value);
+  const mismatch = confirmation.value.length > 0 && confirmation.value !== password.value;
+  document.getElementById("signup-email").setAttribute("aria-invalid", String(signupEmailMessage !== ""));
+  password.setAttribute("aria-invalid", String(invalidPassword));
   confirmation.setAttribute("aria-invalid", String(mismatch));
 }
 
+/**
+ * Renders all feedback messages into the single feedback area
+ * between the confirmation field and the privacy checkbox.
+ *
+ * @returns {void}
+ */
+function renderSignupFeedback() {
+  const box = document.getElementById("signup-feedback");
+  const lines = getSignupFeedbackMessages().map((text) => {
+    const line = document.createElement("p");
+    line.textContent = text;
+    return line;
+  });
+  box.replaceChildren(...lines);
+  updateSignupAriaState();
+}
 
+/**
+ * Validates the email field and re-renders the feedback area.
+ * Called when the email field loses focus.
+ *
+ * @returns {void}
+ */
+function validateSignupEmailOnBlur() {
+  const email = document.getElementById("signup-email");
+  signupEmailMessage = getEmailError(email.value);
+  renderSignupFeedback();
+}
 
+/**
+ * Attaches the blur listener to the email field.
+ *
+ * @returns {void}
+ */
+function bindSignupEmailBlur() {
+  const email = document.getElementById("signup-email");
+  if (email) email.addEventListener("blur", validateSignupEmailOnBlur);
+}
 
+/**
+ * Liefert die noch nicht erfüllten Passwortregeln als Textliste.
+ *
+ * @param {string} value - Eingegebenes Passwort.
+ * @returns {string[]} Fehlende Regeln, leer wenn alles erfüllt ist.
+ */
+function getMissingPasswordRules(value) {
+  const missing = [];
+  if (value.length < 8) missing.push("at least 8 characters");
+  if (!/\p{Lu}/u.test(value)) missing.push("an uppercase letter");
+  if (!/\p{Ll}/u.test(value)) missing.push("a lowercase letter");
+  return missing;
+}
 
+/**
+ * Returns an error message for the given email or an empty string if it is valid.
+ *
+ * @param {string} value - Entered email address.
+ * @returns {string} Error message, empty if the email is valid.
+ */
+function getEmailError(value) {
+  const email = value.trim();
+  if (!email) return "";
+  if (/\s/.test(email)) return "Email must not contain spaces.";
+  if (!email.includes("@")) return "Email is missing an @ sign.";
+  if (email.split("@").length > 2) return "Email must contain only one @ sign.";
+  const [local, domain] = email.split("@");
+  if (!local) return "Email is missing text before the @ sign.";
+  if (!domain) return "Email is missing a domain after the @ sign.";
+  if (!domain.includes(".")) return "Email domain is missing a dot, e.g. example.com.";
+  if (domain.startsWith(".")) return "Email domain must not start with a dot.";
+  if (!/\.[^.]+$/.test(domain)) return "Email is missing an ending after the dot, e.g. .com.";
+  return isValidSignupEmail(email) ? "" : "Please enter a valid email address.";
+}
 
 /**
  * Sperrt den Sign-up-Button, bis alle Felder gültig sind
@@ -111,19 +159,9 @@ function setupPrivacyCheckboxGate() {
   // Fehlt eines der Elemente, nichts tun (z. B. auf anderen Seiten).
   if (!policyCheckbox || !signupButton || !form) return;
 
-
-
-
-
-
-
-
-
   // Prüft alle Felder und schaltet den Button an/aus.
   const updateButtonState = () => {
-    // Zuerst die Passwort-Hinweise aktualisieren.
-    updateSignupPasswordFeedback();
-    // Alle vier Eingabefelder durchgehen; every() ist nur true, wenn ALLE gültig sind.
+    renderSignupFeedback();
     const fieldsValid = [
       form.querySelector("#signup-name"),
       form.querySelector("#signup-email"),
@@ -159,15 +197,6 @@ function setupPrivacyCheckboxGate() {
   // Einmal direkt beim Start prüfen (Button ist anfangs deaktiviert).
   updateButtonState();
 }
-
-
-
-
-
-
-
-
-
 /**
  * Validiert das komplette Formular vor dem Absenden.
  *
@@ -204,16 +233,6 @@ function validateSignupForm() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
 /**
  * Zeigt das Erfolgs-Overlay "You Signed Up successfully"
  * und leitet nach 2 Sekunden weiter.
@@ -230,13 +249,6 @@ function showSignupSuccess() {
 }
 
 
-
-
-
-
-
-
-
 /**
  * Leitet nach erfolgreicher Registrierung zur Summary-Seite weiter.
  */
@@ -246,19 +258,11 @@ function redirectAfterSignup() {
 }
 
 
-
-
-
-
-
-
-
 /**
  * Initialisiert die Signup-Seite: blendet sie ein, übernimmt den
  * Formularversand und aktiviert die Button-Sperre.
  */
 function initSignupPage() {
-  // Hauptcontainer der Signup-Seite.
   const page = document.querySelector(".signup-page");
 
   // Seite per CSS-Klasse "ready" einblenden.
@@ -311,6 +315,7 @@ function initSignupPage() {
 
   // Button-Sperre (Felder + Checkbox) einrichten.
   setupPrivacyCheckboxGate();
+  bindSignupEmailBlur();
 }
 
 // Sobald das HTML geladen ist, die Signup-Seite initialisieren.

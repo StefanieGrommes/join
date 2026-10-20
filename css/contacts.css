@@ -73,6 +73,7 @@ main {
   border-radius: 10px;
   min-height: 53px;
 }
+
 .contact-list-wrapper::-webkit-scrollbar-button:single-button:vertical:decrement {
   display: block;
   height: 20px;
@@ -102,6 +103,7 @@ main {
   padding: 17px 34px 33px;
   margin-bottom: 17px;
 }
+
 .contact-group:first-child .group-letter {
   padding-top: 0px;
 }
@@ -120,6 +122,7 @@ main {
 .contact-item.contact-item-selected {
   background-color: var(--main-color);
 }
+
 .contact-item.contact-item-selected .contact-name {
   color: white;
 }
@@ -142,6 +145,7 @@ main {
   flex-direction: column;
   gap: 5px;
 }
+
 .contact-name {
   font-size: 20px;
 }
@@ -216,6 +220,7 @@ h1 {
   display: flex;
   gap: 20px;
 }
+
 .detail-action-btn {
   display: flex;
   justify-content: center;
@@ -232,10 +237,12 @@ h1 {
   color: var(--hover-primary-button);
   font-weight: 700;
 }
+
 .detail-action-btn img {
   height: 24px;
   width: 24px;
 }
+
 .section-label {
   display: flex;
 
@@ -250,6 +257,7 @@ h1 {
   flex-direction: column;
   gap: 15px;
 }
+
 .contact-detail-field .contact-email {
   overflow-wrap: anywhere;
 }
@@ -259,6 +267,7 @@ h1 {
   font-weight: 700;
   margin-top: 21px;
 }
+
 .back-btn {
   display: none;
 }
@@ -270,6 +279,9 @@ h1 {
 .detail-menu {
   display: none;
 }
+
+/*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
+
 @media (max-width: 1300px) {
   .title {
     align-items: flex-start;
@@ -278,6 +290,7 @@ h1 {
     flex-direction: column;
     gap: 8px;
   }
+
   h1 {
     font-size: 56px;
     padding-right: 0px;
@@ -285,6 +298,7 @@ h1 {
     left: 10px;
     border-right: none;
   }
+
   .title p {
     font-size: 20px;
     left: 15px;
@@ -297,11 +311,13 @@ h1 {
     gap: 18px;
     margin-right: 0px;
   }
+
   .contact-detail-name {
     font-size: 36px;
     font-weight: 700;
     padding-left: 10px;
   }
+
   .contact-list-wrapper {
     flex: 1;
     min-height: 0;
@@ -312,9 +328,11 @@ h1 {
     width: 100%;
     max-width: 300px;
   }
+
   .form-column-left {
     height: calc(100vh - var(--header-height));
   }
+
   .form-column-right {
     padding: 48px 2px 0 16px;
   }
@@ -326,19 +344,21 @@ h1 {
     font-weight: 400;
   }
 }
+
 @media (max-width: 1050px) {
   nav {
     padding-left: 90px;
   }
+
   .nav p {
     text-wrap: nowrap;
   }
 
   .contact-detail {
     flex-direction: column;
-
     margin-right: 0;
   }
+
   .contact-detail-actions {
     justify-content: center;
   }
@@ -351,13 +371,16 @@ h1 {
     position: relative;
     margin-left: 15px;
   }
+
   .form-column-right {
     padding: 48px 2px 0;
   }
+
   .contact-list-wrapper {
     max-width: 265px;
     padding-left: 0px;
   }
+
   .add-contact-btn {
     max-width: 250px;
     font-size: 16px;
@@ -368,12 +391,15 @@ h1 {
     width: 42px;
     font-size: 16px;
   }
+
   .contact-item {
     gap: 20px;
   }
+
   .contact-info {
     min-width: 0;
   }
+
   .contact-name,
   .contact-email {
     overflow: hidden;
@@ -381,6 +407,7 @@ h1 {
     white-space: nowrap;
   }
 }
+
 @media (max-width: 768px) {
   .contact-detail {
     flex-direction: row;
@@ -401,22 +428,27 @@ h1 {
   .form-column-right {
     display: none;
   }
+
   .form-column-left {
     width: 100%;
     min-height: 100%;
     padding: 0px 0px;
     flex: 1;
   }
+
   .add-task-content {
     height: 100%;
   }
+
   .group-letter {
     padding: 17px 34px 17px;
     margin-bottom: 8px;
   }
+
   .contact-group:first-child .group-letter {
     padding-top: 17px;
   }
+
   .contact-detail {
     margin: 32px 54px 21px 10px;
   }
@@ -424,14 +456,17 @@ h1 {
   .contact-detail-actions {
     display: none;
   }
+
   .contact-list-wrapper {
     max-width: 100%;
     padding: 24px 24px 0;
     scrollbar-color: rgb(231, 231, 231) transparent;
   }
+
   main {
     padding: 2px 0px 2px 0px;
   }
+
   .add-contact-btn {
     position: fixed;
     bottom: 112px;
@@ -452,15 +487,18 @@ h1 {
     width: 32px;
     height: 32px;
   }
+
   .detail-open .form-column-left {
     display: none;
   }
+
   .detail-open .form-column-right {
     display: flex;
     width: 100%;
     flex: 1;
     position: relative;
   }
+
   .back-btn {
     display: block;
     position: absolute;
@@ -470,6 +508,7 @@ h1 {
     border: none;
     cursor: pointer;
   }
+
   .back-btn img {
     width: 40px;
     height: 40px;
@@ -492,6 +531,7 @@ h1 {
     cursor: pointer;
     z-index: 20;
   }
+
   .detail-menu-btn img {
     width: 6px;
     height: auto;
@@ -510,6 +550,7 @@ h1 {
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     z-index: 20;
   }
+
   .add-task-content {
     height: 100%;
     width: 100%;

@@ -1,587 +1,18 @@
-// ==========================================
-// BOARD-SEITE (pages/board-layout.html)
-// ==========================================
-// Steuert das Kanban-Board:
-// - Rendern der Task-Karten in die vier Spalten
-// - Drag & Drop zwischen Spalten (Desktop)
-// - "Move to"-Menü für kleine Bildschirme (<= 360px)
-// - Suche nach Titel/Beschreibung
-// - Add-/Edit-Task-Dialog
-// - Detail-Dialog mit Subtasks, Löschen und Bearbeiten
-// Die Spaltenzuordnung wird im localStorage gespeichert.
-// HTML der Karten kommt aus templates.js, die Daten aus app-data.js.
-// ==========================================
-
-// Schlüssel im localStorage, unter dem gespeichert wird, welche Task in welcher Spalte liegt.
-const BOARD_STORAGE_KEY = "join-board-layout-state";
-// Aktueller Suchbegriff aus dem Suchfeld (bleibt beim Neu-Rendern erhalten).
-let currentBoardSearchQuery = "";
-
-/**
- * Schaltet auf Mobilgeräten (<= 768px) die Board-eigene obere Navigation ein
- * und blendet die allgemeine mobile Kopfzeile aus.
- *
- * @returns {void}
- */
-function syncBoardMobileNavigation() {
-  // Board-spezifische obere Leiste für Mobile.
-  const boardTopNav = document.querySelector(".board-mobile-top-nav");
-  // Allgemeine mobile Kopfzeile aus header.txt.
-  const genericHeader = document.querySelector(".nav-mobile");
-
-  // Mobile-Ansicht, wenn das Fenster höchstens 768px breit ist.
-  const isMobile = window.innerWidth <= 768;
-
-  if (boardTopNav) {
-    // Mobile: oben fixierte Leiste über die ganze Breite; Desktop: Inline-Styles entfernen ("").
-    boardTopNav.style.display = isMobile ? "flex" : "";
-    boardTopNav.style.position = isMobile ? "fixed" : "";
-    boardTopNav.style.top = isMobile ? "0" : "";
-    boardTopNav.style.left = isMobile ? "0" : "";
-    boardTopNav.style.right = isMobile ? "0" : "";
-    boardTopNav.style.gridArea = isMobile ? "auto" : "";
-  }
-
-  if (genericHeader) {
-    // Allgemeinen Header auf Mobile ausblenden, damit er nicht doppelt erscheint.
-    genericHeader.style.display = isMobile ? "none" : "";
-  }
-
-}
-
-/**
- * Liefert den Platzhaltertext für eine leere Spalte.
- *
- * @param {string} columnId - id der Spalte (z. B. "todo").
- * @returns {string} Text wie "No tasks To do".
- */
-function getEmptyColumnMessage(columnId) {
-  // Zuordnung Spalten-id -> Leer-Text.
-  const messageMap = {
-    "todo": "No tasks To do",
-    "in-progress": "No tasks In progress",
-    "await-feedback": "No tasks Await feedback",
-    "done": "No tasks Done"
-  };
-
-  // Unbekannte Spalte -> allgemeiner Text.
-  return messageMap[columnId] || "No tasks";
-}
-
-/**
- * Liefert die sichtbare Überschrift einer Spalte.
- *
- * @param {string} columnId - id der Spalte.
- * @returns {string} Spaltenname wie "In progress".
- */
-function getColumnLabel(columnId) {
-  // Zuordnung Spalten-id -> Überschrift.
-  const labelMap = {
-    "todo": "To do",
-    "in-progress": "In progress",
-    "await-feedback": "Await feedback",
-    "done": "Done"
-  };
-
-  // Unbekannte Spalte -> "Board".
-  return labelMap[columnId] || "Board";
-}
-
-/**
- * Lädt die gespeicherte Spaltenzuordnung aus dem localStorage.
- *
- * @returns {Object<string, string>} Objekt { taskId: columnId } oder {}.
- */
-function loadBoardState() {
-  try {
-    // Gespeicherten JSON-String lesen.
-    const storedState = window.localStorage.getItem(BOARD_STORAGE_KEY);
-    // In ein Objekt umwandeln; nichts gespeichert -> leeres Objekt.
-    return storedState ? JSON.parse(storedState) : {};
-  } catch {
-    // Kaputtes JSON oder kein Zugriff auf localStorage -> leeres Objekt.
-    return {};
-  }
-}
-
-/**
- * Erzeugt die Standard-Zuordnung: jede Task liegt in "To do".
- *
- * @returns {Object<string, string>} Objekt { taskId: "todo" }.
- */
-function getDefaultBoardState() {
-  // Ohne Task-Liste gibt es keine Zuordnung.
-  if (!Array.isArray(tasks)) return {};
-
-  // Für jede Task einen Eintrag taskId -> "todo" anlegen.
-  return tasks.reduce((state, task) => {
-    state[task.id] = "todo";
-    return state;
-  }, {});
-}
-
-/**
- * Verschiebt eine Task in eine andere Spalte und speichert das im localStorage.
- *
- * @param {string} taskId - id der Task.
- * @param {string} columnId - id der Ziel-Spalte.
- * @returns {boolean} True bei Erfolg, false wenn Task oder Spalte nicht existiert.
- */
-function moveBoardTask(taskId, columnId) {
-  // Task-Objekt in der Datenliste suchen.
-  const task = tasks.find((item) => item.id === taskId);
-  // Ziel-Spalte im HTML anhand von data-column suchen.
-  const column = Array.from(document.querySelectorAll(".board-main-column"))
-    .find((item) => item.dataset.column === columnId);
-  // Eins von beiden fehlt -> Fehler loggen und abbrechen.
-  if (!task || !column) {
-    console.error("Cannot move task: task or target column not found.", { taskId, columnId });
-    return false;
-  }
-
-  // Standard + gespeicherten Zustand zusammenführen und die neue Spalte für diese Task eintragen.
-  const state = { ...getDefaultBoardState(), ...loadBoardState(), [taskId]: columnId };
-  // Neuen Zustand im localStorage speichern.
-  window.localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(state));
-  // Status auch direkt im Task-Objekt aktualisieren.
-  task.status = columnId;
-  return true;
-}
-
-/**
- * Erstellt das "Move to"-Menü für kleine Bildschirme (<= 360px),
- * auf denen Drag & Drop nicht genutzt wird. Über den Pfeil-Button einer Karte
- * kann die Task eine Spalte nach oben oder unten verschoben werden.
- * Inklusive Tastatursteuerung (Pfeiltasten, Home/End, Escape, Tab).
- *
- * @returns {void}
- */
-function initBoardMoveMenu() {
-  // Board-Container mit allen Spalten.
-  const board = document.querySelector(".board-main-container");
-  if (!board) return;
-
-  // Menü-Element einmalig erzeugen.
-  const menu = document.createElement("div");
-  // id passt zu aria-controls am Move-Button der Karte (templates.js).
-  menu.id = "board-move-menu";
-  menu.className = "board-move-menu";
-  // Barrierefreiheit: als Menü kennzeichnen.
-  menu.setAttribute("role", "menu");
-  menu.setAttribute("aria-label", "Move to");
-  // Anfangs versteckt.
-  menu.hidden = true;
-
-  // Menü an den <body> hängen, damit es über allem schwebt.
-  document.body.appendChild(menu);
-  // Der Move-Button, der das Menü gerade geöffnet hat.
-  let activeButton = null;
-  // Reihenfolge der Spalten (für "eine nach oben/unten").
-  const columnIds = ["todo", "in-progress", "await-feedback", "done"];
-
-  // Schließt das Menü; optional Fokus zurück auf den auslösenden Button.
-  const closeMenu = (restoreFocus = false) => {
-    menu.hidden = true;
-    if (activeButton) {
-      // Button wieder als "zugeklappt" markieren.
-      activeButton.setAttribute("aria-expanded", "false");
-      if (restoreFocus) activeButton.focus();
-    }
-    activeButton = null;
-  };
-
-  // Ein Klick-Listener für alle Karten (Event-Delegation).
-  board.addEventListener("click", (event) => {
-    // Wurde ein Move-Button geklickt?
-    const button = event.target.closest(".board-card-move-button");
-    // Nur reagieren, wenn es ein Move-Button ist UND der Bildschirm <= 360px ist.
-    if (!button || !window.matchMedia("(max-width: 360px)").matches) return;
-    // Zweiter Klick auf denselben Button -> Menü schließen.
-    if (activeButton === button) {
-      closeMenu(true);
-      return;
-    }
-    // Evtl. offenes Menü eines anderen Buttons schließen.
-    closeMenu();
-    // Neuen auslösenden Button merken und als "aufgeklappt" markieren.
-    activeButton = button;
-    button.setAttribute("aria-expanded", "true");
-    // Zugehörige Karte.
-    const card = button.closest(".board-card--task");
-    // Position der aktuellen Spalte in columnIds.
-    const currentIndex = columnIds.indexOf(card.closest(".board-main-column").dataset.column);
-    // Alten Menü-Inhalt leeren.
-    menu.replaceChildren();
-    // Überschrift "Move to" erzeugen.
-    const heading = document.createElement("p");
-    heading.className = "board-move-menu-title";
-    heading.textContent = "Move to";
-    menu.appendChild(heading);
-
-    // Optionen für die vorherige und die nächste Spalte erzeugen.
-    [currentIndex - 1, currentIndex + 1].forEach((index) => {
-      // Außerhalb der Spalten (vor "To do" / nach "Done") -> keine Option.
-      if (index < 0 || index >= columnIds.length) return;
-      // Menüpunkt als Button.
-      const option = document.createElement("button");
-      option.type = "button";
-      option.setAttribute("role", "menuitem");
-      // Pfeil-Symbol (nur optisch, für Screenreader versteckt).
-      const arrow = document.createElement("span");
-      arrow.setAttribute("aria-hidden", "true");
-      // ↑ für vorherige Spalte, ↓ für nächste Spalte.
-      arrow.textContent = index < currentIndex ? "\u2191" : "\u2193";
-      // Pfeil + Spaltenname in den Button einfügen.
-      option.append(arrow, document.createTextNode(getColumnLabel(columnIds[index])));
-      // Klick auf die Option -> Task verschieben.
-      option.addEventListener("click", () => {
-        // id der Task aus data-card-id.
-        const taskId = card.dataset.cardId;
-        // Verschieben; bei Fehler abbrechen.
-        if (!moveBoardTask(taskId, columnIds[index])) return;
-        // Menü schließen und Board neu rendern.
-        closeMenu();
-        initBoardLayout();
-        // Neu gerenderte Karte suchen ...
-        const movedCard = Array.from(board.querySelectorAll(".board-card--task"))
-          .find((item) => item.dataset.cardId === taskId);
-        // ... und den Fokus auf ihren Move-Button setzen (Tastaturnutzer).
-        movedCard.querySelector(".board-card-move-button").focus();
-      });
-      // Option ins Menü einfügen.
-      menu.appendChild(option);
-    });
-
-    // Menü anzeigen (muss sichtbar sein, damit offsetWidth/Height gemessen werden können).
-    menu.hidden = false;
-
-    // Position des Buttons auf dem Bildschirm.
-    const rect = button.getBoundingClientRect();
-    // Menü rechtsbündig zum Button, aber mind. 8px Abstand zum Bildschirmrand.
-    const left = Math.max(8, Math.min(rect.right - menu.offsetWidth, window.innerWidth - menu.offsetWidth - 8));
-    // Unter dem Button, wenn genug Platz ist, sonst darüber.
-    const top = rect.bottom + menu.offsetHeight + 8 <= window.innerHeight
-      ? rect.bottom + 8
-      : Math.max(8, rect.top - menu.offsetHeight - 8);
-    // Berechnete Position setzen.
-    menu.style.left = `${left}px`;
-    menu.style.top = `${top}px`;
-    // Fokus auf die erste Option.
-    menu.querySelector("button").focus();
-  });
-
-  // Klick außerhalb von Menü und Move-Button -> Menü schließen.
-  document.addEventListener("click", (event) => {
-    if (!menu.contains(event.target) && !event.target.closest(".board-card-move-button")) closeMenu();
-  });
-  // Tastatursteuerung, solange das Menü offen ist.
-  document.addEventListener("keydown", (event) => {
-    // Menü zu -> nichts tun.
-    if (menu.hidden) return;
-    if (event.key === "Escape") {
-      // Escape: schließen und Fokus zurück auf den Button.
-      event.preventDefault();
-      closeMenu(true);
-    } else if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
-      // Pfeiltasten/Home/End: zwischen den Optionen wechseln (Seite nicht scrollen).
-      event.preventDefault();
-      // Alle Option-Buttons im Menü.
-      const options = Array.from(menu.querySelectorAll("button"));
-      // Aktuell fokussierte Option.
-      const index = options.indexOf(document.activeElement);
-
-      // Home -> erste, End -> letzte, Pfeile -> nächste/vorherige (mit Umlauf am Ende/Anfang).
-      const nextIndex = event.key === "Home" ? 0 : event.key === "End" ? options.length - 1
-        : (index + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
-      // Neue Option fokussieren.
-      options[nextIndex].focus();
-    } else if (event.key === "Tab") {
-      // Tab: Menü schließen, Fokus zurück auf den Button.
-      closeMenu(true);
-    }
-  });
-  // Fenstergröße ändert sich -> Menü schließen (Position wäre falsch).
-  window.addEventListener("resize", () => closeMenu());
-  // Scrollen außerhalb des Menüs -> schließen (true = auch Scrolls in Unterelementen erfassen).
-  document.addEventListener("scroll", (event) => {
-    if (!menu.contains(event.target)) closeMenu();
-  }, true);
-  // Eingabe im Board (z. B. Suche) -> Menü schließen.
-  board.addEventListener("input", () => closeMenu());
-}
-
-/**
- * Hängt die Drag-Events (dragstart/dragend) an eine Task-Karte.
- *
- * @param {HTMLElement} card - Die Task-Karte.
- * @param {{value: HTMLElement|null}} draggedCardRef - Gemeinsame Referenz auf die gerade gezogene Karte.
- * @returns {void}
- */
-function bindCardDragEvents(card, draggedCardRef) {
-  if (!card) return;
-
-  // Ziehen beginnt.
-  card.addEventListener("dragstart", (event) => {
-    // Auf sehr kleinen Bildschirmen kein Drag & Drop (dort gibt es das Move-Menü).
-    if (window.matchMedia("(max-width: 360px)").matches) {
-      event.preventDefault();
-      return;
-    }
-    // Gezogene Karte merken (für ondrop der Spalten).
-    draggedCardRef.value = card;
-    // Optisches Feedback per CSS (z. B. gedreht/transparent).
-    card.classList.add("is-dragging");
-    card.setAttribute("data-dragging", "true");
-  });
-
-  // Ziehen endet (egal ob abgelegt oder abgebrochen).
-  card.addEventListener("dragend", () => {
-    // Referenz zurücksetzen.
-    draggedCardRef.value = null;
-    // Drag-Styles entfernen.
-    card.classList.remove("is-dragging");
-    card.removeAttribute("data-dragging");
-    // Hervorhebung aller Spalten als Ablageziel entfernen.
-    document.querySelectorAll(".board-main-column").forEach((column) => {
-      column.classList.remove("is-drop-target");
-    });
-  });
-}
-
-/**
- * Baut das Board auf: rendert Spalten, Karten, Leer-Hinweise,
- * richtet Drag & Drop und die Suche ein. Wird bei jeder Änderung erneut aufgerufen.
- *
- * @returns {void}
- */
-function initBoardLayout() {
-  // Alle Spalten-Elemente (mit data-column) aus board-layout.html.
-  const columns = Array.from(document.querySelectorAll(".board-main-column"));
-  // Suchfeld oben im Board.
-  const searchInput = document.querySelector(".board-search-field input");
-  // Container, der alle Spalten enthält.
-  const boardMainContainer = document.querySelector(".board-main-container");
-
-  // Keine Spalten -> nicht auf der Board-Seite, abbrechen.
-  if (!columns.length) return;
-
-  // Standard: alle Tasks in "To do".
-  const defaultState = getDefaultBoardState();
-  // Gespeicherte Zuordnung aus dem localStorage.
-  const savedState = loadBoardState();
-  // Gespeichertes überschreibt den Standard.
-  const boardState = { ...defaultState, ...savedState };
-
-  // Gemeinsame Referenz auf die gerade gezogene Karte (Objekt, damit sie per Referenz geteilt wird).
-  const draggedCardRef = { value: null };
-
-  // Klick-Listener für die "+"-Buttons der Spalten nur EINMAL anhängen (Flag im data-Attribut).
-  if (boardMainContainer && !boardMainContainer.dataset.columnButtonDelegation) {
-    boardMainContainer.dataset.columnButtonDelegation = "true";
-    boardMainContainer.addEventListener("click", (event) => {
-      // Wurde ein "+"-Button einer Spalte geklickt?
-      const columnButton = event.target.closest(".board-main-column-add-button[data-column]");
-      if (!columnButton) return;
-
-      // Add-Task-Dialog für genau diese Spalte öffnen (Funktion kommt aus initAddTaskModal).
-      if (typeof window.openBoardTaskModalForColumn === "function") {
-        window.openBoardTaskModalForColumn(columnButton.dataset.column);
-      }
-    });
-  }
-
-  // Zeigt in jeder Spalte ohne Karte den Hinweis "No tasks ...".
-  const renderEmptyStateForColumns = () => {
-    columns.forEach((column) => {
-      const content = column.querySelector(".board-main-column-content");
-      const hasTaskCard = content ? content.querySelector(".board-card--task") : false;
-      if (hasTaskCard) return;
-
-      const emptyState = document.createElement("p");
-      emptyState.className = "board-empty-state";
-      emptyState.textContent = getEmptyColumnMessage(column.dataset.column || "");
-      emptyState.setAttribute("aria-label", emptyState.textContent);
-
-      if (content) {
-        content.appendChild(emptyState);
-      } else {
-        column.appendChild(emptyState);
-      }
-    });
-  };
-
- // Zeigt "Keine Ergebnisse gefunden", wenn die Suche nichts findet.
-  const renderSearchEmptyState = () => {
-    if (!boardMainContainer) return;
-
-    // Spalten nur ausblenden, nicht löschen.
-    columns.forEach((column) => {
-      column.style.display = "none";
-    });
-
-    const emptyState = document.createElement("p");
-    emptyState.className = "board-search-empty-state";
-    emptyState.textContent = "Keine Ergebnisse gefunden";
-    emptyState.setAttribute("aria-label", emptyState.textContent);
-
-    boardMainContainer.appendChild(emptyState);
-  };
-
-  // Erzeugt den Kopf einer Spalte: Überschrift + "+"-Button.
-    const createColumnHeader = (columnId) => {
-    const header = document.createElement("div");
-    header.className = "board-main-column-header";
-
-    const title = document.createElement("h2");
-    title.className = "board-main-column-title";
-    title.textContent = getColumnLabel(columnId);
-
-    const addButton = document.createElement("button");
-    addButton.type = "button";
-    addButton.className = "board-main-column-add-button";
-    addButton.dataset.column = columnId;
-    addButton.setAttribute("aria-label", `Add ${getColumnLabel(columnId)}`);
-    addButton.textContent = "+";
-
-    header.appendChild(title);
-    header.appendChild(addButton);
-
-    return header;
-  };
-
-  // Erzeugt den leeren Inhaltsbereich einer Spalte (hier kommen die Karten rein).
-  const createColumnContent = () => {
-    const content = document.createElement("div");
-    content.className = "board-main-column-content";
-    return content;
-  };
-
-  // Rendert das komplette Board neu (Spalten leeren, Karten einsortieren).
-  const renderBoardState = () => {
-    // Alten Leer-Hinweis der Suche entfernen.
-    const searchEmpty = boardMainContainer && boardMainContainer.querySelector(".board-search-empty-state");
-    if (searchEmpty) searchEmpty.remove();
-
-    // Spalten wieder einblenden.
-    columns.forEach((column) => {
-      column.style.display = "";
-    });
-
-    // Jede Spalte leeren und Kopf + Inhaltsbereich neu aufbauen.
-    columns.forEach((column) => {
-      column.innerHTML = "";
-
-      const header = createColumnHeader(column.dataset.column || "");
-      const content = createColumnContent();
-
-      column.appendChild(header);
-      column.appendChild(content);
-    });
-
-    // Keine Task-Daten -> nur Leer-Hinweise anzeigen.
-    if (!Array.isArray(tasks)) {
-      renderEmptyStateForColumns();
-      return;
-    }
-
-    // Suchbegriff klein geschrieben und ohne Leerzeichen am Rand.
-    const searchTerm = currentBoardSearchQuery.trim().toLowerCase();
-    // Bei Suchbegriff nur Tasks, deren Titel oder Beschreibung ihn enthält; sonst alle.
-    const visibleTasks = searchTerm
-      ? tasks.filter((task) => {
-          const title = String(task.title || "").toLowerCase();
-          const description = String(task.description || "").toLowerCase();
-          return title.includes(searchTerm) || description.includes(searchTerm);
-        })
-      : tasks;
-
-    // Suche ohne Treffer -> "Keine Ergebnisse gefunden" anzeigen.
-    if (searchTerm && visibleTasks.length === 0) {
-      renderSearchEmptyState();
-      return;
-    }
-
-    // Jede sichtbare Task in ihre Spalte einsortieren.
-    visibleTasks.forEach((task) => {
-      const targetColumnId = boardState[task.id] || "todo";
-      const column = columns.find((item) => item.dataset.column === targetColumnId);
-      if (!column) return;
-
-      const content = column.querySelector(".board-main-column-content");
-      if (!content) return;
-
-      const wrapper = document.createElement("div");
-      wrapper.innerHTML = renderTaskCard(task);
-      const card = wrapper.firstElementChild;
-      if (!card) return;
-
-      bindCardDragEvents(card, draggedCardRef);
-      content.appendChild(card);
-    });
-
-    // Leere Spalten mit Hinweis füllen.
-    renderEmptyStateForColumns();
-  };
-
-  // Hebt eine Spalte als Ablageziel hervor (oder entfernt die Hervorhebung).
-  const setDropTargetState = (column, isActive) => {
-    column.classList.toggle("is-drop-target", isActive);
-  };
-
-  // Drop-Events für jede Spalte (als on...-Property, damit beim erneuten Aufruf nichts doppelt hängt).
-  columns.forEach((column) => {
-    // Karte wird über die Spalte gezogen.
-    column.ondragover = (event) => {
-      if (!draggedCardRef.value) return;
-
-      // preventDefault erlaubt das Ablegen.
-      event.preventDefault();
-      setDropTargetState(column, true);
-    };
-
-    // Karte verlässt die Spalte -> Hervorhebung entfernen.
-    column.ondragleave = () => {
-      setDropTargetState(column, false);
-    };
-
-    // Karte wird in der Spalte losgelassen.
-    column.ondrop = (event) => {
-      event.preventDefault();
-
-      if (!draggedCardRef.value) return;
-
-      // Ziel-Spalte, gezogene Karte und deren Task-id ermitteln.
-      const targetColumnId = column.dataset.column;
-      const draggedCard = draggedCardRef.value;
-      const draggedTaskId = draggedCard.dataset.cardId;
-
-      // Task verschieben und speichern; bei Fehler abbrechen.
-      if (!moveBoardTask(draggedTaskId, targetColumnId)) return;
-      // Lokalen Zustand aktualisieren und neu rendern.
-      boardState[draggedTaskId] = targetColumnId;
-      renderBoardState();
-      setDropTargetState(column, false);
-    };
-  });
-
-  // Bei jeder Eingabe im Suchfeld Suchbegriff merken und Board neu rendern.
-  if (searchInput) {
-    searchInput.oninput = () => {
-      currentBoardSearchQuery = searchInput.value || "";
-      renderBoardState();
-    };
-  }
-
-  // Beim (erneuten) Aufbau den aktuellen Wert im Suchfeld übernehmen.
-  if (searchInput) {
-    currentBoardSearchQuery = searchInput.value || currentBoardSearchQuery;
-  }
-
-  // Erstes Rendern des Boards.
-  renderBoardState();
-}
-
-
+const boardStorageKey = "join-board-layout-state";
+const columnIds = ["todo", "in-progress", "await-feedback", "done"];
+const columnLabels = {
+  "todo": "To do",
+  "in-progress": "In progress",
+  "await-feedback": "Await feedback",
+  "done": "Done"
+};
+const addTaskPriorityClasses = { Urgent: "priority-urgent", Medium: "priority-medium", Low: "priority-low" };
+const addTaskPriorityColors = { Urgent: "#f66a5f", Medium: "#f9a35c", Low: "#5bc0be" };
+const addTaskCategoryColors = { "Technical Task": "#2bc7b7", "User Story": "#2d8cff" };
+
+const boardMainContainer = document.querySelector(".board-main-container");
+const taskDetailModal = document.getElementById("board-task-detail-modal");
+const taskDetailRoot = document.getElementById("board-task-detail-root");
 const addTaskModal = document.getElementById("board-add-task-modal");
 const addTaskForm = document.getElementById("board-task-form");
 const addTaskSaveButton = document.getElementById("board-task-save-button");
@@ -593,41 +24,654 @@ const addTaskTitleInput = document.getElementById("taskTitle");
 const addTaskDescriptionInput = document.getElementById("taskDescription");
 const addTaskDateInput = document.getElementById("taskDueDate");
 const addTaskCategoryInput = document.getElementById("taskCategory");
+const addTaskDropdown = document.getElementById("assigned-to-dropdown");
+const addTaskAvatars = document.getElementById("assigned-avatars");
+const addTaskRequiredFields = [addTaskTitleInput, addTaskDateInput, addTaskCategoryInput];
 const addTaskHeaderButtons = Array.from(document.querySelectorAll(".board-header-column button[data-column]"));
-const ADD_TASK_PRIORITY_CLASSES = { Urgent: "priority-urgent", Medium: "priority-medium", Low: "priority-low" };
-const ADD_TASK_PRIORITY_COLORS = { Urgent: "#f66a5f", Medium: "#f9a35c", Low: "#5bc0be" };
-const ADD_TASK_CATEGORY_COLORS = { "Technical Task": "#2bc7b7", "User Story": "#2d8cff" };
-let addTaskEditingId = null;
-let addTaskDefaultStatus = "todo";
 
-// ---------- Priorität ----------
-function getAddTaskPriority() {
-  const active = addTaskForm.querySelector(".priority-btn.priority-active");
-  if (!active) return "Medium";
-  return Object.keys(ADD_TASK_PRIORITY_CLASSES)
-    .find((key) => active.classList.contains(ADD_TASK_PRIORITY_CLASSES[key])) || "Medium";
+let boardSearchQuery = "";
+let draggedCard = null;
+let moveMenu = null;
+let moveMenuButton = null;
+let addTaskEditingId = null;
+
+/**
+ * Applies or removes the fixed mobile top navigation styles.
+ *
+ * @param {HTMLElement} topNav - The board specific mobile navigation element.
+ * @param {boolean} isMobile - Whether the viewport is in mobile mode.
+ * @returns {void}
+ */
+function applyMobileTopNavStyles(topNav, isMobile) {
+  const styles = { display: "flex", position: "fixed", top: "0", left: "0", right: "0", gridArea: "auto" };
+  Object.entries(styles).forEach(([property, value]) => {
+    topNav.style[property] = isMobile ? value : "";
+  });
 }
 
+/**
+ * Switches between the board mobile navigation and the generic header
+ * depending on the viewport width (mobile: 768px or less).
+ *
+ * @returns {void}
+ */
+function syncBoardMobileNavigation() {
+  const topNav = document.querySelector(".board-mobile-top-nav");
+  const genericHeader = document.querySelector(".nav-mobile");
+  const isMobile = window.innerWidth <= 768;
+  if (topNav) applyMobileTopNavStyles(topNav, isMobile);
+  if (genericHeader) genericHeader.style.display = isMobile ? "none" : "";
+}
+
+/**
+ * Returns the placeholder text for an empty column.
+ *
+ * @param {string} columnId - Id of the column, e.g. "todo".
+ * @returns {string} Text such as "No tasks To do".
+ */
+function getEmptyColumnMessage(columnId) {
+  const label = columnLabels[columnId];
+  return label ? `No tasks ${label}` : "No tasks";
+}
+
+/**
+ * Returns the visible heading of a column.
+ *
+ * @param {string} columnId - Id of the column.
+ * @returns {string} Column name such as "In progress".
+ */
+function getColumnLabel(columnId) {
+  return columnLabels[columnId] || "Board";
+}
+
+/**
+ * Loads the saved task-to-column mapping from localStorage.
+ *
+ * @returns {Object<string, string>} Object { taskId: columnId } or an empty object.
+ */
+function loadBoardState() {
+  try {
+    const storedState = window.localStorage.getItem(boardStorageKey);
+    return storedState ? JSON.parse(storedState) : {};
+  } catch {
+    return {};
+  }
+}
+
+/**
+ * Saves the task-to-column mapping to localStorage.
+ *
+ * @param {Object<string, string>} state - Object { taskId: columnId }.
+ * @returns {void}
+ */
+function saveBoardState(state) {
+  window.localStorage.setItem(boardStorageKey, JSON.stringify(state));
+}
+
+/**
+ * Creates the default mapping in which every task is in "todo".
+ *
+ * @returns {Object<string, string>} Object { taskId: "todo" }.
+ */
+function getDefaultBoardState() {
+  if (!Array.isArray(tasks)) return {};
+  return tasks.reduce((state, task) => {
+    state[task.id] = "todo";
+    return state;
+  }, {});
+}
+
+/**
+ * Merges the default mapping with the saved mapping.
+ *
+ * @returns {Object<string, string>} Object { taskId: columnId }.
+ */
+function getBoardState() {
+  return { ...getDefaultBoardState(), ...loadBoardState() };
+}
+
+/**
+ * Finds a task by its id.
+ *
+ * @param {string} taskId - Id of the task.
+ * @returns {Object|null} The task or null if it does not exist.
+ */
+function getTaskById(taskId) {
+  if (!taskId || !Array.isArray(tasks)) return null;
+  return tasks.find((task) => task.id === taskId) || null;
+}
+
+/**
+ * Moves a task to another column and persists the change.
+ *
+ * @param {string} taskId - Id of the task.
+ * @param {string} columnId - Id of the target column.
+ * @returns {boolean} True on success, false if the task or column does not exist.
+ */
+function moveBoardTask(taskId, columnId) {
+  const task = getTaskById(taskId);
+  if (!task || !columnIds.includes(columnId)) {
+    console.error("Cannot move task: task or target column not found.", { taskId, columnId });
+    return false;
+  }
+  saveBoardState({ ...getBoardState(), [taskId]: columnId });
+  task.status = columnId;
+  return true;
+}
+
+/**
+ * Creates the hidden "Move to" menu element and appends it to the body.
+ *
+ * @returns {HTMLElement} The menu element.
+ */
+function createMoveMenu() {
+  const menu = document.createElement("div");
+  menu.id = "board-move-menu";
+  menu.className = "board-move-menu";
+  menu.setAttribute("role", "menu");
+  menu.setAttribute("aria-label", "Move to");
+  menu.hidden = true;
+  document.body.appendChild(menu);
+  return menu;
+}
+
+/**
+ * Closes the "Move to" menu and optionally restores focus to its trigger button.
+ *
+ * @param {boolean} [restoreFocus=false] - Whether to focus the trigger button again.
+ * @returns {void}
+ */
+function closeMoveMenu(restoreFocus = false) {
+  moveMenu.hidden = true;
+  if (moveMenuButton) {
+    moveMenuButton.setAttribute("aria-expanded", "false");
+    if (restoreFocus) moveMenuButton.focus();
+  }
+  moveMenuButton = null;
+}
+
+/**
+ * Moves a task via the menu, re-renders the board and focuses the moved card.
+ *
+ * @param {string} taskId - Id of the task.
+ * @param {string} columnId - Id of the target column.
+ * @returns {void}
+ */
+function moveTaskFromMenu(taskId, columnId) {
+  if (!moveBoardTask(taskId, columnId)) return;
+  closeMoveMenu();
+  renderBoard();
+  const movedCard = document.querySelector(`.board-card--task[data-card-id="${taskId}"]`);
+  if (movedCard) movedCard.querySelector(".board-card-move-button").focus();
+}
+
+/**
+ * Creates one menu item that moves the card to the column at the given index.
+ *
+ * @param {HTMLElement} card - The task card.
+ * @param {number} targetIndex - Index of the target column in columnIds.
+ * @param {number} currentIndex - Index of the current column in columnIds.
+ * @returns {HTMLButtonElement} The menu item button.
+ */
+function createMoveOption(card, targetIndex, currentIndex) {
+  const option = document.createElement("button");
+  const arrow = document.createElement("span");
+  option.type = "button";
+  option.setAttribute("role", "menuitem");
+  arrow.setAttribute("aria-hidden", "true");
+  arrow.textContent = targetIndex < currentIndex ? "\u2191" : "\u2193";
+  option.append(arrow, document.createTextNode(getColumnLabel(columnIds[targetIndex])));
+  option.addEventListener("click", () => moveTaskFromMenu(card.dataset.cardId, columnIds[targetIndex]));
+  return option;
+}
+
+/**
+ * Fills the "Move to" menu with the previous and next column of a card.
+ *
+ * @param {HTMLElement} card - The task card the menu belongs to.
+ * @returns {void}
+ */
+function fillMoveMenu(card) {
+  const currentIndex = columnIds.indexOf(card.closest(".board-main-column").dataset.column);
+  const heading = document.createElement("p");
+  heading.className = "board-move-menu-title";
+  heading.textContent = "Move to";
+  moveMenu.replaceChildren(heading);
+  [currentIndex - 1, currentIndex + 1]
+    .filter((index) => index >= 0 && index < columnIds.length)
+    .forEach((index) => moveMenu.appendChild(createMoveOption(card, index, currentIndex)));
+}
+
+/**
+ * Positions the menu next to its trigger button and keeps it inside the viewport.
+ *
+ * @param {HTMLElement} button - The trigger button.
+ * @returns {void}
+ */
+function positionMoveMenu(button) {
+  const rect = button.getBoundingClientRect();
+  const width = moveMenu.offsetWidth;
+  const height = moveMenu.offsetHeight;
+  const left = Math.max(8, Math.min(rect.right - width, window.innerWidth - width - 8));
+  const fitsBelow = rect.bottom + height + 8 <= window.innerHeight;
+  const top = fitsBelow ? rect.bottom + 8 : Math.max(8, rect.top - height - 8);
+  moveMenu.style.left = `${left}px`;
+  moveMenu.style.top = `${top}px`;
+}
+
+/**
+ * Opens the "Move to" menu for a card.
+ *
+ * @param {HTMLElement} button - The move button of the card.
+ * @returns {void}
+ */
+function openMoveMenu(button) {
+  closeMoveMenu();
+  moveMenuButton = button;
+  button.setAttribute("aria-expanded", "true");
+  fillMoveMenu(button.closest(".board-card--task"));
+  moveMenu.hidden = false;
+  positionMoveMenu(button);
+  moveMenu.querySelector("button").focus();
+}
+
+/**
+ * Opens or closes the menu when a move button is clicked (screens up to 360px).
+ *
+ * @param {MouseEvent} event - The click event.
+ * @returns {void}
+ */
+function handleMoveButtonClick(event) {
+  const button = event.target.closest(".board-card-move-button");
+  if (!button || !window.matchMedia("(max-width: 360px)").matches) return;
+  if (moveMenuButton === button) closeMoveMenu(true);
+  else openMoveMenu(button);
+}
+
+/**
+ * Closes the menu when the user clicks outside of it.
+ *
+ * @param {MouseEvent} event - The click event.
+ * @returns {void}
+ */
+function handleMoveMenuOutsideClick(event) {
+  const isInside = moveMenu.contains(event.target);
+  if (!isInside && !event.target.closest(".board-card-move-button")) closeMoveMenu();
+}
+
+/**
+ * Closes the menu when something outside of it is scrolled.
+ *
+ * @param {Event} event - The scroll event.
+ * @returns {void}
+ */
+function handleMoveMenuScroll(event) {
+  if (!moveMenu.contains(event.target)) closeMoveMenu();
+}
+
+/**
+ * Focuses a menu item depending on the pressed navigation key.
+ *
+ * @param {string} key - One of "ArrowDown", "ArrowUp", "Home" or "End".
+ * @returns {void}
+ */
+function focusMoveMenuOption(key) {
+  const options = Array.from(moveMenu.querySelectorAll("button"));
+  const index = options.indexOf(document.activeElement);
+  const step = key === "ArrowDown" ? 1 : -1;
+  let nextIndex = (index + step + options.length) % options.length;
+  if (key === "Home") nextIndex = 0;
+  if (key === "End") nextIndex = options.length - 1;
+  options[nextIndex].focus();
+}
+
+/**
+ * Handles keyboard control while the menu is open.
+ *
+ * @param {KeyboardEvent} event - The keydown event.
+ * @returns {void}
+ */
+function handleMoveMenuKeydown(event) {
+  if (moveMenu.hidden) return;
+  if (event.key === "Escape" || event.key === "Tab") {
+    if (event.key === "Escape") event.preventDefault();
+    closeMoveMenu(true);
+  } else if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+    event.preventDefault();
+    focusMoveMenuOption(event.key);
+  }
+}
+
+/**
+ * Sets up the "Move to" menu used on small screens instead of drag and drop.
+ *
+ * @returns {void}
+ */
+function initBoardMoveMenu() {
+  if (!boardMainContainer) return;
+  moveMenu = createMoveMenu();
+  boardMainContainer.addEventListener("click", handleMoveButtonClick);
+  boardMainContainer.addEventListener("input", () => closeMoveMenu());
+  document.addEventListener("click", handleMoveMenuOutsideClick);
+  document.addEventListener("keydown", handleMoveMenuKeydown);
+  document.addEventListener("scroll", handleMoveMenuScroll, true);
+  window.addEventListener("resize", () => closeMoveMenu());
+}
+
+/**
+ * Returns all board columns.
+ *
+ * @returns {HTMLElement[]} Array of column elements.
+ */
+function getBoardColumns() {
+  return Array.from(document.querySelectorAll(".board-main-column"));
+}
+
+/**
+ * Starts dragging a card (disabled on screens up to 360px).
+ *
+ * @param {DragEvent} event - The dragstart event.
+ * @param {HTMLElement} card - The dragged card.
+ * @returns {void}
+ */
+function handleCardDragStart(event, card) {
+  if (window.matchMedia("(max-width: 360px)").matches) {
+    event.preventDefault();
+    return;
+  }
+  draggedCard = card;
+  card.classList.add("is-dragging");
+  card.setAttribute("data-dragging", "true");
+}
+
+/**
+ * Cleans up drag styles after dragging ends.
+ *
+ * @param {HTMLElement} card - The dragged card.
+ * @returns {void}
+ */
+function handleCardDragEnd(card) {
+  draggedCard = null;
+  card.classList.remove("is-dragging");
+  card.removeAttribute("data-dragging");
+  getBoardColumns().forEach((column) => column.classList.remove("is-drop-target"));
+}
+
+/**
+ * Attaches the drag events to a task card.
+ *
+ * @param {HTMLElement} card - The task card.
+ * @returns {void}
+ */
+function bindCardDragEvents(card) {
+  card.addEventListener("dragstart", (event) => handleCardDragStart(event, card));
+  card.addEventListener("dragend", () => handleCardDragEnd(card));
+}
+
+/**
+ * Handles dropping a card into a column.
+ *
+ * @param {DragEvent} event - The drop event.
+ * @param {HTMLElement} column - The target column.
+ * @returns {void}
+ */
+function handleColumnDrop(event, column) {
+  event.preventDefault();
+  if (!draggedCard) return;
+  const taskId = draggedCard.dataset.cardId;
+  draggedCard = null;
+  column.classList.remove("is-drop-target");
+  if (moveBoardTask(taskId, column.dataset.column)) renderBoard();
+}
+
+/**
+ * Attaches the drag-over, drag-leave and drop events to a column.
+ *
+ * @param {HTMLElement} column - The column element.
+ * @returns {void}
+ */
+function bindColumnDropEvents(column) {
+  column.ondragover = (event) => {
+    if (!draggedCard) return;
+    event.preventDefault();
+    column.classList.add("is-drop-target");
+  };
+  column.ondragleave = () => column.classList.remove("is-drop-target");
+  column.ondrop = (event) => handleColumnDrop(event, column);
+}
+
+/**
+ * Creates the header of a column with its title and add button.
+ *
+ * @param {string} columnId - Id of the column.
+ * @returns {HTMLElement} The header element.
+ */
+function createColumnHeader(columnId) {
+  const header = document.createElement("div");
+  const title = document.createElement("h2");
+  const addButton = document.createElement("button");
+  header.className = "board-main-column-header";
+  title.className = "board-main-column-title";
+  title.textContent = getColumnLabel(columnId);
+  addButton.type = "button";
+  addButton.className = "board-main-column-add-button";
+  addButton.dataset.column = columnId;
+  addButton.setAttribute("aria-label", `Add ${getColumnLabel(columnId)}`);
+  addButton.textContent = "+";
+  header.append(title, addButton);
+  return header;
+}
+
+/**
+ * Creates the empty content area of a column.
+ *
+ * @returns {HTMLElement} The content element.
+ */
+function createColumnContent() {
+  const content = document.createElement("div");
+  content.className = "board-main-column-content";
+  return content;
+}
+
+/**
+ * Resets all columns to header and empty content and removes the search hint.
+ *
+ * @returns {void}
+ */
+function resetBoardColumns() {
+  const emptyState = boardMainContainer.querySelector(".board-search-empty-state");
+  if (emptyState) emptyState.remove();
+  getBoardColumns().forEach((column) => {
+    column.style.display = "";
+    column.replaceChildren(createColumnHeader(column.dataset.column), createColumnContent());
+  });
+}
+
+/**
+ * Adds a hint to every column that contains no task card.
+ *
+ * @returns {void}
+ */
+function renderEmptyColumnHints() {
+  getBoardColumns().forEach((column) => {
+    const content = column.querySelector(".board-main-column-content");
+    if (content.querySelector(".board-card--task")) return;
+    const hint = document.createElement("p");
+    hint.className = "board-empty-state";
+    hint.textContent = getEmptyColumnMessage(column.dataset.column);
+    hint.setAttribute("aria-label", hint.textContent);
+    content.appendChild(hint);
+  });
+}
+
+/**
+ * Hides all columns and shows the "no results" hint.
+ *
+ * @returns {void}
+ */
+function renderSearchEmptyState() {
+  const message = document.createElement("p");
+  getBoardColumns().forEach((column) => {
+    column.style.display = "none";
+  });
+  message.className = "board-search-empty-state";
+  message.textContent = "Keine Ergebnisse gefunden";
+  message.setAttribute("aria-label", message.textContent);
+  boardMainContainer.appendChild(message);
+}
+
+/**
+ * Checks whether the current search query is long enough to filter (3+ characters).
+ *
+ * @returns {boolean} True if a search is active.
+ */
+function hasActiveSearch() {
+  return boardSearchQuery.trim().length >= 3;
+}
+
+/**
+ * Returns the tasks matching the current search query.
+ *
+ * @returns {Object[]} All tasks if no search is active, otherwise the matches.
+ */
+function getVisibleTasks() {
+  if (!Array.isArray(tasks)) return [];
+  if (!hasActiveSearch()) return tasks;
+  const query = boardSearchQuery.trim().toLowerCase();
+  return tasks.filter((task) => {
+    const title = String(task.title || "").toLowerCase();
+    const description = String(task.description || "").toLowerCase();
+    return title.includes(query) || description.includes(query);
+  });
+}
+
+/**
+ * Renders a task card into its column.
+ *
+ * @param {Object} task - The task to render.
+ * @param {Object<string, string>} boardState - Mapping { taskId: columnId }.
+ * @returns {void}
+ */
+function appendTaskCard(task, boardState) {
+  const columnId = boardState[task.id] || "todo";
+  const column = getBoardColumns().find((item) => item.dataset.column === columnId);
+  const content = column && column.querySelector(".board-main-column-content");
+  if (!content) return;
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = renderTaskCard(task);
+  const card = wrapper.firstElementChild;
+  if (!card) return;
+  bindCardDragEvents(card);
+  content.appendChild(card);
+}
+
+/**
+ * Renders the complete board: columns, task cards and hints.
+ *
+ * @returns {void}
+ */
+function renderBoard() {
+  resetBoardColumns();
+  const visibleTasks = getVisibleTasks();
+  if (hasActiveSearch() && visibleTasks.length === 0) {
+    renderSearchEmptyState();
+    return;
+  }
+  const boardState = getBoardState();
+  visibleTasks.forEach((task) => appendTaskCard(task, boardState));
+  renderEmptyColumnHints();
+}
+
+/**
+ * Applies the value of the search field and re-renders the board.
+ *
+ * @returns {void}
+ */
+function runBoardSearch() {
+  const input = document.querySelector(".board-search-field input");
+  boardSearchQuery = input ? input.value : "";
+  renderBoard();
+}
+
+/**
+ * Opens the add-task dialog when a column add button is clicked.
+ *
+ * @param {MouseEvent} event - The click event.
+ * @returns {void}
+ */
+function handleColumnAddClick(event) {
+  const button = event.target.closest(".board-main-column-add-button[data-column]");
+  if (button) openAddTaskModalForColumn(button.dataset.column);
+}
+
+/**
+ * Sets up the board: drop events, column add buttons, search button and first render.
+ *
+ * @returns {void}
+ */
+function initBoardLayout() {
+  const searchButton = document.querySelector(".board-search-button");
+  if (!boardMainContainer) return;
+  getBoardColumns().forEach(bindColumnDropEvents);
+  boardMainContainer.addEventListener("click", handleColumnAddClick);
+  if (searchButton) searchButton.addEventListener("click", runBoardSearch);
+  renderBoard();
+}
+
+/**
+ * Reads the selected priority from the form.
+ *
+ * @returns {string} "Urgent", "Medium" or "Low".
+ */
+function getAddTaskPriority() {
+  const active = addTaskForm.querySelector(".priority-btn.priority-active");
+  const match = Object.keys(addTaskPriorityClasses).find((key) => {
+    return active && active.classList.contains(addTaskPriorityClasses[key]);
+  });
+  return match || "Medium";
+}
+
+/**
+ * Selects a priority button in the form.
+ *
+ * @param {string} value - "Urgent", "Medium" or "Low".
+ * @returns {void}
+ */
 function setAddTaskPriority(value) {
-  const cssClass = ADD_TASK_PRIORITY_CLASSES[value] || ADD_TASK_PRIORITY_CLASSES.Medium;
+  const cssClass = addTaskPriorityClasses[value] || addTaskPriorityClasses.Medium;
   changePriority(addTaskForm.querySelector(`.${cssClass}`));
 }
 
-// ---------- Formulardaten lesen ----------
+/**
+ * Reads the initials of all selected contacts.
+ *
+ * @returns {string[]} Initials such as ["AM", "EM"].
+ */
 function getSelectedAssignedContacts() {
   return Array.from(document.querySelectorAll("#assigned-to-list .contact-option.selected"))
     .map((option) => option.querySelector(".contact-avatar").textContent.trim());
 }
 
+/**
+ * Reads the subtasks from the form and keeps the done state of unchanged labels.
+ *
+ * @param {Object[]} [previous=[]] - Previous subtasks of the edited task.
+ * @returns {{label: string, done: boolean}[]} The subtasks.
+ */
 function readAddTaskSubtasks(previous = []) {
-  saveSubtask(); // noch nicht bestätigten Text im Subtask-Feld übernehmen
-  return Array.from(subTaskList.querySelectorAll(".subtask-text")).map((el) => {
-    const label = el.textContent.trim();
+  saveSubtask();
+  return Array.from(subTaskList.querySelectorAll(".subtask-text")).map((element) => {
+    const label = element.textContent.trim();
     const old = previous.find((subtask) => subtask.label === label);
     return { label, done: old ? Boolean(old.done) : false };
   });
 }
 
+/**
+ * Builds the task fields shared by creating and editing a task.
+ *
+ * @returns {Object} Task data without id, status and subtasks.
+ */
 function buildAddTaskData() {
   const priority = getAddTaskPriority();
   const category = addTaskCategoryInput.value;
@@ -636,95 +680,140 @@ function buildAddTaskData() {
     description: addTaskDescriptionInput.value.trim(),
     dueDate: addTaskDateInput.value,
     priority,
-    priorityColor: ADD_TASK_PRIORITY_COLORS[priority] || ADD_TASK_PRIORITY_COLORS.Low,
+    priorityColor: addTaskPriorityColors[priority] || addTaskPriorityColors.Low,
     category,
-    categoryColor: ADD_TASK_CATEGORY_COLORS[category] || ADD_TASK_CATEGORY_COLORS["User Story"],
+    categoryColor: addTaskCategoryColors[category] || addTaskCategoryColors["User Story"],
     assignedTo: getSelectedAssignedContacts()
   };
 }
 
-// ---------- Validierung ----------
-function clearAddTaskErrors() {
-  addTaskForm.querySelectorAll(".input-error").forEach((el) => el.classList.remove("input-error"));
-  addTaskForm.querySelectorAll(".field-error").forEach((el) => { el.textContent = ""; });
-}
-
-function clearAddTaskFieldError(field) {
-  field.classList.remove("input-error");
-  const error = field.closest(".form-field").querySelector(".field-error");
-  if (error) error.textContent = "";
-}
-
+/**
+ * Shows or clears the error state of a form field.
+ *
+ * @param {HTMLElement} field - The input element.
+ * @param {string} message - Error text, an empty string clears the error.
+ * @returns {void}
+ */
 function setAddTaskError(field, message) {
-  field.classList.add("input-error");
   const error = field.closest(".form-field").querySelector(".field-error");
+  field.classList.toggle("input-error", Boolean(message));
   if (error) error.textContent = message;
 }
 
-function validateAddTaskForm() {
-  clearAddTaskErrors();
-  const required = [addTaskTitleInput, addTaskDateInput, addTaskCategoryInput];
-  const missing = required.filter((field) => !field.value.trim());
-  missing.forEach((field) => setAddTaskError(field, "This field is required"));
-  return missing.length === 0;
+/**
+ * Clears the errors of all required fields.
+ *
+ * @returns {void}
+ */
+function clearAddTaskErrors() {
+  addTaskRequiredFields.forEach((field) => setAddTaskError(field, ""));
 }
 
+/**
+ * Validates the required fields and shows an error for each missing one.
+ *
+ * @returns {boolean} True if all required fields are filled.
+ */
+function validateAddTaskForm() {
+  let isValid = true;
+  addTaskRequiredFields.forEach((field) => {
+    const isMissing = !field.value.trim();
+    setAddTaskError(field, isMissing ? "This field is required" : "");
+    if (isMissing) isValid = false;
+  });
+  return isValid;
+}
+
+/**
+ * Clears the error of a required field as soon as the user changes it.
+ *
+ * @returns {void}
+ */
 function bindAddTaskFieldReset() {
-  [addTaskTitleInput, addTaskDateInput, addTaskCategoryInput].forEach((field) => {
-    field.addEventListener("input", () => clearAddTaskFieldError(field));
+  addTaskRequiredFields.forEach((field) => {
+    field.addEventListener("input", () => setAddTaskError(field, ""));
   });
 }
 
-// ---------- Zurücksetzen, Öffnen, Schließen ----------
+/**
+ * Sets the text of the save button without touching its icon.
+ *
+ * @param {string} text - New label text.
+ * @returns {void}
+ */
 function setAddTaskSaveLabel(text) {
   addTaskSaveButton.firstChild.textContent = text;
 }
 
+/**
+ * Resets all form fields, the contact list, the subtasks and the errors.
+ *
+ * @returns {void}
+ */
 function resetAddTaskForm() {
   addTaskForm.reset();
   list.innerHTML = "";
   list.style.display = "none";
-  document.getElementById("assigned-to-dropdown").classList.remove("open");
-  document.getElementById("assigned-avatars").innerHTML = "";
+  addTaskDropdown.classList.remove("open");
+  addTaskAvatars.innerHTML = "";
   subTaskList.innerHTML = "";
   showSubtaskActions();
   setAddTaskPriority("Medium");
   clearAddTaskErrors();
 }
 
+/**
+ * Resets the dialog to the "Add Task" state.
+ *
+ * @returns {void}
+ */
 function resetAddTaskState() {
   addTaskEditingId = null;
-  addTaskDefaultStatus = "todo";
   addTaskDialogTitle.textContent = "Add Task";
   setAddTaskSaveLabel("Create Task ");
   addTaskModal.dataset.status = "todo";
   resetAddTaskForm();
 }
 
+/**
+ * Shows the add-task dialog.
+ *
+ * @returns {void}
+ */
 function showAddTaskModal() {
   addTaskModal.classList.add("is-open");
   addTaskModal.setAttribute("aria-hidden", "false");
 }
 
-function openAddTaskModal() {
-  resetAddTaskState();
-  showAddTaskModal();
-}
-
+/**
+ * Opens the dialog for a new task in the given column.
+ *
+ * @param {string} status - Id of the target column.
+ * @returns {void}
+ */
 function openAddTaskModalForColumn(status) {
   resetAddTaskState();
-  addTaskDefaultStatus = status || "todo";
-  addTaskModal.dataset.status = addTaskDefaultStatus;
+  addTaskModal.dataset.status = status || "todo";
   showAddTaskModal();
 }
 
+/**
+ * Closes the dialog and resets it.
+ *
+ * @returns {void}
+ */
 function closeAddTaskModal() {
   addTaskModal.classList.remove("is-open");
   addTaskModal.setAttribute("aria-hidden", "true");
   resetAddTaskState();
 }
 
-// ---------- Bearbeiten ----------
+/**
+ * Fills the basic form fields with the data of a task.
+ *
+ * @param {Object} task - The task to edit.
+ * @returns {void}
+ */
 function fillAddTaskForm(task) {
   addTaskTitleInput.value = task.title || "";
   addTaskDescriptionInput.value = task.description || "";
@@ -733,6 +822,12 @@ function fillAddTaskForm(task) {
   setAddTaskPriority(task.priority || "Medium");
 }
 
+/**
+ * Renders the contact list and selects the assigned contacts.
+ *
+ * @param {string[]} assigned - Initials of the assigned contacts.
+ * @returns {void}
+ */
 function fillAddTaskContacts(assigned) {
   renderContactOptions(getSessionData("session-contacts"));
   list.querySelectorAll(".contact-option").forEach((option) => {
@@ -742,12 +837,24 @@ function fillAddTaskContacts(assigned) {
   renderAssignedAvatars();
 }
 
+/**
+ * Renders the subtasks of a task into the subtask list.
+ *
+ * @param {{label: string}[]} subtasks - Subtasks of the task.
+ * @returns {void}
+ */
 function fillAddTaskSubtasks(subtasks) {
   subtasks.forEach((subtask) => {
     subTaskList.insertAdjacentHTML("beforeend", getSubtaskItemTemplate(subtask.label));
   });
 }
 
+/**
+ * Opens the dialog in edit mode for an existing task.
+ *
+ * @param {Object} task - The task to edit.
+ * @returns {void}
+ */
 function openAddTaskEditModal(task) {
   if (!task) return;
   resetAddTaskState();
@@ -755,211 +862,283 @@ function openAddTaskEditModal(task) {
   addTaskDialogTitle.textContent = "Edit Task";
   setAddTaskSaveLabel("Save changes ");
   fillAddTaskForm(task);
-  fillAddTaskContacts(Array.isArray(task.assignedTo) ? task.assignedTo : []);
-  fillAddTaskSubtasks(Array.isArray(task.subtasks) ? task.subtasks : []);
+  fillAddTaskContacts(task.assignedTo || []);
+  fillAddTaskSubtasks(task.subtasks || []);
   showAddTaskModal();
 }
 
-// ---------- Speichern ----------
+/**
+ * Writes the form data into the task that is being edited.
+ *
+ * @returns {void}
+ */
 function updateAddTask() {
-  const task = Array.isArray(tasks) ? tasks.find((item) => item.id === addTaskEditingId) : null;
+  const task = getTaskById(addTaskEditingId);
   if (!task) return;
   Object.assign(task, buildAddTaskData(), { subtasks: readAddTaskSubtasks(task.subtasks) });
 }
 
-function storeAddTaskStatus(task) {
-  const boardState = loadBoardState();
-  boardState[task.id] = task.status;
-  window.localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(boardState));
-}
-
+/**
+ * Creates a new task from the form data and stores its column.
+ *
+ * @returns {void}
+ */
 function createAddTask() {
   const newTask = {
     ...buildAddTaskData(),
     id: `task-${Date.now()}`,
-    status: addTaskModal.dataset.status || addTaskDefaultStatus || "todo",
+    status: addTaskModal.dataset.status || "todo",
     subtasks: readAddTaskSubtasks(),
     progress: 0
   };
   newTask.badge = newTask.category;
   tasks.unshift(newTask);
-  storeAddTaskStatus(newTask);
+  saveBoardState({ ...loadBoardState(), [newTask.id]: newTask.status });
 }
 
+/**
+ * Validates the form, saves the task, re-renders the board and closes the dialog.
+ *
+ * @returns {void}
+ */
 function saveAddTask() {
   if (!validateAddTaskForm()) return;
   if (addTaskEditingId) updateAddTask();
   else createAddTask();
-  initBoardLayout();
+  renderBoard();
   closeAddTaskModal();
 }
 
-// ---------- Initialisierung ----------
+/**
+ * Handles the submit event of the add-task form.
+ *
+ * @param {SubmitEvent} event - The submit event.
+ * @returns {void}
+ */
+function handleAddTaskSubmit(event) {
+  event.preventDefault();
+  saveAddTask();
+}
+
+/**
+ * Closes the dialog when the dark backdrop is clicked.
+ *
+ * @param {MouseEvent} event - The click event.
+ * @returns {void}
+ */
+function handleAddTaskBackdropClick(event) {
+  if (event.target === addTaskModal) closeAddTaskModal();
+}
+
+/**
+ * Lets the column buttons in the board header open the dialog for their column.
+ *
+ * @returns {void}
+ */
 function bindAddTaskHeaderButtons() {
   addTaskHeaderButtons.forEach((button) => {
     button.addEventListener("click", () => openAddTaskModalForColumn(button.dataset.column));
   });
 }
 
-function exposeAddTaskModalApi() {
-  window.openBoardTaskEditModal = openAddTaskEditModal;
-  window.openBoardTaskModalForColumn = openAddTaskModalForColumn;
-  window.closeBoardTaskModal = closeAddTaskModal;
-}
-
 /**
- * Initialisiert den Add-/Edit-Task-Dialog im Board:
- * Öffnen/Schließen, Formular-Validierung, Erstellen neuer Tasks
- * und Speichern bearbeiteter Tasks.
+ * Sets up the add and edit task dialog.
  *
  * @returns {void}
  */
 function initAddTaskModal() {
   bindAddTaskFieldReset();
   bindAddTaskHeaderButtons();
-  addTaskForm.addEventListener("submit", (event) => { event.preventDefault(); saveAddTask(); });
-  addTaskOpenButton.addEventListener("click", openAddTaskModal);
+  addTaskForm.addEventListener("submit", handleAddTaskSubmit);
+  addTaskOpenButton.addEventListener("click", () => openAddTaskModalForColumn("todo"));
   addTaskCloseButton.addEventListener("click", closeAddTaskModal);
   addTaskClearButton.addEventListener("click", resetAddTaskForm);
-  addTaskModal.addEventListener("click", (event) => {
-    if (event.target === addTaskModal) closeAddTaskModal();
-  });
-  exposeAddTaskModalApi();
+  addTaskModal.addEventListener("click", handleAddTaskBackdropClick);
 }
 
-function initTaskDetailModal() {
-  const boardMainContainer = document.querySelector(".board-main-container");
-  const detailModal = document.getElementById("board-task-detail-modal");
-  const detailRoot = document.getElementById("board-task-detail-root");
-  if (!boardMainContainer || !detailModal || !detailRoot) return;
+/**
+ * Calculates the progress of a task from its subtasks or its progress value.
+ *
+ * @param {Object} task - The task.
+ * @returns {{width: number, label: string}} Progress bar width in percent and its label.
+ */
+function getTaskProgress(task) {
+  const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
+  const doneCount = subtasks.filter((subtask) => subtask.done).length;
+  if (!subtasks.length) {
+    const width = Math.max(0, Math.min(100, task.progress || 0));
+    return { width, label: `${Math.round(width)}%` };
+  }
+  const width = Math.round((doneCount / subtasks.length) * 100);
+  return { width, label: `${doneCount}/${subtasks.length} Subtasks` };
+}
 
-  const getTaskById = (taskId) => {
-    if (!taskId || !Array.isArray(tasks)) return null;
-    return tasks.find((task) => task.id === taskId) || null;
-  };
-
-  const syncCardContent = (task) => {
-    if (!task) return;
-    const card = boardMainContainer.querySelector(`.board-card--task[data-card-id="${task.id}"]`);
-    if (!card) return;
-
-    const title = card.querySelector(".board-card-title");
-    const description = card.querySelector(".board-card-description");
-    const progressBar = card.querySelector(".board-progress-bar span");
-    const progressLabel = card.querySelector(".board-progress-label");
-    if (title) title.textContent = task.title;
-    if (description) description.textContent = task.description;
-
-    const taskSubtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
-    const doneSubtasks = taskSubtasks.filter((subtask) => subtask.done).length;
-    const totalSubtasks = taskSubtasks.length;
-    const progressWidth = totalSubtasks
-      ? Math.round((doneSubtasks / totalSubtasks) * 100)
-      : Math.max(0, Math.min(100, task.progress || 0));
-
-    if (progressBar) progressBar.style.width = `${progressWidth}%`;
-    if (progressLabel) {
-      progressLabel.textContent = totalSubtasks
-        ? `${doneSubtasks}/${totalSubtasks} Subtasks`
-        : `${Math.round(progressWidth)}%`;
-    }
-  };
-
-  const deleteTask = (taskId) => {
-    const taskIndex = Array.isArray(tasks) ? tasks.findIndex((task) => task.id === taskId) : -1;
-    if (taskIndex === -1) return;
-    tasks.splice(taskIndex, 1);
-
-    const boardState = loadBoardState();
-    delete boardState[taskId];
-    window.localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(boardState));
-
-    const card = boardMainContainer.querySelector(`.board-card--task[data-card-id="${taskId}"]`);
-    if (card) card.remove();
-    initBoardLayout();
-  };
-
-  const closeDetailModal = () => {
-    detailModal.classList.remove("is-open");
-    detailModal.setAttribute("aria-hidden", "true");
-    detailRoot.innerHTML = "";
-    detailRoot.removeAttribute("data-task-id");
-  };
-
-  const openDetailModal = (task) => {
-    if (!task) return;
-    detailRoot.innerHTML = renderTaskDetail(task);
-    detailRoot.dataset.taskId = task.id;
-    detailModal.classList.add("is-open");
-    detailModal.setAttribute("aria-hidden", "false");
-
-    const closeButton = detailRoot.querySelector(".board-detail-close");
-    if (closeButton) closeButton.addEventListener("click", closeDetailModal);
-  };
-
-  detailRoot.addEventListener("click", (event) => {
-    const actionButton = event.target.closest("[data-action]");
-    if (!actionButton) return;
-
-    const taskId = detailRoot.dataset.taskId;
-    const task = getTaskById(taskId);
-    if (!task) return;
-
-    if (actionButton.dataset.action === "delete-task") {
-      if (!window.confirm("Delete this task?")) return;
-      deleteTask(taskId);
-      closeDetailModal();
-      return;
-    }
-
-    if (actionButton.dataset.action === "edit-task") {
-      closeDetailModal();
-      if (typeof window.openBoardTaskEditModal === "function") {
-        window.openBoardTaskEditModal(task);
-      }
-    }
-  });
-
-  detailRoot.addEventListener("change", (event) => {
-    const checkbox = event.target.closest(".board-detail-subtask input[type='checkbox']");
-    if (!checkbox) return;
-
-    const task = getTaskById(detailRoot.dataset.taskId);
-    if (!task || !Array.isArray(task.subtasks)) return;
-
-    const subtaskIndex = Number(checkbox.dataset.subtaskIndex);
-    if (!Number.isInteger(subtaskIndex) || !task.subtasks[subtaskIndex]) return;
-
-    task.subtasks[subtaskIndex].done = checkbox.checked;
-    syncCardContent(task);
-  });
-boardMainContainer.addEventListener("click", (event) => {
-  // Klicks auf den Move-Button (Mobile) nicht als Karten-Klick werten.
-  if (event.target.closest(".board-card-move-button")) return;
-
-  const card = event.target.closest(".board-card--task");
+/**
+ * Updates title, description and progress of a card without re-rendering the board.
+ *
+ * @param {Object} task - The task whose card should be updated.
+ * @returns {void}
+ */
+function syncCardContent(task) {
+  const card = boardMainContainer.querySelector(`.board-card--task[data-card-id="${task.id}"]`);
   if (!card) return;
-
-  openDetailModal(getTaskById(card.dataset.cardId));
-});
-
-  detailModal.addEventListener("click", (event) => {
-    if (event.target === detailModal) closeDetailModal();
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && detailModal.classList.contains("is-open")) {
-      closeDetailModal();
-    }
-  });
+  const progress = getTaskProgress(task);
+  const bar = card.querySelector(".board-progress-bar span");
+  const label = card.querySelector(".board-progress-label");
+  card.querySelector(".board-card-title").textContent = task.title;
+  card.querySelector(".board-card-description").textContent = task.description;
+  if (bar) bar.style.width = `${progress.width}%`;
+  if (label) label.textContent = progress.label;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+/**
+ * Deletes a task from the data, the saved state and the board.
+ *
+ * @param {string} taskId - Id of the task.
+ * @returns {void}
+ */
+function deleteTask(taskId) {
+  const taskIndex = tasks.findIndex((task) => task.id === taskId);
+  if (taskIndex === -1) return;
+  const boardState = loadBoardState();
+  tasks.splice(taskIndex, 1);
+  delete boardState[taskId];
+  saveBoardState(boardState);
+  renderBoard();
+}
+
+/**
+ * Closes the task detail dialog and clears its content.
+ *
+ * @returns {void}
+ */
+function closeDetailModal() {
+  taskDetailModal.classList.remove("is-open");
+  taskDetailModal.setAttribute("aria-hidden", "true");
+  taskDetailRoot.innerHTML = "";
+  taskDetailRoot.removeAttribute("data-task-id");
+}
+
+/**
+ * Opens the task detail dialog.
+ *
+ * @param {Object|null} task - The task to show.
+ * @returns {void}
+ */
+function openDetailModal(task) {
+  if (!task) return;
+  taskDetailRoot.innerHTML = renderTaskDetail(task);
+  taskDetailRoot.dataset.taskId = task.id;
+  taskDetailModal.classList.add("is-open");
+  taskDetailModal.setAttribute("aria-hidden", "false");
+}
+
+/**
+ * Handles the delete and edit buttons of the detail dialog.
+ *
+ * @param {MouseEvent} event - The click event.
+ * @returns {void}
+ */
+function handleDetailAction(event) {
+  const action = event.target.closest("[data-action]");
+  const task = getTaskById(taskDetailRoot.dataset.taskId);
+  if (!action || !task) return;
+  if (action.dataset.action === "delete-task") {
+    if (!window.confirm("Delete this task?")) return;
+    deleteTask(task.id);
+    closeDetailModal();
+  } else if (action.dataset.action === "edit-task") {
+    closeDetailModal();
+    openAddTaskEditModal(task);
+  }
+}
+
+/**
+ * Routes clicks inside the detail dialog to closing or to an action.
+ *
+ * @param {MouseEvent} event - The click event.
+ * @returns {void}
+ */
+function handleDetailRootClick(event) {
+  if (event.target.closest(".board-detail-close")) closeDetailModal();
+  else handleDetailAction(event);
+}
+
+/**
+ * Stores the done state of a subtask when its checkbox changes.
+ *
+ * @param {Event} event - The change event.
+ * @returns {void}
+ */
+function handleSubtaskToggle(event) {
+  const checkbox = event.target.closest(".board-detail-subtask input[type='checkbox']");
+  const task = getTaskById(taskDetailRoot.dataset.taskId);
+  if (!checkbox || !task || !Array.isArray(task.subtasks)) return;
+  const subtask = task.subtasks[Number(checkbox.dataset.subtaskIndex)];
+  if (!subtask) return;
+  subtask.done = checkbox.checked;
+  syncCardContent(task);
+}
+
+/**
+ * Opens the detail dialog when a task card is clicked.
+ *
+ * @param {MouseEvent} event - The click event.
+ * @returns {void}
+ */
+function handleCardClick(event) {
+  if (event.target.closest(".board-card-move-button")) return;
+  const card = event.target.closest(".board-card--task");
+  if (card) openDetailModal(getTaskById(card.dataset.cardId));
+}
+
+/**
+ * Closes the detail dialog when Escape is pressed.
+ *
+ * @param {KeyboardEvent} event - The keydown event.
+ * @returns {void}
+ */
+function handleDetailEscape(event) {
+  const isOpen = taskDetailModal.classList.contains("is-open");
+  if (event.key === "Escape" && isOpen) closeDetailModal();
+}
+
+/**
+ * Closes the detail dialog when its dark backdrop is clicked.
+ *
+ * @param {MouseEvent} event - The click event.
+ * @returns {void}
+ */
+function handleDetailBackdropClick(event) {
+  if (event.target === taskDetailModal) closeDetailModal();
+}
+
+/**
+ * Sets up the task detail dialog.
+ *
+ * @returns {void}
+ */
+function initTaskDetailModal() {
+  if (!boardMainContainer || !taskDetailModal || !taskDetailRoot) return;
+  taskDetailRoot.addEventListener("click", handleDetailRootClick);
+  taskDetailRoot.addEventListener("change", handleSubtaskToggle);
+  boardMainContainer.addEventListener("click", handleCardClick);
+  taskDetailModal.addEventListener("click", handleDetailBackdropClick);
+  document.addEventListener("keydown", handleDetailEscape);
+}
+
+/**
+ * Initializes all parts of the board page.
+ *
+ * @returns {void}
+ */
+function initBoardPage() {
   syncBoardMobileNavigation();
   initBoardLayout();
   initBoardMoveMenu();
   initAddTaskModal();
   initTaskDetailModal();
-});
+}
 
+document.addEventListener("DOMContentLoaded", initBoardPage);
 window.addEventListener("resize", syncBoardMobileNavigation);

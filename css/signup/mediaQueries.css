@@ -20,12 +20,10 @@
     gap: 12px;
   }
 
- 
-    .auth-panel {
-            height: auto;
+  .auth-panel {
+    height: auto;
     width: min(600px, 100%);
     }
-
 }
 
 @media (max-width: 640px) {
@@ -41,7 +39,6 @@
 }
 
 @media (max-width: 576px) {
-
   .content-card {
     padding: 32px 16px;
   }
@@ -51,6 +48,7 @@
   .page {
     justify-content: start;
   }
+
   .page-header {
     position: relative;
     padding: 24px 0 16px;
