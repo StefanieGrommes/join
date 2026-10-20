@@ -1,17 +1,4 @@
-// ==========================================
-// APP DATA / ALLGEMEINE DATENBANK
-// ==========================================
-// Diese Datei enthält alle Daten, die nicht direkt Kontakte sind:
-// - Info-Seiten
-// - Navigation
-// - Aufgaben / Tasks
-// - Board-Spalten
-// ==========================================
-
-// Inhalte der Info-Seiten. Jede Seite hat Titel, Einleitung und Abschnitte
-// (heading + content-Absätze). Gerendert über renderInfoPage() in templates.js.
 const infoPages = {
-  // Hilfeseite (Help).
   help: {
     title: 'Help',
     intro: 'Here you can find the most important information about how Join works and how you can use it efficiently.',
@@ -43,7 +30,6 @@ const infoPages = {
     ]
   },
 
-  // Datenschutzerklärung (Privacy Policy).
   privacy: {
     title: 'Privacy Policy',
     intro: 'This privacy policy explains what data we collect, why we collect it, and how we protect it.',
@@ -72,7 +58,6 @@ const infoPages = {
     ]
   },
 
-  // Impressum (Legal Notice).
   legal: {
     title: 'Legal Notice',
     intro: 'The following information provides the legal details about the operator and the responsibilities of the application.',
@@ -102,8 +87,6 @@ const infoPages = {
   }
 };
 
-// Hauptnavigation der Sidebar: id = Ziel-Seite, label = Text, icon = Symbol.
-// Wird in renderSidebar() (templates.js) zu Buttons gerendert.
 const navigationItems = [
   { id: 'summary', label: 'Summary', icon: '▣' },
   { id: 'add-task', label: 'Add Task', icon: '＋' },
@@ -111,18 +94,13 @@ const navigationItems = [
   { id: 'contacts', label: 'Contacts', icon: '◉' }
 ];
 
-// Links im unteren Bereich der Sidebar (Help, Privacy, Legal).
 const footerNavigationItems = [
   { id: 'help', label: 'Help', href: '#help' },
   { id: 'privacy', label: 'Privacy Policy', href: '#privacy' },
   { id: 'legal', label: 'Legal notice', href: '#legal' }
 ];
 
-// Beispiel-Aufgaben für das Board. Wichtige Felder:
-// id = eindeutige Kennung (data-card-id der Karte), status = Board-Spalte,
-// assignedTo = Kontakt-Initialen (siehe contacts.js), subtasks = Teilaufgaben mit done-Status.
 const tasks = [
-  // Task 1: User Story, Hälfte der Subtasks erledigt.
   {
     id: 'done-task-card',
     title: 'Kochwelt Page & Recipe Recommender',
@@ -141,7 +119,6 @@ const tasks = [
     progress: 50,
     badge: 'User Story'
   },
-  // Task 2: Technical Task, alle Subtasks erledigt.
   {
     id: 'technical-task-card',
     title: 'CSS Architecture Planning',
@@ -162,7 +139,6 @@ const tasks = [
   }
 ];
 
-// Die vier Spalten des Boards: id (data-column im HTML), Überschrift und Farbe.
 const boardColumns = [
   { id: 'todo', title: 'To do', color: '#e7f1ff' },
   { id: 'in-progress', title: 'In progress', color: '#f4d5f7' },

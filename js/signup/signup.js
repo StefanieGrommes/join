@@ -1,118 +1,101 @@
+
 /**
- * Prüft, ob der Name mindestens 2 Zeichen lang ist.
- *
- * @param {string} value - Eingegebener Name.
- * @returns {boolean} True, wenn der Name gültig ist.
+ * Checks whether the signup name contains at least two characters.
+ * @param {string} value - The entered name.
+ * @returns {boolean} Whether the name is valid.
  */
 function isValidSignupName(value) {
-  // Leerzeichen entfernen und Länge prüfen.
   return value.trim().length >= 2;
 }
 
-
 /**
- * Prüft, ob die E-Mail das Format "text@text.endung" hat.
- *
- * @param {string} value - Eingegebene E-Mail.
- * @returns {boolean} True, wenn die E-Mail gültig ist.
+ * Checks whether the email address has a valid format.
+ * @param {string} value - The entered email address.
+ * @returns {boolean} Whether the email is valid.
  */
 function isValidSignupEmail(value) {
-
-  // Regex: keine Leerzeichen, genau ein "@", danach ein Punkt mit Endung.
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
 /**
- * Prüft die Passwortregeln: mind. 8 Zeichen, ein Groß- und ein Kleinbuchstabe.
- *
- * @param {string} value - Eingegebenes Passwort.
- * @returns {boolean} True, wenn das Passwort alle Regeln erfüllt.
+ * Checks the password length and letter case requirements.
+ * @param {string} value - The entered password.
+ * @returns {boolean} Whether the password is valid.
  */
 function isValidSignupPassword(value) {
-
-  // Unicode-Kategorien erkennen auch Buchstaben wie Ä und ü.
   return value.length >= 8 && /\p{Lu}/u.test(value) && /\p{Ll}/u.test(value);
 }
 
-/** Current email error message; only updated on blur. */
 let signupEmailMessage = "";
 
 /**
- * Collects all currently active feedback messages for the signup form.
- *
- * @returns {string[]} Messages in display order, empty if everything is valid.
+ * Collects all active signup feedback messages.
+ * @returns {string[]} The current feedback messages.
  */
 function getSignupFeedbackMessages() {
   const password = document.getElementById("signup-password");
   const confirmation = document.getElementById("signup-confirm-password");
-  const missing = password.value.length > 0 ? getMissingPasswordRules(password.value) : [];
-  const mismatch = confirmation.value.length > 0 && confirmation.value !== password.value;
+  const missing = getMissingPasswordRules(password?.value || "");
+  const mismatch = confirmation?.value && confirmation.value !== password?.value;
   const messages = [];
   if (signupEmailMessage) messages.push(signupEmailMessage);
-  if (missing.length) messages.push(`Password needs: ${missing.join(", ")}.`);
+  if (missing.length && password.value) messages.push(`Password needs: ${missing.join(", ")}.`);
   if (mismatch) messages.push("Passwords don't match. Please try again.");
   return messages;
 }
 
 /**
- * Sets the aria-invalid state on the email, password and confirmation fields.
- *
+ * Updates accessibility validation states for signup fields.
  * @returns {void}
  */
 function updateSignupAriaState() {
+  const email = document.getElementById("signup-email");
   const password = document.getElementById("signup-password");
   const confirmation = document.getElementById("signup-confirm-password");
-  const invalidPassword = password.value.length > 0 && !isValidSignupPassword(password.value);
-  const mismatch = confirmation.value.length > 0 && confirmation.value !== password.value;
-  document.getElementById("signup-email").setAttribute("aria-invalid", String(signupEmailMessage !== ""));
-  password.setAttribute("aria-invalid", String(invalidPassword));
-  confirmation.setAttribute("aria-invalid", String(mismatch));
+  if (email) email.setAttribute("aria-invalid", String(!!signupEmailMessage));
+  if (password) password.setAttribute("aria-invalid", String(!!password.value && !isValidSignupPassword(password.value)));
+  if (confirmation) confirmation.setAttribute("aria-invalid", String(!!confirmation.value && confirmation.value !== password?.value));
 }
 
 /**
- * Renders all feedback messages into the single feedback area
- * between the confirmation field and the privacy checkbox.
- *
+ * Renders signup feedback and updates accessibility states.
  * @returns {void}
  */
 function renderSignupFeedback() {
   const box = document.getElementById("signup-feedback");
-  const lines = getSignupFeedbackMessages().map((text) => {
+  const lines = getSignupFeedbackMessages().map((message) => {
     const line = document.createElement("p");
-    line.textContent = text;
+    line.textContent = message;
     return line;
   });
-  box.replaceChildren(...lines);
+  if (box) box.replaceChildren(...lines);
   updateSignupAriaState();
 }
 
 /**
- * Validates the email field and re-renders the feedback area.
- * Called when the email field loses focus.
- *
+ * Validates the email field when it loses focus.
  * @returns {void}
  */
 function validateSignupEmailOnBlur() {
   const email = document.getElementById("signup-email");
+  if (!email) return;
   signupEmailMessage = getEmailError(email.value);
   renderSignupFeedback();
 }
 
 /**
- * Attaches the blur listener to the email field.
- *
+ * Registers the signup email blur listener.
  * @returns {void}
  */
 function bindSignupEmailBlur() {
-  const email = document.getElementById("signup-email");
-  if (email) email.addEventListener("blur", validateSignupEmailOnBlur);
+  document.getElementById("signup-email")
+    ?.addEventListener("blur", validateSignupEmailOnBlur);
 }
 
 /**
- * Liefert die noch nicht erfüllten Passwortregeln als Textliste.
- *
- * @param {string} value - Eingegebenes Passwort.
- * @returns {string[]} Fehlende Regeln, leer wenn alles erfüllt ist.
+ * Returns the password requirements that are not yet satisfied.
+ * @param {string} value - The entered password.
+ * @returns {string[]} The missing password requirements.
  */
 function getMissingPasswordRules(value) {
   const missing = [];
@@ -123,10 +106,9 @@ function getMissingPasswordRules(value) {
 }
 
 /**
- * Returns an error message for the given email or an empty string if it is valid.
- *
- * @param {string} value - Entered email address.
- * @returns {string} Error message, empty if the email is valid.
+ * Returns a specific validation error for an email address.
+ * @param {string} value - The entered email address.
+ * @returns {string} The error message or an empty string.
  */
 function getEmailError(value) {
   const email = value.trim();
@@ -144,179 +126,143 @@ function getEmailError(value) {
 }
 
 /**
- * Sperrt den Sign-up-Button, bis alle Felder gültig sind
- * und die Datenschutz-Checkbox angehakt ist.
- *
+ * Checks whether a signup field contains a valid value.
+ * @param {HTMLInputElement} field - The field to validate.
+ * @param {HTMLFormElement} form - The signup form.
+ * @returns {boolean} Whether the field is valid.
+ */
+function isSignupFieldValid(field, form) {
+  const value = field.value;
+  const validators = {
+    "signup-name": isValidSignupName,
+    "signup-email": isValidSignupEmail,
+    "signup-password": isValidSignupPassword
+  };
+  if (field.id === "signup-confirm-password") {
+    return value.length >= 8 && value === form.querySelector("#signup-password")?.value;
+  }
+  return validators[field.id] ? validators[field.id](value) : true;
+}
+
+/**
+ * Checks whether all required signup fields are valid.
+ * @param {HTMLFormElement} form - The signup form.
+ * @returns {boolean} Whether all fields are valid.
+ */
+function areSignupFieldsValid(form) {
+  const selectors = ["#signup-name", "#signup-email", "#signup-password", "#signup-confirm-password"];
+  return selectors.every((selector) => {
+    const field = form.querySelector(selector);
+    return !!field && isSignupFieldValid(field, form);
+  });
+}
+
+/**
+ * Updates signup feedback and the submit button state.
+ * @param {HTMLFormElement} form - The signup form.
+ * @param {HTMLInputElement} policyCheckbox - The privacy checkbox.
+ * @param {HTMLButtonElement} signupButton - The submit button.
+ * @returns {void}
+ */
+function updateSignupButtonState(form, policyCheckbox, signupButton) {
+  renderSignupFeedback();
+  signupButton.disabled = !(areSignupFieldsValid(form) && policyCheckbox.checked);
+}
+
+/**
+ * Registers input and checkbox listeners for signup validation.
+ * @returns {void}
  */
 function setupPrivacyCheckboxGate() {
-  // Checkbox "I accept the Privacy policy".
   const policyCheckbox = document.querySelector("#privacy-policy-checkbox");
-  // Sign-up-Button.
   const signupButton = document.querySelector("#signup-submit-button");
-  // Gesamtes Formular.
   const form = document.querySelector("#signup-form");
-
-  // Fehlt eines der Elemente, nichts tun (z. B. auf anderen Seiten).
   if (!policyCheckbox || !signupButton || !form) return;
-
-  // Prüft alle Felder und schaltet den Button an/aus.
-  const updateButtonState = () => {
-    renderSignupFeedback();
-    const fieldsValid = [
-      form.querySelector("#signup-name"),
-      form.querySelector("#signup-email"),
-      form.querySelector("#signup-password"),
-      form.querySelector("#signup-confirm-password")
-    ].every((field) => {
-      // Feld existiert nicht -> nicht blockieren.
-      if (!field) return true;
-      // Aktueller Wert des Feldes.
-      const value = field.value;
-      // Je nach Feld-ID die passende Prüffunktion verwenden.
-      if (field.id === "signup-name") return isValidSignupName(value);
-      if (field.id === "signup-email") return isValidSignupEmail(value);
-      if (field.id === "signup-password") return isValidSignupPassword(value);
-      // Bestätigung: mind. 8 Zeichen und identisch mit dem Passwort.
-      if (field.id === "signup-confirm-password") return value.length >= 8 && value === form.querySelector("#signup-password")?.value;
-      return true;
-    });
-
-    // Button nur aktiv, wenn alle Felder gültig sind UND die Checkbox angehakt ist.
-    signupButton.disabled = !(fieldsValid && policyCheckbox.checked);
-  };
-
-  // Bei jeder Eingabe und beim Verlassen eines Feldes neu prüfen.
+  const update = () => updateSignupButtonState(form, policyCheckbox, signupButton);
   form.querySelectorAll("input").forEach((input) => {
-    input.addEventListener("input", updateButtonState);
-    input.addEventListener("blur", updateButtonState);
+    input.addEventListener("input", update);
+    input.addEventListener("blur", update);
   });
-
-  // Beim An-/Abhaken der Checkbox neu prüfen.
-  policyCheckbox.addEventListener("change", updateButtonState);
-
-  // Einmal direkt beim Start prüfen (Button ist anfangs deaktiviert).
-  updateButtonState();
+  policyCheckbox.addEventListener("change", update);
+  update();
 }
+
 /**
- * Validiert das komplette Formular vor dem Absenden.
- *
- * @returns {boolean} True, wenn alle Felder und die Checkbox gültig sind.
+ * Validates all required signup fields and the privacy checkbox.
+ * @returns {boolean} Whether the complete form is valid.
  */
 function validateSignupForm() {
-  // Formular holen; ohne Formular ist nichts gültig.
   const form = document.querySelector("#signup-form");
-  if (!form) return false;
-
-  // Alle benötigten Felder aus dem Formular holen.
-  const nameInput = form.querySelector("#signup-name");
-  const emailInput = form.querySelector("#signup-email");
-  const passwordInput = form.querySelector("#signup-password");
-  const confirmPasswordInput = form.querySelector("#signup-confirm-password");
   const policyCheckbox = document.querySelector("#privacy-policy-checkbox");
-
-  // Liste aus Feld + Prüfergebnis ("ok"); "|| ''" schützt vor fehlenden Feldern.
-  const validations = [
-    { field: nameInput, ok: isValidSignupName(nameInput?.value || "") },
-    { field: emailInput, ok: isValidSignupEmail(emailInput?.value || "") },
-    { field: passwordInput, ok: isValidSignupPassword(passwordInput?.value || "") },
-    {
-      field: confirmPasswordInput,
-      ok: !!confirmPasswordInput && confirmPasswordInput.value === passwordInput?.value && confirmPasswordInput.value.length >= 8
-    },
-    { field: policyCheckbox, ok: !!policyCheckbox && policyCheckbox.checked }
-  ];
-
-
-
-  // Nur true, wenn jede Prüfung "ok" ist.
-  return validations.every((item) => item.ok);
+  return !!form && !!policyCheckbox && areSignupFieldsValid(form) && policyCheckbox.checked;
 }
 
-
 /**
- * Zeigt das Erfolgs-Overlay "You Signed Up successfully"
- * und leitet nach 2 Sekunden weiter.
+ * Displays the signup success overlay and schedules redirection.
+ * @returns {void}
  */
 function showSignupSuccess() {
-  // Overlay-Element aus signup.html.
   const overlay = document.getElementById("signup-success-overlay");
-  // Overlay sichtbar machen.
+  if (!overlay) return;
   overlay.hidden = false;
-  // Erfolgstext in das Overlay schreiben.
   overlay.querySelector(".signup-success-message").textContent = "You Signed Up successfully";
-  // Nach 2 Sekunden zur Summary-Seite weiterleiten.
   window.setTimeout(redirectAfterSignup, 2000);
 }
 
-
 /**
- * Leitet nach erfolgreicher Registrierung zur Summary-Seite weiter.
+ * Redirects the user to the summary page after signup.
+ * @returns {void}
  */
 function redirectAfterSignup() {
-  // Pfad relativ zu pages/signup.html -> pages/summary.html.
   window.location.href = "./summary.html";
 }
 
+/**
+ * Completes the demo signup and displays the success overlay.
+ * @param {HTMLFormElement} form - The signup form.
+ * @param {HTMLButtonElement} signupButton - The submit button.
+ * @returns {void}
+ */
+function completeSignup(form, signupButton) {
+  const name = form.querySelector("#signup-name").value.trim();
+  window.sessionStorage.setItem("join-demo-name", name);
+  window.sessionStorage.setItem("join-session-mode", "demo");
+  signupButton.textContent = "Signed up";
+  showSignupSuccess();
+}
 
 /**
- * Initialisiert die Signup-Seite: blendet sie ein, übernimmt den
- * Formularversand und aktiviert die Button-Sperre.
+ * Handles signup form submission and validates the entered data.
+ * @param {SubmitEvent} event - The form submission event.
+ * @returns {void}
+ */
+function handleSignupSubmit(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const signupButton = document.querySelector("#signup-submit-button");
+  if (!validateSignupForm() || !signupButton) {
+    if (signupButton) signupButton.disabled = true;
+    return;
+  }
+  signupButton.disabled = true;
+  signupButton.textContent = "Signing up...";
+  form.inert = true;
+  window.setTimeout(() => completeSignup(form, signupButton), 700);
+}
+
+/**
+ * Initializes the signup page and its form validation.
+ * @returns {void}
  */
 function initSignupPage() {
-  const page = document.querySelector(".signup-page");
-
-  // Seite per CSS-Klasse "ready" einblenden.
-  if (page) {
-    page.classList.add("ready");
-  }
-
-  // Formular und Sign-up-Button holen.
+  document.querySelector(".signup-page")?.classList.add("ready");
   const form = document.querySelector("#signup-form");
-  const signupButton = document.querySelector("#signup-submit-button");
-
   if (form) {
-
-    // Browser-eigene Validierungs-Popups abschalten, wir validieren selbst.
     form.noValidate = true;
-    // Beim Absenden des Formulars ...
-    form.addEventListener("submit", (event) => {
-      // ... Seiten-Reload verhindern.
-      event.preventDefault();
-
-      // Formular ungültig -> Button sperren und abbrechen.
-      if (!validateSignupForm()) {
-        signupButton.disabled = true;
-        return;
-      }
-
-      // Sicherheitshalber: ohne Button nichts weiter tun.
-      if (!signupButton) return;
-
-      // Button sperren und Ladezustand anzeigen.
-      signupButton.disabled = true;
-      signupButton.textContent = "Signing up...";
-
-      // Gesamtes Formular nicht mehr bedienbar machen.
-      form.inert = true;
-
-      // Kurze Verzögerung simuliert das Speichern (kein echtes Backend).
-      window.setTimeout(() => {
-        // Vorhandenen Demo-Sitzungsmodus nutzen, damit der Header die Initialen anzeigt.
-        const name = form.querySelector("#signup-name").value.trim();
-        window.sessionStorage.setItem("join-demo-name", name);
-        window.sessionStorage.setItem("join-session-mode", "demo");
-        // Button-Text auf "Signed up" ändern.
-        signupButton.textContent = "Signed up";
-        // Erfolgs-Overlay anzeigen und danach weiterleiten.
-        showSignupSuccess();
-      }, 700);
-    });
+    form.addEventListener("submit", handleSignupSubmit);
   }
-
-  // Button-Sperre (Felder + Checkbox) einrichten.
   setupPrivacyCheckboxGate();
   bindSignupEmailBlur();
 }
 
-// Sobald das HTML geladen ist, die Signup-Seite initialisieren.
 window.addEventListener("DOMContentLoaded", initSignupPage);

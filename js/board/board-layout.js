@@ -611,9 +611,11 @@ function handleColumnAddClick(event) {
  */
 function initBoardLayout() {
   const searchButton = document.querySelector(".board-search-button");
+  const searchInput = document.querySelector(".board-search-field input");
   if (!boardMainContainer) return;
   getBoardColumns().forEach(bindColumnDropEvents);
   boardMainContainer.addEventListener("click", handleColumnAddClick);
+  if (searchInput) searchInput.addEventListener("input", runBoardSearch);
   if (searchButton) searchButton.addEventListener("click", runBoardSearch);
   renderBoard();
 }

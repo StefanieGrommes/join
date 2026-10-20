@@ -1,236 +1,189 @@
 /**
- * Öffnet den Dialog zum Hinzufügen eines Kontakts.
- *
+ * Opens the contact dialog as a modal.
  * @returns {void}
  */
 function showDialog() {
-  // Erstes <dialog>-Element der Seite holen.
   const dialog = document.querySelector("dialog");
-  // Nur öffnen, wenn es existiert (als Modal mit Hintergrund).
-  if (dialog) {
-    dialog.showModal();
-  }
+  if (dialog) dialog.showModal();
 }
 
 /**
- * Schließt den Dialog zum Hinzufügen eines Kontakts.
- *
+ * Closes the contact dialog.
  * @returns {void}
  */
 function closeDialog() {
-  // Erstes <dialog>-Element der Seite holen.
   const dialog = document.querySelector("dialog");
-  // Nur schließen, wenn es existiert.
-  if (dialog) {
-    dialog.close();
-  }
+  if (dialog) dialog.close();
 }
 
 /**
- * Zeigt eine Fehlermeldung im passenden Toast-Bereich an.
- *
- * @param {string} message - Die Anzeigemeldung.
- * @param {HTMLInputElement|null} [input=null] - Das betroffene Feld.
+ * Displays a toast message for four seconds.
+ * @param {string} message - The message to display.
+ * @param {HTMLInputElement|null} [input=null] - The related input.
  * @returns {void}
  */
 function showToastMessage(message, input = null) {
-  // Ziel-Toast aus data-toast-id des Feldes, sonst Standard "toast-wrapper-mail".
-  const toastId = input && input.dataset.toastId ? input.dataset.toastId : "toast-wrapper-mail";
-  // Toast-Element holen (Fallback siehe Zeile darunter).
-  const toast = document.getElementById(toastId) || document.getElementById("toast-wrapper-mail");
-
-  // Kein Toast-Element -> abbrechen.
+  const toastId = input?.dataset.toastId || "toast-wrapper-mail";
+  const toast = document.getElementById(toastId)
+    || document.getElementById("toast-wrapper-mail");
   if (!toast) return;
-
-  // Läuft noch ein alter Ausblend-Timer, diesen stoppen.
-  if (toast.dataset.timeoutId) {
-    clearTimeout(Number(toast.dataset.timeoutId));
-  }
-
-  // Meldung eintragen und Toast per CSS-Klasse einblenden.
+  clearTimeout(Number(toast.dataset.timeoutId));
   toast.textContent = message;
   toast.classList.add("show");
-
-  // Nach 4 Sekunden wieder ausblenden und Text leeren.
-  const timeoutId = setTimeout(() => {
+  toast.dataset.timeoutId = setTimeout(() => {
     toast.classList.remove("show");
     toast.textContent = "";
   }, 4000);
-
-  // Timer-id merken, damit er bei einer neuen Meldung abgebrochen werden kann.
-  toast.dataset.timeoutId = String(timeoutId);
 }
 
 /**
- * Prüft, ob der Name aus Vor- und Nachname besteht.
- *
- * @param {string} value - Der eingegebene Name.
- * @returns {boolean} True, wenn der Name gültig ist.
+ * Checks whether a name contains a first and last name.
+ * @param {string} value - The name to validate.
+ * @returns {boolean} Whether the name is valid.
  */
 function isValidName(value) {
-  // Mindestens 2 Zeichen und mindestens zwei durch Leerzeichen getrennte Teile.
-  return value.trim().length >= 2 && value.trim().split(" ").length >= 2;
+  return value.trim().split(/\s+/).filter(Boolean).length >= 2;
 }
 
 /**
- * Prüft, ob eine E-Mail-Adresse gültig ist.
- *
- * @param {string} value - Die eingegebene E-Mail.
- * @returns {boolean} True, wenn die E-Mail gültig ist.
+ * Checks whether an email address has a valid format.
+ * @param {string} value - The email address to validate.
+ * @returns {boolean} Whether the email is valid.
  */
 function isValidEmail(value) {
-  // Regex: Text, genau ein "@", Domain mit Punkt und Endung.
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
 /**
- * Prüft, ob eine Telefonnummer gültig ist.
- *
- * @param {string} phoneNr - Die eingegebene Telefonnummer.
- * @returns {boolean} True, wenn die Telefonnummer gültig ist.
+ * Checks whether a phone number contains at least nine digits.
+ * @param {string} phoneNumber - The phone number to validate.
+ * @returns {boolean} Whether the phone number is valid.
  */
-function isValidPhoneNr(phoneNr) {
-  // Leerzeichen sowie + ( ) - entfernen, damit nur Ziffern übrig bleiben.
-  const cleanPhoneNr = phoneNr.replace(/\s+/g, "").replace(/[+()\-]/g, "");
-  // Mindestens 9 Zeichen und ausschließlich Ziffern.
-  return cleanPhoneNr.length >= 9 && /^\d+$/.test(cleanPhoneNr);
+function isValidPhoneNumber(phoneNumber) {
+  const digits = phoneNumber.replace(/[^\d]/g, "");
+  return digits.length >= 9 && /^[\d\s+()\-]+$/.test(phoneNumber);
 }
 
 /**
- * Checks a field without changing its visual state.
- * @param {HTMLInputElement} input  - The field to check
- * @returns {boolean} True if the value is valid
+ * Determines the validation result based on the input placeholder.
+ * @param {HTMLInputElement} input - The input to validate.
+ * @returns {boolean} Whether the input value is valid.
  */
 function isFieldValid(input) {
-  let value = input.value.trim();
-  let placeholder = (input.placeholder || "").toLocaleLowerCase();
+  const value = input.value.trim();
+  const placeholder = (input.placeholder || "").toLowerCase();
   if (placeholder.includes("name")) return isValidName(value);
   if (placeholder.includes("email")) return isValidEmail(value);
-  if (placeholder.includes("phone")) return isValidPhoneNr(value);
+  if (placeholder.includes("phone")) return isValidPhoneNumber(value);
   return true;
 }
 
-
-
-
 /**
- * Validiert ein Formularfeld und setzt den Fehlerzustand.
- *
- * @param {HTMLInputElement|null} input - Das zu prüfende Feld.
- * @returns {boolean} True, wenn das Feld gültig ist.
+ * Validates an input and updates its visual error state.
+ * @param {HTMLInputElement|null} input - The input to validate.
+ * @returns {boolean} Whether the input is valid.
  */
 function validateContactField(input) {
-  // Kein Feld -> als gültig werten.
   if (!input) return true;
-
-  // Eingabewert ohne Leerzeichen am Rand.
-  const value = input.value.trim();
-  // Feldtyp wird am Platzhalter erkannt ("name", "email", "phone").
-  const placeholder = (input.placeholder || "").toLowerCase();
-
-  // Namensfeld prüfen; ungültig -> rot markieren und Toast anzeigen.
-  if (placeholder.includes("name")) {
-    const isValid = isValidName(value);
-    input.setAttribute("aria-invalid", String(!isValid));
-    input.classList.toggle("is-invalid", !isValid);
-    if (!isValid) {
-      showToastMessage("Please enter first and last name", input);
-    }
-    return isValid;
-  }
-
-  // E-Mail-Feld prüfen; ungültig -> rot markieren und Toast anzeigen.
-  if (placeholder.includes("email")) {
-    const isValid = isValidEmail(value);
-    input.setAttribute("aria-invalid", String(!isValid));
-    input.classList.toggle("is-invalid", !isValid);
-    if (!isValid) {
-      showToastMessage("Please enter a valid email address.", input);
-    }
-    return isValid;
-  }
-
-  // Telefonfeld prüfen; ungültig -> rot markieren und Toast anzeigen.
-  if (placeholder.includes("phone")) {
-    const isValid = isValidPhoneNr(value);
-    input.setAttribute("aria-invalid", String(!isValid));
-    input.classList.toggle("is-invalid", !isValid);
-    if (!isValid) {
-      showToastMessage("Please enter a valid phone number.", input);
-    }
-    return isValid;
-  }
-
-  // Unbekanntes Feld -> Fehlerzustand entfernen, gilt als gültig.
-  input.setAttribute("aria-invalid", "false");
-  input.classList.remove("is-invalid");
-  return true;
+  const isValid = isFieldValid(input);
+  input.setAttribute("aria-invalid", String(!isValid));
+  input.classList.toggle("is-invalid", !isValid);
+  if (!isValid) showFieldError(input);
+  return isValid;
 }
 
 /**
- * Initialisiert das Kontaktformular mit benutzerdefinierter Validierung.
- *
+ * Displays the appropriate validation message for an input.
+ * @param {HTMLInputElement} input - The invalid input.
+ * @returns {void}
+ */
+function showFieldError(input) {
+  const placeholder = (input.placeholder || "").toLowerCase();
+  const messages = {
+    name: "Please enter first and last name.",
+    email: "Please enter a valid email address.",
+    phone: "Please enter a valid phone number."
+  };
+  const key = Object.keys(messages).find((item) =>
+    placeholder.includes(item)
+  );
+  if (key) showToastMessage(messages[key], input);
+}
+
+/**
+ * Updates the contact form submit button according to field validity.
+ * @param {HTMLInputElement[]} fields - The form input fields.
+ * @param {HTMLButtonElement|null} submitButton - The submit button.
+ * @returns {void}
+ */
+function updateSubmitButtonState(fields, submitButton) {
+  if (submitButton) {
+    submitButton.disabled = !fields.every(isFieldValid);
+  }
+}
+
+/**
+ * Initializes validation and submission for the contact form.
  * @returns {void}
  */
 function initAddContactForm() {
-  // Kontaktformular im Dialog holen; fehlt es, abbrechen.
   const form = document.querySelector(".add-contact-form");
   if (!form) return;
-
-  // Browser-Validierungs-Popups abschalten, wir validieren selbst.
   form.noValidate = true;
-
-  // Alle Eingabefelder (Name, E-Mail, Telefon).
   const fields = Array.from(form.querySelectorAll("input"));
-  // Button "Create contact".
   const submitButton = form.querySelector(".create-contact-btn");
-
-  // Formular gültig, wenn jedes Feld gültig ist.
-  const isFormValid = () => fields.every((field) => isFieldValid(field));
-
-  // Button nur aktivieren, wenn das Formular gültig ist.
-  const updateSubmitButtonState = () => {
-    if (!submitButton) return;
-    submitButton.disabled = !isFormValid();
-  };
-
-  // Für jedes Feld Startzustand setzen und Listener anhängen.
-  fields.forEach((field) => {
-    // Anfangs kein Fehlerzustand.
-    field.setAttribute("aria-invalid", "false");
-    field.classList.remove("is-invalid");
-
-    // Beim Verlassen des Feldes prüfen.
-    field.addEventListener("blur", () => {
-      validateContactField(field);
-      updateSubmitButtonState();
-    });
-
-    // Beim Tippen: nur neu prüfen, wenn das Feld schon als fehlerhaft markiert ist.
-    field.addEventListener("input", () => {
-      if (field.classList.contains("is-invalid")) {
-        validateContactField(field);
-      }
-      updateSubmitButtonState();
-    });
-  });
-
-
-
-  form.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const isValid = fields.every((field) => validateContactField(field));
-  if (!isValid) {
-    updateSubmitButtonState();
-    return; 
-  }
-  addNewContact(form); 
-  });
-
-
-  // Button-Zustand beim Start einmal setzen.
-  updateSubmitButtonState();
+  fields.forEach((field) => initContactField(field, fields, submitButton));
+  form.addEventListener("submit", (event) =>
+    handleContactSubmit(event, form, fields, submitButton)
+  );
+  updateSubmitButtonState(fields, submitButton);
 }
 
-// Formular sofort beim Laden des Skripts initialisieren.
+/**
+ * Registers validation listeners for a contact input.
+ * @param {HTMLInputElement} field - The input to initialize.
+ * @param {HTMLInputElement[]} fields - All form inputs.
+ * @param {HTMLButtonElement|null} submitButton - The submit button.
+ * @returns {void}
+ */
+function initContactField(field, fields, submitButton) {
+  field.setAttribute("aria-invalid", "false");
+  field.classList.remove("is-invalid");
+  field.addEventListener("blur", () => validateContactField(field));
+  field.addEventListener("blur", () =>
+    updateSubmitButtonState(fields, submitButton)
+  );
+  field.addEventListener("input", () => handleContactInput(field, fields, submitButton));
+}
+
+/**
+ * Revalidates an edited field and updates the submit button.
+ * @param {HTMLInputElement} field - The edited input.
+ * @param {HTMLInputElement[]} fields - All form inputs.
+ * @param {HTMLButtonElement|null} submitButton - The submit button.
+ * @returns {void}
+ */
+function handleContactInput(field, fields, submitButton) {
+  if (field.classList.contains("is-invalid")) validateContactField(field);
+  updateSubmitButtonState(fields, submitButton);
+}
+
+/**
+ * Validates and submits the contact form.
+ * @param {SubmitEvent} event - The form submission event.
+ * @param {HTMLFormElement} form - The contact form.
+ * @param {HTMLInputElement[]} fields - The form input fields.
+ * @param {HTMLButtonElement|null} submitButton - The submit button.
+ * @returns {void}
+ */
+function handleContactSubmit(event, form, fields, submitButton) {
+  event.preventDefault();
+  const isValid = fields.every(validateContactField);
+  if (!isValid) {
+    updateSubmitButtonState(fields, submitButton);
+    return;
+  }
+  addNewContact(form);
+}
+
 initAddContactForm();

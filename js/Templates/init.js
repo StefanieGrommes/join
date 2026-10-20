@@ -1,254 +1,303 @@
 
- async function init(){
-    await fetchFooterHeader();
-    renderNavFooterMobile2();
-    initNavbarButtonsBackground();
-    await initSessionData();
-    renderContactList(getSessionData("session-contacts"));
-}
+const BASE_URL = "https://join--testuser-default-rtdb.europe-west1.firebasedatabase.app/";
+let activeProfileButton = null;
+
 /**
- * this is a function that fetches the footer and header templates and inserts them into the pages
+ * Initializes shared page templates, session data, and contact rendering.
+ * @returns {Promise<void>} A promise resolved after initialization.
  */
-
-async function fetchFooterHeader() {
-    const headerResponse = await fetch('../templates/header.txt');
-    const headerHtml = await headerResponse.text();
-    document.body.insertAdjacentHTML('afterbegin', headerHtml);
-    // Gast-/Demo-Initialen in den Profilkreis des gerade eingefügten Headers schreiben.
-    updateSessionHeader();
-    initProfileMenu();
-    const footerResponse = await fetch('../templates/footer.txt');
-    const footerHtml = await footerResponse.text();
-    document.body.insertAdjacentHTML('beforeend', footerHtml);
+async function init() {
+  await fetchFooterHeader();
+  renderNavFooterMobile2();
+  initNavbarButtonsBackground();
+  await initSessionData();
+  renderContactList(getSessionData("session-contacts"));
 }
 
 /**
- * Verbindet die Profilkreise mit dem gemeinsamen Desktop-/Mobile-Menue.
+ * Fetches and inserts the shared header and footer templates.
+ * @returns {Promise<void>} A promise resolved after insertion.
+ */
+async function fetchFooterHeader() {
+  await insertTemplate("../templates/header.txt", "afterbegin");
+  updateSessionHeader();
+  initProfileMenu();
+  await insertTemplate("../templates/footer.txt", "beforeend");
+}
+
+/**
+ * Fetches a template and inserts it into the document body.
+ * @param {string} path - The template URL.
+ * @param {InsertPosition} position - The insertion position.
+ * @returns {Promise<void>} A promise resolved after insertion.
+ */
+async function insertTemplate(path, position) {
+  const response = await fetch(path);
+  if (!response.ok) throw new Error(`Failed to load template: ${path}`);
+  document.body.insertAdjacentHTML(position, await response.text());
+}
+
+/**
+ * Initializes the shared desktop and mobile profile menu.
+ * @returns {void}
  */
 function initProfileMenu() {
-    const menu = document.getElementById("profile-menu");
-    if (!menu || menu.dataset.initialized) return;
-    menu.dataset.initialized = "true";
-    const buttons = document.querySelectorAll(".profile-initials-btn, .board-mobile-profile-button");
-    let activeButton = null;
-
-    const closeMenu = (restoreFocus = false) => {
-        menu.hidden = true;
-        if (activeButton) {
-            activeButton.setAttribute("aria-expanded", "false");
-            if (restoreFocus) activeButton.focus();
-        }
-        activeButton = null;
-    };
-
-    buttons.forEach((button) => {
-        button.type = "button";
-        if (!button.hasAttribute("aria-label")) button.setAttribute("aria-label", "Profile");
-        button.setAttribute("aria-controls", menu.id);
-        button.setAttribute("aria-expanded", "false");
-        button.addEventListener("click", () => {
-            const wasOpen = activeButton === button;
-            closeMenu();
-            if (wasOpen) return;
-            activeButton = button;
-            menu.hidden = false;
-            button.setAttribute("aria-expanded", "true");
-            const rect = button.getBoundingClientRect();
-            menu.style.left = `${Math.max(8, Math.min(rect.right - menu.offsetWidth, window.innerWidth - menu.offsetWidth - 8))}px`;
-            menu.style.top = `${Math.max(8, Math.min(rect.bottom + 8, window.innerHeight - menu.offsetHeight - 8))}px`;
-            menu.querySelector("a").focus();
-        });
-    });
-
-    document.addEventListener("click", (event) => {
-        if (!menu.contains(event.target) && !Array.from(buttons).some(button => button.contains(event.target))) closeMenu();
-    });
-    document.addEventListener("keydown", (event) => {
-        if (!menu.hidden && event.key === "Escape") {
-            event.preventDefault();
-            closeMenu(true);
-        }
-    });
-    document.addEventListener("focusin", (event) => {
-        if (!menu.contains(event.target) && !Array.from(buttons).some(button => button.contains(event.target))) closeMenu();
-    });
-    window.addEventListener("resize", () => closeMenu());
-    document.addEventListener("scroll", () => closeMenu(), true);
+  const menu = document.getElementById("profile-menu");
+  if (!menu || menu.dataset.initialized) return;
+  menu.dataset.initialized = "true";
+  menu.hidden = true;
+  document.querySelectorAll(".profile-initials-btn, .board-mobile-profile-button")
+    .forEach((button) => configureProfileButton(button, menu));
+  bindProfileMenuDismissal(menu);
 }
 
 /**
- * Zeigt Gast- oder Demoinitialen in den vorhandenen Profilkreisen an.
- *
+ * Configures a profile button and its click behavior.
+ * @param {HTMLButtonElement} button - The profile button.
+ * @param {HTMLElement} menu - The shared profile menu.
+ * @returns {void}
+ */
+function configureProfileButton(button, menu) {
+  button.type = "button";
+  button.setAttribute("aria-label", button.getAttribute("aria-label") || "Profile");
+  button.setAttribute("aria-controls", menu.id);
+  button.setAttribute("aria-expanded", "false");
+  button.addEventListener("click", () => toggleProfileMenu(button, menu));
+}
+
+/**
+ * Opens or closes the profile menu for the selected button.
+ * @param {HTMLButtonElement} button - The activated profile button.
+ * @param {HTMLElement} menu - The shared profile menu.
+ * @returns {void}
+ */
+function toggleProfileMenu(button, menu) {
+  const wasActive = activeProfileButton === button && !menu.hidden;
+  closeProfileMenu(menu);
+  if (wasActive) return;
+  activeProfileButton = button;
+  menu.hidden = false;
+  button.setAttribute("aria-expanded", "true");
+  positionProfileMenu(button, menu);
+  menu.querySelector("a")?.focus();
+}
+
+/**
+ * Positions the profile menu within the visible viewport.
+ * @param {HTMLButtonElement} button - The active profile button.
+ * @param {HTMLElement} menu - The profile menu.
+ * @returns {void}
+ */
+function positionProfileMenu(button, menu) {
+  const rect = button.getBoundingClientRect();
+  const maxLeft = window.innerWidth - menu.offsetWidth - 8;
+  const maxTop = window.innerHeight - menu.offsetHeight - 8;
+  menu.style.left = `${Math.max(8, Math.min(rect.right - menu.offsetWidth, maxLeft))}px`;
+  menu.style.top = `${Math.max(8, Math.min(rect.bottom + 8, maxTop))}px`;
+}
+
+/**
+ * Closes the profile menu and optionally restores focus.
+ * @param {HTMLElement} menu - The profile menu.
+ * @param {boolean} restoreFocus - Whether to restore button focus.
+ * @returns {void}
+ */
+function closeProfileMenu(menu, restoreFocus = false) {
+  menu.hidden = true;
+  if (activeProfileButton) {
+    activeProfileButton.setAttribute("aria-expanded", "false");
+    if (restoreFocus) activeProfileButton.focus();
+  }
+  activeProfileButton = null;
+}
+
+/**
+ * Registers outside-click, focus, keyboard, and viewport listeners.
+ * @param {HTMLElement} menu - The profile menu.
+ * @returns {void}
+ */
+function bindProfileMenuDismissal(menu) {
+  document.addEventListener("click", (event) => {
+    if (!isProfileMenuTarget(event.target, menu)) closeProfileMenu(menu);
+  });
+  document.addEventListener("focusin", (event) => {
+    if (!isProfileMenuTarget(event.target, menu)) closeProfileMenu(menu);
+  });
+  document.addEventListener("keydown", (event) => handleProfileMenuKeydown(event, menu));
+  window.addEventListener("resize", () => closeProfileMenu(menu));
+  document.addEventListener("scroll", () => closeProfileMenu(menu), true);
+}
+
+/**
+ * Checks whether an element belongs to the menu or a profile button.
+ * @param {Element} target - The event target.
+ * @param {HTMLElement} menu - The profile menu.
+ * @returns {boolean} Whether the target belongs to the menu controls.
+ */
+function isProfileMenuTarget(target, menu) {
+  return menu.contains(target) ||
+    Array.from(document.querySelectorAll(".profile-initials-btn, .board-mobile-profile-button"))
+      .some((button) => button.contains(target));
+}
+
+/**
+ * Handles Escape key presses while the profile menu is open.
+ * @param {KeyboardEvent} event - The keyboard event.
+ * @param {HTMLElement} menu - The profile menu.
+ * @returns {void}
+ */
+function handleProfileMenuKeydown(event, menu) {
+  if (menu.hidden || event.key !== "Escape") return;
+  event.preventDefault();
+  closeProfileMenu(menu, true);
+}
+
+/**
+ * Updates profile buttons with guest or demo user initials.
  * @returns {void}
  */
 function updateSessionHeader() {
-    // Sitzungsmodus ("guest" oder "demo"), gesetzt in login.js.
-    const mode = window.sessionStorage.getItem("join-session-mode");
-    // Beim Demo-Login eingegebener Name, gesetzt in login.js.
-    const name = window.sessionStorage.getItem("join-demo-name");
-    // Weder Gast noch Demo mit Namen -> nichts anzeigen.
-    if (mode !== "guest" && (mode !== "demo" || !name)) return;
-    // Gast -> "G", Demo -> Initialen aus dem Namen.
-    const initials = mode === "guest" ? "G" : getDemoInitials(name);
-    // Text für Tooltip und Screenreader.
-    const label = mode === "guest" ? "Guest profile" : `${name} (demo profile)`;
-    // Alle Profil-Buttons (Desktop-Header + Board-Mobile-Leiste) mit den Initialen befüllen.
-    document.querySelectorAll(".profile-initials-btn, .board-mobile-profile-button")
-        .forEach(button => showProfileInitials(button, initials, label));
+  const mode = sessionStorage.getItem("join-session-mode");
+  const name = sessionStorage.getItem("join-demo-name");
+  if (mode !== "guest" && (mode !== "demo" || !name)) return;
+  const initials = mode === "guest" ? "G" : getDemoInitials(name);
+  const label = mode === "guest" ? "Guest profile" : `${name} (demo profile)`;
+  document.querySelectorAll(".profile-initials-btn, .board-mobile-profile-button")
+    .forEach((button) => showProfileInitials(button, initials, label));
 }
 
-
 /**
- * Ermittelt bis zu zwei Initialen aus dem Demo-Anzeigenamen.
- *
- * @param {string} name - Der eingegebene Anzeigename.
- * @returns {string} Die Initialen fuer den Profilkreis.
+ * Extracts up to two initials from a display name.
+ * @param {string} name - The display name.
+ * @returns {string} The uppercase initials.
  */
 function getDemoInitials(name) {
-    // Namen an Leerzeichen in Teile zerlegen.
-    const parts = name.trim().split(/\s+/);
-    // Mehrere Teile -> erster + letzter, sonst nur der eine Teil.
-    const selected = parts.length > 1 ? [parts[0], parts[parts.length - 1]] : parts;
-    // Jeweils ersten Buchstaben nehmen (Array.from unterstützt auch Emojis/Umlaute) und groß schreiben.
-    return selected.map(part => Array.from(part)[0]).join("").toUpperCase();
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  const selected = parts.length > 1 ? [parts[0], parts[parts.length - 1]] : parts;
+  return selected.map((part) => Array.from(part)[0] || "").join("").toUpperCase();
 }
 
-
 /**
- * Ergaenzt den Profilkreis eines Buttons um Initialen.
- *
- * @param {HTMLButtonElement} button - Der vorhandene Profilbutton.
- * @param {string} initials - Die sichtbaren Initialen.
- * @param {string} label - Der zugaengliche Profilname.
+ * Adds accessible initials to an SVG profile button.
+ * @param {HTMLButtonElement} button - The profile button.
+ * @param {string} initials - The initials to display.
+ * @param {string} label - The accessible profile label.
  * @returns {void}
  */
 function showProfileInitials(button, initials, label) {
-    // Kreis-SVG im Button.
-    const svg = button.querySelector("svg");
-    // Kein SVG -> nichts zu tun.
-    if (!svg) return;
-    // Initialen schon vorhanden -> nicht doppelt einfügen.
-    if (svg.querySelector(".guest-profile-initial")) return;
-    // Neues SVG-<text>-Element (muss mit SVG-Namespace erstellt werden).
-    const initial = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    const attributes = {x: "28", y: "28", "text-anchor": "middle", "dominant-baseline": "central", fill: "#2A3647", "font-size": "20", "font-weight": "700", "font-family": "Inter, sans-serif", class: "guest-profile-initial"};
-    // Alle Attribute (Position, Zentrierung, Farbe, Klasse ...) auf das <text>-Element setzen.
-    Object.entries(attributes).forEach(([name, value]) => initial.setAttribute(name, value));
-    // Initialen als Text eintragen.
-    initial.textContent = initials;
-    // <text> in den Kreis einfügen.
-    svg.appendChild(initial);
-    // Beschriftung für Screenreader.
-    button.setAttribute("aria-label", label);
-    // Tooltip beim Hovern.
-    button.setAttribute("title", label);
+  const svg = button.querySelector("svg");
+  if (!svg || svg.querySelector(".guest-profile-initial")) return;
+  const initial = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  Object.entries(getProfileInitialAttributes()).forEach(([key, value]) => initial.setAttribute(key, value));
+  initial.textContent = initials;
+  svg.appendChild(initial);
+  button.setAttribute("aria-label", label);
+  button.setAttribute("title", label);
 }
-
 
 /**
- * this is a function that checks which html path is active and sets the background-color of the navbar
+ * Returns SVG attributes for the profile initials.
+ * @returns {Object<string, string>} The SVG text attributes.
  */
-
-function initNavbarButtonsBackground(){
-const links = document.querySelectorAll(".nav-btn a");
-const currentPage = window.location.pathname.split("/").pop();
-links.forEach(link => {
-    const linkPage = link.getAttribute("href").split("/").pop();
-    if (currentPage === linkPage) {
-        link.closest(".nav-btn").classList.add("is-active");
-    }
-});
+function getProfileInitialAttributes() {
+  return {
+    x: "28", y: "28", "text-anchor": "middle", "dominant-baseline": "central",
+    fill: "#2A3647", "font-size": "20", "font-weight": "700",
+    "font-family": "Inter, sans-serif", class: "guest-profile-initial"
+  };
 }
 
-function renderNavFooterMobile2(){
-    const navfooterMobile = document.getElementById("nav-footer-mobile");
-    const currentPage = window.location.pathname.split("/").pop();
-    if(currentPage === "privacy-notice.html" || currentPage === "legal-notice.html") {
-        navfooterMobile.innerHTML = displayNavFooterMobilePolicy();
+/**
+ * Highlights the navigation link matching the current page.
+ * @returns {void}
+ */
+function initNavbarButtonsBackground() {
+  const currentPage = window.location.pathname.split("/").pop();
+  document.querySelectorAll(".nav-btn a").forEach((link) => {
+    if (link.getAttribute("href")?.split("/").pop() === currentPage) {
+      link.closest(".nav-btn")?.classList.add("is-active");
     }
+  });
 }
 
+/**
+ * Renders mobile policy navigation on privacy and legal pages.
+ * @returns {void}
+ */
+function renderNavFooterMobile2() {
+  const container = document.getElementById("nav-footer-mobile");
+  const page = window.location.pathname.split("/").pop();
+  if (!container || !["privacy-notice.html", "legal-notice.html"].includes(page)) return;
+  container.innerHTML = displayNavFooterMobilePolicy();
+}
+
+/**
+ * Returns the mobile navigation template for policy pages.
+ * @returns {string} The mobile navigation HTML.
+ */
 function displayNavFooterMobilePolicy() {
-    return `<div class="mobile-nav-btns">
-    <div class="nav-btn">
-            <a href="../index.html" class="nav-element mobile-design">
-                   <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="mask0_268662_8754" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="30" height="30">
-<rect width="30" height="30" fill="#D9D9D9"/>
-</mask>
-<g mask="url(#mask0_268662_8754)">
-<mask id="mask1_268662_8754" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="2" y="2" width="26" height="27">
-<rect x="2" y="2.03418" width="26" height="26" fill="#D9D9D9"/>
-</mask>
-<g mask="url(#mask1_268662_8754)">
-<path d="M16.0833 24.7842C15.7764 24.7842 15.5191 24.6804 15.3115 24.4727C15.1038 24.2651 15 24.0078 15 23.7008C15 23.3939 15.1038 23.1366 15.3115 22.929C15.5191 22.7213 15.7764 22.6175 16.0833 22.6175H22.5833V7.45085H16.0833C15.7764 7.45085 15.5191 7.34703 15.3115 7.13939C15.1038 6.93175 15 6.67446 15 6.36751C15 6.06057 15.1038 5.80328 15.3115 5.59564C15.5191 5.388 15.7764 5.28418 16.0833 5.28418H22.5833C23.1792 5.28418 23.6892 5.49633 24.1135 5.92064C24.5378 6.34494 24.75 6.85501 24.75 7.45085V22.6175C24.75 23.2133 24.5378 23.7234 24.1135 24.1477C23.6892 24.572 23.1792 24.7842 22.5833 24.7842H16.0833ZM14.1063 16.1175H6.33333C6.02639 16.1175 5.7691 16.0137 5.56146 15.8061C5.35382 15.5984 5.25 15.3411 5.25 15.0342C5.25 14.7272 5.35382 14.4699 5.56146 14.2623C5.7691 14.0547 6.02639 13.9508 6.33333 13.9508H14.1063L12.075 11.9196C11.8764 11.721 11.7771 11.4772 11.7771 11.1883C11.7771 10.8995 11.8764 10.6467 12.075 10.43C12.2736 10.2133 12.5264 10.1005 12.8333 10.0915C13.1403 10.0824 13.4021 10.1863 13.6188 10.4029L17.4917 14.2758C17.7083 14.4925 17.8167 14.7453 17.8167 15.0342C17.8167 15.3231 17.7083 15.5758 17.4917 15.7925L13.6188 19.6654C13.4021 19.8821 13.1448 19.9859 12.8469 19.9769C12.549 19.9679 12.2917 19.855 12.075 19.6383C11.8764 19.4217 11.7816 19.1644 11.7906 18.8665C11.7997 18.5686 11.9035 18.3203 12.1021 18.1217L14.1063 16.1175Z" fill="#CDCDCD"/>
-</g>
-</g>
-</svg>
-                    <span>Log In</span>
-                </a>
-                </div>
-            <div class="legal-and-policy-mobile" id="mobile-nav-btns-legal-policy">
-            <div class="nav-btn">
-                <a href="../pages/privacy-notice.html" class="nav-element mobile-design">
-                    <span>Privacy Policy</span>
-                </a>
-                </div>
-            <div class="nav-btn">
-                <a href="../pages/legal-notice.html" class="nav-element mobile-design">
-                    <span>Legal Notice</span>
-                </a>
-                </div>
-            </div>
-            </div>`;
+  return `<div class="mobile-nav-btns"><div class="nav-btn"><a href="../index.html" class="nav-element mobile-design"><svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M16 24H23V6H16M14 15H5M5 15L12 8M5 15L12 22" stroke="#CDCDCD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Log In</span></a></div><div class="legal-and-policy-mobile" id="mobile-nav-btns-legal-policy"><div class="nav-btn"><a href="../pages/privacy-notice.html" class="nav-element mobile-design"><span>Privacy Policy</span></a></div><div class="nav-btn"><a href="../pages/legal-notice.html" class="nav-element mobile-design"><span>Legal Notice</span></a></div></div></div>`;
 }
 
+/**
+ * Initializes contact and task data in session storage.
+ * @returns {Promise<void>} A promise resolved after initialization.
+ */
 async function initSessionData() {
   if (sessionStorage.getItem("session-initialized")) return;
   const { userArray, taskArray } = await fetchTemplateData();
-  if(!userArray) return;
-  sessionStorage.setItem("session-contacts", JSON.stringify(Object.values(userArray || {})));
-  sessionStorage.setItem("session-tasks", JSON.stringify(Object.values(taskArray || {})));
+  if (!userArray) return;
+  saveSessionData("session-contacts", Object.values(userArray));
+  saveSessionData("session-tasks", Object.values(taskArray || {}));
   sessionStorage.setItem("session-initialized", "true");
 }
 
-const BASE_URL = "https://join--testuser-default-rtdb.europe-west1.firebasedatabase.app/";
-
-async function fetchTemplateData(){
-   let response = await fetch(BASE_URL + ".json");
-   let data = await response.json();
-   console.log(data);
-   const userArray = data.contacts;
-   const taskArray = data.tasks;
-   return { userArray, taskArray };
+/**
+ * Fetches contact and task data from the configured database.
+ * @returns {Promise<{userArray: Object, taskArray: Object}>} The fetched data.
+ */
+async function fetchTemplateData() {
+  const response = await fetch(`${BASE_URL}.json`);
+  if (!response.ok) throw new Error("Failed to fetch application data.");
+  const data = await response.json();
+  return { userArray: data.contacts, taskArray: data.tasks };
 }
 
+/**
+ * Reads and parses a value from session storage.
+ * @param {string} key - The storage key.
+ * @returns {Array|Object} The stored value or an empty array.
+ */
 function getSessionData(key) {
-return JSON.parse(sessionStorage.getItem(key) || "[]");
+  try {
+    return JSON.parse(sessionStorage.getItem(key) || "[]");
+  } catch {
+    return [];
+  }
 }
 
+/**
+ * Serializes and saves data in session storage.
+ * @param {string} key - The storage key.
+ * @param {any} items - The data to store.
+ * @returns {void}
+ */
 function saveSessionData(key, items) {
-sessionStorage.setItem(key, JSON.stringify(items));
+  sessionStorage.setItem(key, JSON.stringify(items));
 }
 
-function createAlphabeticalList(userArray) {
-    const sortedUsers = userArray.sort((a, b) => a.firstName.localeCompare(b.firstName));
-    console.log(sortedUsers);
-}
-
-function sortTasks(taskArray) {
-    const sortedTasks = taskArray.sort((a, b) => a.state.localeCompare(b.state));
-    console.log(sortedTasks);
-}
-
-async function postData(path="", data={}){
-    let response = await fetch(BASE_URL + path + ".json", {
-        method: "POST",
-        header: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-    });
-    let responseToJson= await response.json();
-    console.log(responseToJson);
+/**
+ * Sends data to the configured database endpoint.
+ * @param {string} path - The database path.
+ * @param {Object} data - The data to send.
+ * @returns {Promise<Object>} The response data.
+ */
+async function postData(path = "", data = {}) {
+  const response = await fetch(`${BASE_URL}${path}.json`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+  if (!response.ok) throw new Error("Failed to save application data.");
+  return response.json();
 }
