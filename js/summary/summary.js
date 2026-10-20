@@ -23,3 +23,20 @@ function getCurrentDaytime() {
     }
 }
 
+const taskBoxes = document.querySelectorAll(".grey-boxes-task");
+
+taskBoxes.forEach((box) => {
+    box.addEventListener("click", goToBoard);
+    box.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            goToBoard();
+        }
+    });
+});
+
+function goToBoard() {
+    window.location.href = "board-layout.html";
+}
+
+
