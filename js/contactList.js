@@ -107,6 +107,7 @@ function renderContactList(contacts) {
   if (!contacts) return;
   allContacts = contacts;
   let wrapper = document.getElementById("contactListWrapper");
+  if (!wrapper) return;
   let groups = groupContactsByLetter(sortContactsByName(contacts));
   let html = "";
   for (let letter in groups) {

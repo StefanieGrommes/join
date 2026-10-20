@@ -95,11 +95,34 @@
 
 .board-task-dialog {
   width: min(900px, calc(100vw - 48px));
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
   background: #ffffff;
   border-radius: 18px;
   box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
   padding: 20px 28px 18px;
   border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.board-task-dialog .add-task-form {
+  max-width: none;
+}
+
+.board-task-dialog .form-columns {
+  gap: 32px;
+}
+
+.board-task-dialog .form-column-left,
+.board-task-dialog .form-column-right {
+  max-width: none;
+}
+
+.board-task-dialog .form-column-right {
+  padding-left: 32px;
+}
+
+.board-task-dialog .form-footer {
+  margin-top: 24px;
 }
 
 .board-task-header {
@@ -127,79 +150,9 @@
   cursor: pointer;
 }
 
-.board-task-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-}
-
-.board-task-form-column {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.board-task-label {
-  font-size: 16px;
-  font-weight: 600;
-  color: #1f2937;
-}
-
-.board-task-input,
-.board-task-textarea,
-.board-task-select {
-  width: 100%;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
-  background: #fff;
-  color: #111827;
-  font-size: 1rem;
-  padding: 12px 14px;
-  outline: none;
-}
-
-.board-task-input:focus,
-.board-task-textarea:focus,
-.board-task-select:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
-}
-
-.board-task-textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-.board-task-date-wrap {
-  position: relative;
-}
 
 .board-task-date-wrap input {
   width: 100%;
-}
-
-.board-task-footer {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 16px;
-  margin-top: 24px;
-}
-
-.board-task-actions {
-  display: flex;
-  gap: 12px;
-}
-
-.board-task-cancel,
-.board-task-save {
-  min-width: 110px;
-  height: 44px;
-  border-radius: 10px;
-  border: 1px solid #d1d5db;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
 }
 
 .board-task-cancel {
@@ -213,10 +166,6 @@
   color: #fff;
 }
 
-.board-task-save:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
 
 .board-detail-modal {
   position: fixed;

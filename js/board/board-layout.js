@@ -393,19 +393,15 @@ function initBoardLayout() {
   // Zeigt in jeder Spalte ohne Karte den Hinweis "No tasks ...".
   const renderEmptyStateForColumns = () => {
     columns.forEach((column) => {
-      // Inhaltsbereich der Spalte.
       const content = column.querySelector(".board-main-column-content");
-      // Gibt es mindestens eine Karte?
       const hasTaskCard = content ? content.querySelector(".board-card--task") : false;
       if (hasTaskCard) return;
 
-      // Hinweis-Element erzeugen.
       const emptyState = document.createElement("p");
       emptyState.className = "board-empty-state";
       emptyState.textContent = getEmptyColumnMessage(column.dataset.column || "");
       emptyState.setAttribute("aria-label", emptyState.textContent);
 
-      // In den Inhaltsbereich einfügen, sonst direkt in die Spalte.
       if (content) {
         content.appendChild(emptyState);
       } else {
@@ -414,44 +410,39 @@ function initBoardLayout() {
     });
   };
 
-  // Zeigt "Keine Ergebnisse gefunden", wenn die Suche nichts findet.
+ // Zeigt "Keine Ergebnisse gefunden", wenn die Suche nichts findet.
   const renderSearchEmptyState = () => {
     if (!boardMainContainer) return;
 
-    // Gesamtes Board leeren.
-    boardMainContainer.innerHTML = "";
+    // Spalten nur ausblenden, nicht löschen.
+    columns.forEach((column) => {
+      column.style.display = "none";
+    });
 
-    // Hinweis-Element erzeugen.
     const emptyState = document.createElement("p");
     emptyState.className = "board-search-empty-state";
     emptyState.textContent = "Keine Ergebnisse gefunden";
     emptyState.setAttribute("aria-label", emptyState.textContent);
 
-    // Hinweis ins Board einfügen.
     boardMainContainer.appendChild(emptyState);
   };
 
   // Erzeugt den Kopf einer Spalte: Überschrift + "+"-Button.
-  const createColumnHeader = (columnId) => {
-    // Container für den Kopf.
+    const createColumnHeader = (columnId) => {
     const header = document.createElement("div");
     header.className = "board-main-column-header";
 
-    // Spaltenüberschrift (z. B. "To do").
     const title = document.createElement("h2");
     title.className = "board-main-column-title";
     title.textContent = getColumnLabel(columnId);
 
-    // "+"-Button zum Hinzufügen einer Task direkt in diese Spalte.
     const addButton = document.createElement("button");
     addButton.type = "button";
     addButton.className = "board-main-column-add-button";
-    // Spalten-id merken -> wird beim Klick ausgelesen.
     addButton.dataset.column = columnId;
     addButton.setAttribute("aria-label", `Add ${getColumnLabel(columnId)}`);
     addButton.textContent = "+";
 
-    // Überschrift und Button in den Kopf einfügen.
     header.appendChild(title);
     header.appendChild(addButton);
 
@@ -467,6 +458,15 @@ function initBoardLayout() {
 
   // Rendert das komplette Board neu (Spalten leeren, Karten einsortieren).
   const renderBoardState = () => {
+    // Alten Leer-Hinweis der Suche entfernen.
+    const searchEmpty = boardMainContainer && boardMainContainer.querySelector(".board-search-empty-state");
+    if (searchEmpty) searchEmpty.remove();
+
+    // Spalten wieder einblenden.
+    columns.forEach((column) => {
+      column.style.display = "";
+    });
+
     // Jede Spalte leeren und Kopf + Inhaltsbereich neu aufbauen.
     columns.forEach((column) => {
       column.innerHTML = "";
@@ -503,25 +503,18 @@ function initBoardLayout() {
 
     // Jede sichtbare Task in ihre Spalte einsortieren.
     visibleTasks.forEach((task) => {
-      // Ziel-Spalte aus dem Board-Zustand (Fallback "todo").
       const targetColumnId = boardState[task.id] || "todo";
-      // Passendes Spalten-Element finden.
       const column = columns.find((item) => item.dataset.column === targetColumnId);
-
       if (!column) return;
 
-      // Inhaltsbereich der Spalte.
       const content = column.querySelector(".board-main-column-content");
       if (!content) return;
 
-      // HTML-String der Karte (templates.js) in ein echtes Element umwandeln.
       const wrapper = document.createElement("div");
       wrapper.innerHTML = renderTaskCard(task);
       const card = wrapper.firstElementChild;
-
       if (!card) return;
 
-      // Drag-Events anhängen und Karte in die Spalte einfügen.
       bindCardDragEvents(card, draggedCardRef);
       content.appendChild(card);
     });
@@ -588,6 +581,232 @@ function initBoardLayout() {
   renderBoardState();
 }
 
+
+const addTaskModal = document.getElementById("board-add-task-modal");
+const addTaskForm = document.getElementById("board-task-form");
+const addTaskSaveButton = document.getElementById("board-task-save-button");
+const addTaskClearButton = document.getElementById("board-task-clear-button");
+const addTaskCloseButton = document.getElementById("board-task-close-button");
+const addTaskOpenButton = document.getElementById("board-open-add-task-modal");
+const addTaskDialogTitle = document.getElementById("board-task-dialog-title");
+const addTaskTitleInput = document.getElementById("taskTitle");
+const addTaskDescriptionInput = document.getElementById("taskDescription");
+const addTaskDateInput = document.getElementById("taskDueDate");
+const addTaskCategoryInput = document.getElementById("taskCategory");
+const addTaskHeaderButtons = Array.from(document.querySelectorAll(".board-header-column button[data-column]"));
+const ADD_TASK_PRIORITY_CLASSES = { Urgent: "priority-urgent", Medium: "priority-medium", Low: "priority-low" };
+const ADD_TASK_PRIORITY_COLORS = { Urgent: "#f66a5f", Medium: "#f9a35c", Low: "#5bc0be" };
+const ADD_TASK_CATEGORY_COLORS = { "Technical Task": "#2bc7b7", "User Story": "#2d8cff" };
+let addTaskEditingId = null;
+let addTaskDefaultStatus = "todo";
+
+// ---------- Priorität ----------
+function getAddTaskPriority() {
+  const active = addTaskForm.querySelector(".priority-btn.priority-active");
+  if (!active) return "Medium";
+  return Object.keys(ADD_TASK_PRIORITY_CLASSES)
+    .find((key) => active.classList.contains(ADD_TASK_PRIORITY_CLASSES[key])) || "Medium";
+}
+
+function setAddTaskPriority(value) {
+  const cssClass = ADD_TASK_PRIORITY_CLASSES[value] || ADD_TASK_PRIORITY_CLASSES.Medium;
+  changePriority(addTaskForm.querySelector(`.${cssClass}`));
+}
+
+// ---------- Formulardaten lesen ----------
+function getSelectedAssignedContacts() {
+  return Array.from(document.querySelectorAll("#assigned-to-list .contact-option.selected"))
+    .map((option) => option.querySelector(".contact-avatar").textContent.trim());
+}
+
+function readAddTaskSubtasks(previous = []) {
+  saveSubtask(); // noch nicht bestätigten Text im Subtask-Feld übernehmen
+  return Array.from(subTaskList.querySelectorAll(".subtask-text")).map((el) => {
+    const label = el.textContent.trim();
+    const old = previous.find((subtask) => subtask.label === label);
+    return { label, done: old ? Boolean(old.done) : false };
+  });
+}
+
+function buildAddTaskData() {
+  const priority = getAddTaskPriority();
+  const category = addTaskCategoryInput.value;
+  return {
+    title: addTaskTitleInput.value.trim(),
+    description: addTaskDescriptionInput.value.trim(),
+    dueDate: addTaskDateInput.value,
+    priority,
+    priorityColor: ADD_TASK_PRIORITY_COLORS[priority] || ADD_TASK_PRIORITY_COLORS.Low,
+    category,
+    categoryColor: ADD_TASK_CATEGORY_COLORS[category] || ADD_TASK_CATEGORY_COLORS["User Story"],
+    assignedTo: getSelectedAssignedContacts()
+  };
+}
+
+// ---------- Validierung ----------
+function clearAddTaskErrors() {
+  addTaskForm.querySelectorAll(".input-error").forEach((el) => el.classList.remove("input-error"));
+  addTaskForm.querySelectorAll(".field-error").forEach((el) => { el.textContent = ""; });
+}
+
+function clearAddTaskFieldError(field) {
+  field.classList.remove("input-error");
+  const error = field.closest(".form-field").querySelector(".field-error");
+  if (error) error.textContent = "";
+}
+
+function setAddTaskError(field, message) {
+  field.classList.add("input-error");
+  const error = field.closest(".form-field").querySelector(".field-error");
+  if (error) error.textContent = message;
+}
+
+function validateAddTaskForm() {
+  clearAddTaskErrors();
+  const required = [addTaskTitleInput, addTaskDateInput, addTaskCategoryInput];
+  const missing = required.filter((field) => !field.value.trim());
+  missing.forEach((field) => setAddTaskError(field, "This field is required"));
+  return missing.length === 0;
+}
+
+function bindAddTaskFieldReset() {
+  [addTaskTitleInput, addTaskDateInput, addTaskCategoryInput].forEach((field) => {
+    field.addEventListener("input", () => clearAddTaskFieldError(field));
+  });
+}
+
+// ---------- Zurücksetzen, Öffnen, Schließen ----------
+function setAddTaskSaveLabel(text) {
+  addTaskSaveButton.firstChild.textContent = text;
+}
+
+function resetAddTaskForm() {
+  addTaskForm.reset();
+  list.innerHTML = "";
+  list.style.display = "none";
+  document.getElementById("assigned-to-dropdown").classList.remove("open");
+  document.getElementById("assigned-avatars").innerHTML = "";
+  subTaskList.innerHTML = "";
+  showSubtaskActions();
+  setAddTaskPriority("Medium");
+  clearAddTaskErrors();
+}
+
+function resetAddTaskState() {
+  addTaskEditingId = null;
+  addTaskDefaultStatus = "todo";
+  addTaskDialogTitle.textContent = "Add Task";
+  setAddTaskSaveLabel("Create Task ");
+  addTaskModal.dataset.status = "todo";
+  resetAddTaskForm();
+}
+
+function showAddTaskModal() {
+  addTaskModal.classList.add("is-open");
+  addTaskModal.setAttribute("aria-hidden", "false");
+}
+
+function openAddTaskModal() {
+  resetAddTaskState();
+  showAddTaskModal();
+}
+
+function openAddTaskModalForColumn(status) {
+  resetAddTaskState();
+  addTaskDefaultStatus = status || "todo";
+  addTaskModal.dataset.status = addTaskDefaultStatus;
+  showAddTaskModal();
+}
+
+function closeAddTaskModal() {
+  addTaskModal.classList.remove("is-open");
+  addTaskModal.setAttribute("aria-hidden", "true");
+  resetAddTaskState();
+}
+
+// ---------- Bearbeiten ----------
+function fillAddTaskForm(task) {
+  addTaskTitleInput.value = task.title || "";
+  addTaskDescriptionInput.value = task.description || "";
+  addTaskDateInput.value = task.dueDate || "";
+  addTaskCategoryInput.value = task.category || "";
+  setAddTaskPriority(task.priority || "Medium");
+}
+
+function fillAddTaskContacts(assigned) {
+  renderContactOptions(getSessionData("session-contacts"));
+  list.querySelectorAll(".contact-option").forEach((option) => {
+    const initials = option.querySelector(".contact-avatar").textContent.trim();
+    if (assigned.includes(initials)) toggleContactSelection(option);
+  });
+  renderAssignedAvatars();
+}
+
+function fillAddTaskSubtasks(subtasks) {
+  subtasks.forEach((subtask) => {
+    subTaskList.insertAdjacentHTML("beforeend", getSubtaskItemTemplate(subtask.label));
+  });
+}
+
+function openAddTaskEditModal(task) {
+  if (!task) return;
+  resetAddTaskState();
+  addTaskEditingId = task.id;
+  addTaskDialogTitle.textContent = "Edit Task";
+  setAddTaskSaveLabel("Save changes ");
+  fillAddTaskForm(task);
+  fillAddTaskContacts(Array.isArray(task.assignedTo) ? task.assignedTo : []);
+  fillAddTaskSubtasks(Array.isArray(task.subtasks) ? task.subtasks : []);
+  showAddTaskModal();
+}
+
+// ---------- Speichern ----------
+function updateAddTask() {
+  const task = Array.isArray(tasks) ? tasks.find((item) => item.id === addTaskEditingId) : null;
+  if (!task) return;
+  Object.assign(task, buildAddTaskData(), { subtasks: readAddTaskSubtasks(task.subtasks) });
+}
+
+function storeAddTaskStatus(task) {
+  const boardState = loadBoardState();
+  boardState[task.id] = task.status;
+  window.localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(boardState));
+}
+
+function createAddTask() {
+  const newTask = {
+    ...buildAddTaskData(),
+    id: `task-${Date.now()}`,
+    status: addTaskModal.dataset.status || addTaskDefaultStatus || "todo",
+    subtasks: readAddTaskSubtasks(),
+    progress: 0
+  };
+  newTask.badge = newTask.category;
+  tasks.unshift(newTask);
+  storeAddTaskStatus(newTask);
+}
+
+function saveAddTask() {
+  if (!validateAddTaskForm()) return;
+  if (addTaskEditingId) updateAddTask();
+  else createAddTask();
+  initBoardLayout();
+  closeAddTaskModal();
+}
+
+// ---------- Initialisierung ----------
+function bindAddTaskHeaderButtons() {
+  addTaskHeaderButtons.forEach((button) => {
+    button.addEventListener("click", () => openAddTaskModalForColumn(button.dataset.column));
+  });
+}
+
+function exposeAddTaskModalApi() {
+  window.openBoardTaskEditModal = openAddTaskEditModal;
+  window.openBoardTaskModalForColumn = openAddTaskModalForColumn;
+  window.closeBoardTaskModal = closeAddTaskModal;
+}
+
 /**
  * Initialisiert den Add-/Edit-Task-Dialog im Board:
  * Öffnen/Schließen, Formular-Validierung, Erstellen neuer Tasks
@@ -596,282 +815,41 @@ function initBoardLayout() {
  * @returns {void}
  */
 function initAddTaskModal() {
-  // Buttons und Container des Dialogs aus board-layout.html.
-  const openButton = document.getElementById("board-open-add-task-modal");
-  const closeButton = document.getElementById("board-task-close-button");
-  const cancelButton = document.getElementById("board-task-cancel-button");
-  const modal = document.getElementById("board-add-task-modal");
-  const form = document.getElementById("board-task-form");
-  const saveButton = document.getElementById("board-task-save-button");
-  const dialogTitle = document.getElementById("board-task-dialog-title");
-
-  // Eingabefelder des Formulars.
-  const titleInput = document.getElementById("board-task-title");
-  const descriptionInput = document.getElementById("board-task-description");
-  const dateInput = document.getElementById("board-task-date");
-  const priorityInput = document.getElementById("board-task-priority");
-  const assignedInput = document.getElementById("board-task-assigned");
-  const categoryInput = document.getElementById("board-task-category");
-  const subtaskInput = document.getElementById("board-task-subtask");
-  // "+"-Buttons im Spalten-Header, die den Dialog für eine bestimmte Spalte öffnen.
-  const headerButtons = Array.from(document.querySelectorAll(".board-header-column button[data-column]"));
-
-  // id der Task, die gerade bearbeitet wird (null = neue Task anlegen).
-  let editingTaskId = null;
-  // Spalte, in die eine neue Task kommt.
-  let defaultStatus = "todo";
-
-  // Setzt den Dialog auf "Add Task" zurück und leert das Formular.
-  const resetModalState = () => {
-    editingTaskId = null;
-    defaultStatus = "todo";
-    if (dialogTitle) dialogTitle.textContent = "Add Task";
-    if (saveButton) saveButton.textContent = "Create Task";
-    form.reset();
-    // Button bleibt gesperrt, bis das Formular gültig ist.
-    saveButton.disabled = true;
-    modal.dataset.status = "todo";
-  };
-
-  // Öffnet den Dialog für eine neue Task in "To do".
-  const openModal = () => {
-    resetModalState();
-    modal.classList.add("is-open");
-    modal.setAttribute("aria-hidden", "false");
-  };
-
-  // Öffnet den Dialog für eine neue Task in einer bestimmten Spalte.
-  const openModalForColumn = (status) => {
-    resetModalState();
-    defaultStatus = status || "todo";
-    // Ziel-Spalte am Dialog merken (wird beim Speichern gelesen).
-    modal.dataset.status = defaultStatus;
-    modal.classList.add("is-open");
-    modal.setAttribute("aria-hidden", "false");
-  };
-
-  // Schließt den Dialog und setzt ihn zurück.
-  const closeModal = () => {
-    modal.classList.remove("is-open");
-    modal.setAttribute("aria-hidden", "true");
-    resetModalState();
-  };
-
-  // Öffnet den Dialog im Bearbeiten-Modus und füllt die Felder mit den Task-Daten.
-  const openEditModal = (task) => {
-    if (!task) return;
-
-    // Merken, welche Task bearbeitet wird.
-    editingTaskId = task.id;
-    // Texte auf "Edit" umstellen.
-    if (dialogTitle) dialogTitle.textContent = "Edit Task";
-    if (saveButton) saveButton.textContent = "Save changes";
-
-    // Felder mit den vorhandenen Werten befüllen.
-    titleInput.value = task.title || "";
-    descriptionInput.value = task.description || "";
-    dateInput.value = task.dueDate || "";
-    priorityInput.value = task.priority || "Medium";
-
-    // In der Mehrfachauswahl die zugewiesenen Kontakte markieren.
-    Array.from(assignedInput.options).forEach((option) => {
-      option.selected = Array.isArray(task.assignedTo) && task.assignedTo.includes(option.value);
-    });
-
-    categoryInput.value = task.category || "";
-    // Subtasks als kommagetrennten Text ins Feld schreiben.
-    if (subtaskInput) {
-      subtaskInput.value = Array.isArray(task.subtasks) ? task.subtasks.map((subtask) => subtask.label).join(", ") : "";
-    }
-
-    // Speichern-Button je nach Gültigkeit freigeben und Dialog öffnen.
-    updateSaveButtonState();
-    modal.classList.add("is-open");
-    modal.setAttribute("aria-hidden", "false");
-  };
-
-  // Wandelt "a, b, c" in [{label: "a", done: false}, ...] um.
-  const parseSubtasks = (value) => {
-    if (!value) return [];
-
-    return value
-      // An Kommas trennen.
-      .split(",")
-      // Leerzeichen entfernen.
-      .map((item) => item.trim())
-      // Leere Einträge entfernen.
-      .filter(Boolean)
-      // In Subtask-Objekte umwandeln.
-      .map((label) => ({ label, done: false }));
-  };
-
-  // Liefert die Werte (Initialen) aller ausgewählten Kontakte.
-  const getSelectedAssignedContacts = () => {
-    if (!assignedInput) return [];
-    return Array.from(assignedInput.selectedOptions)
-      .map((option) => option.value)
-      .filter(Boolean);
-  };
-
-  // Formular ist gültig, wenn alle Pflichtfelder ausgefüllt sind und mind. ein Kontakt gewählt ist.
-  const isFormValid = () => {
-    return titleInput.value.trim() !== "" &&
-      descriptionInput.value.trim() !== "" &&
-      dateInput.value.trim() !== "" &&
-      priorityInput.value !== "" &&
-      getSelectedAssignedContacts().length > 0 &&
-      categoryInput.value !== "";
-  };
-
-  // Speichern-Button sperren, solange geladen wird oder das Formular ungültig ist.
-  const updateSaveButtonState = () => {
-    if (!saveButton) return;
-    const isLoading = saveButton.dataset.loading === "true";
-    saveButton.disabled = isLoading || !isFormValid();
-  };
-
-  // Bei jeder Änderung eines Pflichtfeldes den Button-Zustand prüfen.
-  [titleInput, descriptionInput, dateInput, priorityInput, assignedInput, categoryInput].forEach((field) => {
-    if (!field) return;
-    field.addEventListener("input", updateSaveButtonState);
-    field.addEventListener("change", updateSaveButtonState);
+  bindAddTaskFieldReset();
+  bindAddTaskHeaderButtons();
+  addTaskForm.addEventListener("submit", (event) => { event.preventDefault(); saveAddTask(); });
+  addTaskOpenButton.addEventListener("click", openAddTaskModal);
+  addTaskCloseButton.addEventListener("click", closeAddTaskModal);
+  addTaskClearButton.addEventListener("click", resetAddTaskForm);
+  addTaskModal.addEventListener("click", (event) => {
+    if (event.target === addTaskModal) closeAddTaskModal();
   });
-
-  // "Add task"-Button öffnet, X und Cancel schließen den Dialog.
-  openButton.addEventListener("click", openModal);
-  closeButton.addEventListener("click", closeModal);
-  cancelButton.addEventListener("click", closeModal);
-
-  // Klick auf den dunklen Hintergrund (außerhalb des Dialogs) schließt ihn.
-  modal.addEventListener("click", (event) => {
-    if (event.target === modal) {
-      closeModal();
-    }
-  });
-
-  // Klick auf "Create Task" / "Save changes".
-  saveButton.addEventListener("click", () => {
-    // Doppelklick während des Speicherns oder ungültiges Formular -> nichts tun.
-    if (saveButton.dataset.loading === "true" || !isFormValid()) return;
-
-    // Ladezustand setzen und Text anpassen.
-    saveButton.dataset.loading = "true";
-    saveButton.disabled = true;
-    saveButton.textContent = editingTaskId ? "Saving..." : "Creating...";
-
-    // Kurze Verzögerung simuliert das Speichern.
-    window.setTimeout(() => {
-      // Ladezustand beenden.
-      saveButton.dataset.loading = "false";
-      // ---- Bearbeiten einer vorhandenen Task ----
-      if (editingTaskId) {
-        // Task-Objekt suchen.
-        const task = Array.isArray(tasks) ? tasks.find((item) => item.id === editingTaskId) : null;
-        if (task) {
-          // Alle Werte aus dem Formular übernehmen.
-          task.title = titleInput.value.trim();
-          task.description = descriptionInput.value.trim();
-          task.dueDate = dateInput.value;
-          task.priority = priorityInput.value;
-          // Farbe je Priorität: Urgent rot, Medium orange, Low grün.
-          task.priorityColor = priorityInput.value === "Urgent" ? "#f66a5f" : priorityInput.value === "Medium" ? "#f9a35c" : "#5bc0be";
-          task.category = categoryInput.value;
-          // Farbe je Kategorie: Technical Task türkis, User Story blau.
-          task.categoryColor = categoryInput.value === "Technical Task" ? "#2bc7b7" : "#2d8cff";
-          task.assignedTo = getSelectedAssignedContacts();
-          task.subtasks = parseSubtasks(subtaskInput.value);
-        }
-
-        // Board neu rendern und Dialog schließen.
-        initBoardLayout();
-        closeModal();
-        return;
-      }
-
-      // ---- Neue Task anlegen ----
-      const newTask = {
-        // Eindeutige id über den aktuellen Zeitstempel.
-        id: `task-${Date.now()}`,
-        title: titleInput.value.trim(),
-        description: descriptionInput.value.trim(),
-        dueDate: dateInput.value,
-        priority: priorityInput.value,
-        priorityColor: priorityInput.value === "Urgent" ? "#f66a5f" : priorityInput.value === "Medium" ? "#f9a35c" : "#5bc0be",
-        category: categoryInput.value,
-        categoryColor: categoryInput.value === "Technical Task" ? "#2bc7b7" : "#2d8cff",
-        // Ziel-Spalte: am Dialog gespeicherte Spalte, sonst "todo".
-        status: modal.dataset.status || defaultStatus || "todo",
-        assignedTo: getSelectedAssignedContacts(),
-        subtasks: parseSubtasks(subtaskInput.value),
-        progress: 0,
-        badge: categoryInput.value
-      };
-
-      // Neue Task vorne in die Liste einfügen.
-      tasks.unshift(newTask);
-      // Spaltenzuordnung der neuen Task im localStorage speichern.
-      const boardState = loadBoardState();
-      boardState[newTask.id] = newTask.status;
-      window.localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(boardState));
-      // Board neu rendern und Dialog schließen.
-      initBoardLayout();
-      closeModal();
-    }, 300);
-  });
-
-  // "+"-Buttons im Spalten-Header öffnen den Dialog für ihre Spalte.
-  headerButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      openModalForColumn(button.dataset.column);
-    });
-  });
-
-  // Funktionen global verfügbar machen, damit initBoardLayout() und initTaskDetailModal() sie aufrufen können.
-  window.openBoardTaskEditModal = openEditModal;
-  window.openBoardTaskModalForColumn = openModalForColumn;
-  window.closeBoardTaskModal = closeModal;
+  exposeAddTaskModalApi();
 }
 
-/**
- * Initialisiert den Detail-Dialog einer Task: öffnen per Klick auf die
- * Beschreibung, Subtasks abhaken, Task löschen oder bearbeiten.
- *
- * @returns {void}
- */
 function initTaskDetailModal() {
-  // Board-Container, Detail-Dialog und dessen Inhaltsbereich.
   const boardMainContainer = document.querySelector(".board-main-container");
   const detailModal = document.getElementById("board-task-detail-modal");
   const detailRoot = document.getElementById("board-task-detail-root");
-
-  // Fehlt eines davon -> nicht auf der Board-Seite.
   if (!boardMainContainer || !detailModal || !detailRoot) return;
 
-  // Sucht eine Task anhand ihrer id.
   const getTaskById = (taskId) => {
     if (!taskId || !Array.isArray(tasks)) return null;
     return tasks.find((task) => task.id === taskId) || null;
   };
 
-  // Aktualisiert Titel, Beschreibung und Fortschritt der kleinen Karte, ohne das Board neu zu rendern.
   const syncCardContent = (task) => {
     if (!task) return;
-
-    // Karte der Task im Board finden.
     const card = boardMainContainer.querySelector(`.board-card--task[data-card-id="${task.id}"]`);
     if (!card) return;
 
-    // Elemente innerhalb der Karte.
     const title = card.querySelector(".board-card-title");
     const description = card.querySelector(".board-card-description");
     const progressBar = card.querySelector(".board-progress-bar span");
     const progressLabel = card.querySelector(".board-progress-label");
-
-    // Texte aktualisieren.
     if (title) title.textContent = task.title;
     if (description) description.textContent = task.description;
 
-    // Fortschritt wie in renderTaskCard() (templates.js) berechnen.
     const taskSubtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
     const doneSubtasks = taskSubtasks.filter((subtask) => subtask.done).length;
     const totalSubtasks = taskSubtasks.length;
@@ -879,7 +857,6 @@ function initTaskDetailModal() {
       ? Math.round((doneSubtasks / totalSubtasks) * 100)
       : Math.max(0, Math.min(100, task.progress || 0));
 
-    // Balkenbreite und Beschriftung setzen.
     if (progressBar) progressBar.style.width = `${progressWidth}%`;
     if (progressLabel) {
       progressLabel.textContent = totalSubtasks
@@ -888,48 +865,20 @@ function initTaskDetailModal() {
     }
   };
 
-  // Löscht eine Task aus den Daten, dem localStorage und dem Board.
   const deleteTask = (taskId) => {
-    // Position der Task in der Liste.
     const taskIndex = Array.isArray(tasks) ? tasks.findIndex((task) => task.id === taskId) : -1;
     if (taskIndex === -1) return;
-
-    // Task aus dem Array entfernen.
     tasks.splice(taskIndex, 1);
 
-    // Eintrag aus dem gespeicherten Board-Zustand entfernen.
     const boardState = loadBoardState();
     delete boardState[taskId];
     window.localStorage.setItem(BOARD_STORAGE_KEY, JSON.stringify(boardState));
 
-    // Karte aus dem DOM entfernen.
     const card = boardMainContainer.querySelector(`.board-card--task[data-card-id="${taskId}"]`);
     if (card) card.remove();
-
-    // Board neu rendern (z. B. für "No tasks"-Hinweise).
     initBoardLayout();
   };
 
-  // Öffnet den Detail-Dialog für eine Task.
-  const openDetailModal = (task) => {
-    if (!task) return;
-
-    // Detail-HTML aus templates.js einfügen.
-    detailRoot.innerHTML = renderTaskDetail(task);
-    // Task-id merken (für Delete/Edit/Subtasks).
-    detailRoot.dataset.taskId = task.id;
-    // Dialog anzeigen.
-    detailModal.classList.add("is-open");
-    detailModal.setAttribute("aria-hidden", "false");
-
-    // X-Button im Detail schließt den Dialog.
-    const closeButton = detailRoot.querySelector(".board-detail-close");
-    if (closeButton) {
-      closeButton.addEventListener("click", closeDetailModal);
-    }
-  };
-
-  // Schließt den Detail-Dialog und leert ihn.
   const closeDetailModal = () => {
     detailModal.classList.remove("is-open");
     detailModal.setAttribute("aria-hidden", "true");
@@ -937,28 +886,32 @@ function initTaskDetailModal() {
     detailRoot.removeAttribute("data-task-id");
   };
 
-  // Klicks auf Delete/Edit im Detail-Dialog (Event-Delegation über data-action).
+  const openDetailModal = (task) => {
+    if (!task) return;
+    detailRoot.innerHTML = renderTaskDetail(task);
+    detailRoot.dataset.taskId = task.id;
+    detailModal.classList.add("is-open");
+    detailModal.setAttribute("aria-hidden", "false");
+
+    const closeButton = detailRoot.querySelector(".board-detail-close");
+    if (closeButton) closeButton.addEventListener("click", closeDetailModal);
+  };
+
   detailRoot.addEventListener("click", (event) => {
-    // Button mit data-action suchen.
     const actionButton = event.target.closest("[data-action]");
     if (!actionButton) return;
 
-    // Aktuelle Task holen.
     const taskId = detailRoot.dataset.taskId;
     const task = getTaskById(taskId);
     if (!task) return;
 
-    // Delete: nach Bestätigung löschen und Dialog schließen.
     if (actionButton.dataset.action === "delete-task") {
-      const shouldDelete = window.confirm("Delete this task?");
-      if (!shouldDelete) return;
-
+      if (!window.confirm("Delete this task?")) return;
       deleteTask(taskId);
       closeDetailModal();
       return;
     }
 
-    // Edit: Detail schließen und Bearbeiten-Dialog öffnen (aus initAddTaskModal).
     if (actionButton.dataset.action === "edit-task") {
       closeDetailModal();
       if (typeof window.openBoardTaskEditModal === "function") {
@@ -967,52 +920,33 @@ function initTaskDetailModal() {
     }
   });
 
-  // Subtask-Checkbox im Detail-Dialog an-/abgehakt.
   detailRoot.addEventListener("change", (event) => {
-    // Nur Subtask-Checkboxen beachten.
     const checkbox = event.target.closest(".board-detail-subtask input[type='checkbox']");
     if (!checkbox) return;
 
-    // Aktuelle Task mit Subtasks holen.
-    const taskId = detailRoot.dataset.taskId;
-    const task = getTaskById(taskId);
+    const task = getTaskById(detailRoot.dataset.taskId);
     if (!task || !Array.isArray(task.subtasks)) return;
 
-    // Index der Subtask aus data-subtask-index (templates.js).
     const subtaskIndex = Number(checkbox.dataset.subtaskIndex);
     if (!Number.isInteger(subtaskIndex) || !task.subtasks[subtaskIndex]) return;
 
-    // Erledigt-Status speichern und Karte im Board aktualisieren.
     task.subtasks[subtaskIndex].done = checkbox.checked;
     syncCardContent(task);
   });
+boardMainContainer.addEventListener("click", (event) => {
+  // Klicks auf den Move-Button (Mobile) nicht als Karten-Klick werten.
+  if (event.target.closest(".board-card-move-button")) return;
 
-  // Klick auf die Beschreibung einer Karte öffnet den Detail-Dialog.
-  boardMainContainer.addEventListener("click", (event) => {
-    const description = event.target.closest(".board-card-description");
-    if (!description) return;
+  const card = event.target.closest(".board-card--task");
+  if (!card) return;
 
-    // Zugehörige Karte.
-    const card = description.closest(".board-card--task");
-    if (!card) return;
+  openDetailModal(getTaskById(card.dataset.cardId));
+});
 
-    // Task anhand der data-card-id finden.
-    const taskId = card.dataset.cardId;
-    const task = Array.isArray(tasks) ? tasks.find((item) => item.id === taskId) : null;
-
-    if (!task) return;
-
-    openDetailModal(task);
-  });
-
-  // Klick auf den dunklen Hintergrund schließt den Detail-Dialog.
   detailModal.addEventListener("click", (event) => {
-    if (event.target === detailModal) {
-      closeDetailModal();
-    }
+    if (event.target === detailModal) closeDetailModal();
   });
 
-  // Escape-Taste schließt den Detail-Dialog, wenn er offen ist.
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && detailModal.classList.contains("is-open")) {
       closeDetailModal();
@@ -1020,19 +954,12 @@ function initTaskDetailModal() {
   });
 }
 
-// Startpunkt: Sobald das HTML geladen ist, alle Board-Bereiche initialisieren.
 document.addEventListener("DOMContentLoaded", () => {
-  // Mobile Navigation passend zur Bildschirmbreite einstellen.
   syncBoardMobileNavigation();
-  // Board mit Karten rendern.
   initBoardLayout();
-  // "Move to"-Menü für kleine Bildschirme.
   initBoardMoveMenu();
-  // Add-/Edit-Task-Dialog.
   initAddTaskModal();
-  // Task-Detail-Dialog.
   initTaskDetailModal();
 });
 
-// Bei Größenänderung des Fensters die mobile Navigation anpassen.
 window.addEventListener("resize", syncBoardMobileNavigation);

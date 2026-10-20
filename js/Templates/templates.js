@@ -326,7 +326,7 @@ function renderTaskCard(task) {
       <p class="board-card-description">${task.description}</p>
 
 
-      
+
       <div class="board-card-progress">
         <div class="board-progress-bar">
           <span style="width:${progressWidth}%"></span>
@@ -418,7 +418,7 @@ function renderTaskDetail(task) {
 
           <span class="board-detail-label">Assigned To:</span>
 
-          
+
           <div class="board-detail-assignees">
           ${assigned}
           </div>
