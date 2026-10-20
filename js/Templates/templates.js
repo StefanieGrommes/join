@@ -2,15 +2,15 @@
 // TEMPLATE LAYER / TEMPLATE-RENDERING
 // ==========================================
 // Diese Datei ist die Render-Schicht der App.
-// Sie nimmt Daten aus db.js und erzeugt daraus HTML mit Template-Literals.
+// Sie nimmt Daten aus den Daten-Dateien und erzeugt daraus HTML mit Template-Literals.
 //
 // Reiner Ablauf:
-// 1. db.js liefert Daten
+// 1. Daten-Dateien liefern Daten
 // 2. templates.js formatiert sie als HTML
 // 3. board-layout.js oder andere JS-Dateien hängen das HTML in das DOM
 //
 // Damit bleibt die Trennung sauber:
-// - DB = Daten
+// - Daten-Dateien = Daten
 // - templates.js = Darstellung
 // - script.js / board-layout.js = Logik und DOM-Aktualisierung
 // ==========================================
@@ -55,8 +55,8 @@ function renderSidebar(items, activePage) {
   // Ohne Sidebar im HTML gibt es nichts zu rendern.
   if (!sidebar) return;
 
-  // Übergebene Items nutzen, sonst globale navigationItems, sonst joinDb, sonst leere Liste.
-  const navItems = items || (typeof navigationItems !== 'undefined' ? navigationItems : (joinDb?.navigationItems || []));
+  // Übergebene Items nutzen, sonst die globalen Navigationseinträge.
+  const navItems = items || (typeof navigationItems !== 'undefined' ? navigationItems : []);
 
   // Buttons nur beim ersten Aufruf erzeugen (verhindert doppelte Event-Listener).
   if (!sidebar.dataset.initialized) {
@@ -107,7 +107,7 @@ function renderSidebar(items, activePage) {
 
   // Footer-Links (Help, Privacy, Legal) als <a>-Elemente rendern.
   if (footer) {
-    footer.innerHTML = (typeof footerNavigationItems !== 'undefined' ? footerNavigationItems : (joinDb?.footerNavigationItems || []))
+    footer.innerHTML = (typeof footerNavigationItems !== 'undefined' ? footerNavigationItems : [])
       .map(
         (item) => `
           <a href="${item.href}">${item.label}</a>
@@ -181,7 +181,7 @@ function renderInfoPage(pageData) {
 
 // ===============================
 // Kontakt-Helper
-// Diese Funktionen lesen die Kontakte aus db.js und
+// Diese Funktionen lesen die Kontakte aus den Daten-Dateien und
 // wandeln sie für die Karten-Renderung in kleine Avatar-Elemente um.
 // ===============================
 /**
@@ -206,8 +206,8 @@ function getBoardContactInitials(contact) {
  * @returns {Object|null} Gefundener Kontakt oder null.
  */
 function getContactById(contactId) {
-  // Kontaktliste: globale contacts oder joinDb.contacts als Fallback.
-  const contactList = typeof contacts !== 'undefined' ? contacts : (joinDb?.contacts || []);
+  // Kontaktliste aus den globalen Kontaktdaten.
+  const contactList = typeof contacts !== 'undefined' ? contacts : [];
   // Keine gültige Liste -> kein Kontakt.
   if (!Array.isArray(contactList)) return null;
   // Ersten Kontakt finden, dessen id (oder Initialen) passt.

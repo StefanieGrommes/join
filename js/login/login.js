@@ -53,6 +53,10 @@ function loginAsGuest() {
   window.sessionStorage.removeItem("join-demo-name");
   // Sitzungsmodus "guest" speichern -> wird in init.js (updateSessionHeader) für die Initialen "G" gelesen.
   window.sessionStorage.setItem("join-session-mode", "guest");
+  // Beim Start einer neuen Gastsitzung die vorherigen Daten erneut laden.
+  window.sessionStorage.removeItem("session-initialized");
+  window.sessionStorage.removeItem("session-contacts");
+  window.sessionStorage.removeItem("session-tasks");
   // Gast-Button deaktivieren, damit nicht doppelt geklickt wird.
   document.getElementById("guest-login-button").disabled = true;
   // Weiter zur Summary-Seite.

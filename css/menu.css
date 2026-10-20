@@ -168,8 +168,15 @@ nav p {
 }
 
 .profile-menu a:hover,
-.profile-menu a:focus-visible {
+.profile-menu a:focus-visible,
+.profile-menu button:hover,
+.profile-menu button:focus-visible {
   background-color: var(--hover-menu);
+}
+
+.profile-menu button {
+  cursor: pointer;
+  transition: background-color 100ms ease-in-out;
 }
 
 .profile-menu button:disabled {

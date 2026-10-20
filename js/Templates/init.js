@@ -1,10 +1,24 @@
 
  async function init(){
+    if (!isPublicJoinPage() && !hasJoinSession()) {
+        window.location.replace("../index.html");
+        return;
+    }
     await fetchFooterHeader();
     renderNavFooterMobile2();
     initNavbarButtonsBackground();
     await initSessionData();
     renderContactList(getSessionData("session-contacts"));
+}
+
+function isPublicJoinPage() {
+    const page = window.location.pathname.split("/").pop();
+    return ["index.html", "signup.html", "privacy-notice.html", "legal-notice.html"].includes(page);
+}
+
+function hasJoinSession() {
+    const mode = window.sessionStorage.getItem("join-session-mode");
+    return mode === "guest" || (mode === "demo" && Boolean(window.sessionStorage.getItem("join-demo-name")));
 }
 /**
  * this is a function that fetches the footer and header templates and inserts them into the pages
@@ -29,6 +43,8 @@ function initProfileMenu() {
     const menu = document.getElementById("profile-menu");
     if (!menu || menu.dataset.initialized) return;
     menu.dataset.initialized = "true";
+    const logoutButton = menu.querySelector("#logout-button");
+    if (logoutButton) logoutButton.addEventListener("click", logoutJoinSession);
     const buttons = document.querySelectorAll(".profile-initials-btn, .board-mobile-profile-button");
     let activeButton = null;
 
@@ -74,6 +90,12 @@ function initProfileMenu() {
     });
     window.addEventListener("resize", () => closeMenu());
     document.addEventListener("scroll", () => closeMenu(), true);
+}
+
+function logoutJoinSession() {
+    ["join-session-mode", "join-demo-name", "session-initialized", "session-contacts", "session-tasks"]
+        .forEach((key) => window.sessionStorage.removeItem(key));
+    window.location.href = "../index.html";
 }
 
 /**
