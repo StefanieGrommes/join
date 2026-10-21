@@ -611,11 +611,23 @@ function handleColumnAddClick(event) {
  */
 function initBoardLayout() {
   const searchButton = document.querySelector(".board-search-button");
+  const searchInput = document.querySelector(".board-search-field input");
   if (!boardMainContainer) return;
   getBoardColumns().forEach(bindColumnDropEvents);
   boardMainContainer.addEventListener("click", handleColumnAddClick);
   if (searchButton) searchButton.addEventListener("click", runBoardSearch);
+  if (searchInput) searchInput.addEventListener("input", handleSearchInput);
   renderBoard();
+}
+
+/**
+ * Resets the search as soon as the search field is cleared.
+ *
+ * @param {InputEvent} event - The input event.
+ * @returns {void}
+ */
+function handleSearchInput(event) {
+  if (event.target.value.trim() === "") runBoardSearch();
 }
 
 /**
