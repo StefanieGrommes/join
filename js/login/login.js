@@ -21,6 +21,7 @@ function redirectToSignupPage() {
  */
 function loginAsGuest() {
   window.sessionStorage.removeItem("join-demo-name");
+  window.sessionStorage.removeItem("join-profile-color");
   window.sessionStorage.setItem("join-session-mode", "guest");
   window.sessionStorage.removeItem("session-initialized");
   window.sessionStorage.removeItem("session-contacts");
@@ -57,6 +58,7 @@ function loginAsDemoUser(event) {
   }
   window.sessionStorage.setItem("join-demo-name", name);
   window.sessionStorage.setItem("join-session-mode", "demo");
+  window.sessionStorage.setItem("join-profile-color", createRandomProfileColor());
   window.location.href = "./pages/summary.html";
 }
 

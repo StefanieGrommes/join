@@ -207,9 +207,18 @@ function bindProfileMenuCloseEvents() {
  * @returns {void}
  */
 function logoutJoinSession() {
-    ["join-session-mode", "join-demo-name", "session-initialized", "session-contacts", "session-tasks"]
+    ["join-session-mode", "join-demo-name",  "join-profile-color", "session-initialized", "session-contacts", "session-tasks"]
         .forEach((key) => window.sessionStorage.removeItem(key));
     window.location.href = "../index.html";
+}
+
+/**
+ * Creates a random profile color for each user.
+ * @returns {void}
+ */
+function createRandomProfileColor() {
+    const profileColors = ["#2563EB", "#7C3AED", "#0F766E", "#BE123C", "#4338CA", "#047857", "#A16207", "#6D28D9"];
+    return profileColors[Math.floor(Math.random() * profileColors.length)];
 }
 
 /**
@@ -222,8 +231,13 @@ function updateSessionHeader() {
     if (mode !== "guest" && (mode !== "demo" || !name)) return;
     const initials = mode === "guest" ? "G" : getDemoInitials(name);
     const label = mode === "guest" ? "Guest profile" : `${name} (demo profile)`;
+    let color = window.sessionStorage.getItem("join-profile-color");
+    if (!color) {
+        color = createRandomProfileColor();
+        window.sessionStorage.setItem("join-profile-color", color);
+    }
     document.querySelectorAll(profileButtonSelector)
-        .forEach((button) => showProfileInitials(button, initials, label));
+        .forEach((button) => showProfileInitials(button, initials, label, color));
 }
 
 /**
@@ -257,9 +271,15 @@ function createInitialsElement(initials) {
  * @param {string} label - The accessible profile name.
  * @returns {void}
  */
-function showProfileInitials(button, initials, label) {
+function showProfileInitials(button, initials, label, color) {
     const svg = button.querySelector("svg");
     if (!svg || svg.querySelector(".guest-profile-initial")) return;
+    const circle = svg.querySelector("circle");
+    if (circle) {
+        circle.setAttribute("fill", color);
+        circle.setAttribute("stroke", "#000000");
+        circle.setAttribute("stroke-width", "3");
+    }
     svg.appendChild(createInitialsElement(initials));
     button.setAttribute("aria-label", label);
     button.setAttribute("title", label);

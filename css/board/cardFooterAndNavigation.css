@@ -1,6 +1,6 @@
 :root {
   .board-progress-label {
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 400;
     color: #111827;
     white-space: nowrap;
@@ -34,7 +34,7 @@
     align-items: center;
     justify-content: center;
     color: #ffffff;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 600;
     line-height: 1;
     flex-shrink: 0;
@@ -66,7 +66,7 @@
     border-radius: 14px;
     background: rgba(255, 255, 255, 0.9);
     color: #556070;
-    font-size: 18px;
+    font-size: 1.125rem;
     font-weight: 500;
     text-align: center;
     box-shadow: 0 4px 12px rgba(17, 24, 39, 0.06);
@@ -74,13 +74,20 @@
 
   .board-mobile-top-nav {
     display: none;
-  }
-
-  .board-mobile-top-nav {
+    width: 100%;
+    min-height: 72px;
+    padding: 14px 20px;
+    margin: 0;
     align-items: center;
     justify-content: space-between;
     background: #ffffff;
     box-shadow: 0 0 4px 4px rgba(110, 107, 107, 0.2);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 8;
+    grid-area: auto;
   }
 
   .board-mobile-logo-wrapper {
@@ -109,9 +116,6 @@
 
   .board-mobile-profile-circle {
     display: block;
-  }
-
-  .board-mobile-profile-circle{
     width: 40px;
     height: 40px;
   }

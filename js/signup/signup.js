@@ -245,6 +245,7 @@ function saveSignupSession(form) {
   const name = getSignupValue(form, "#signup-name").trim();
   window.sessionStorage.setItem("join-demo-name", name);
   window.sessionStorage.setItem("join-session-mode", "demo");
+  window.sessionStorage.setItem("join-profile-color", createRandomProfileColor());
 }
 
 /**
