@@ -214,12 +214,40 @@
       <div id="board-task-detail-root" class="board-detail-modal-body"></div>
     </div>
   </div>
+  <template id="board-column-header-template">
+    <div class="board-main-column-header">
+      <h2 class="board-main-column-title"></h2>
+      <button type="button" class="board-main-column-add-button">+</button>
+    </div>
+  </template>
+  <template id="board-column-content-template">
+    <div class="board-main-column-content"></div>
+  </template>
+  <template id="board-empty-hint-template">
+    <p class="board-empty-state"></p>
+  </template>
+  <template id="board-search-empty-template">
+    <p class="board-search-empty-state">Keine Ergebnisse gefunden</p>
+  </template>
+  <template id="board-move-menu-template">
+    <div id="board-move-menu" class="board-move-menu" role="menu" aria-label="Move to" hidden>
+      <p class="board-move-menu-title">Move to</p>
+    </div>
+  </template>
+  <template id="board-move-option-template">
+    <button type="button" role="menuitem"><span aria-hidden="true"></span></button>
+  </template>
   <script src="../js/data/contacts.js"></script>
   <script src="../js/data/app-data.js"></script>
   <script src="../js/Templates/templates.js"></script>
   <script src="../js/Templates/addTaskTemplates.js"></script>
   <script src="../js/contactList.js"></script>
-  <script src="../js/board/board-layout.js"></script>
+  <script src="../js/board/boardData.js"></script>
+  <script src="../js/board/boardRender.js"></script>
+  <script src="../js/board/boardMove.js"></script>
+  <script src="../js/board/boardTaskForm.js"></script>
+  <script src="../js/board/boardDetail.js"></script>
+  <script src="../js/board/boardLayout.js"></script>
 </body>
 
 </html>
