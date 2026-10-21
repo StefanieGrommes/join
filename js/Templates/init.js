@@ -93,9 +93,14 @@ function initProfileMenu() {
 }
 
 function logoutJoinSession() {
-    ["join-session-mode", "join-demo-name", "session-initialized", "session-contacts", "session-tasks"]
+    ["join-session-mode", "join-demo-name", "join-profile-color", "session-initialized", "session-contacts", "session-tasks"]
         .forEach((key) => window.sessionStorage.removeItem(key));
     window.location.href = "../index.html";
+}
+
+function createRandomProfileColor() {
+    const profileColors = ["#2563EB", "#7C3AED", "#0F766E", "#BE123C", "#4338CA", "#047857", "#A16207", "#6D28D9"];
+    return profileColors[Math.floor(Math.random() * profileColors.length)];
 }
 
 /**
@@ -114,9 +119,15 @@ function updateSessionHeader() {
     const initials = mode === "guest" ? "G" : getDemoInitials(name);
     // Text für Tooltip und Screenreader.
     const label = mode === "guest" ? "Guest profile" : `${name} (demo profile)`;
+    // Jeder neue Nutzer erhält eine zufällige Farbe, die für die Session erhalten bleibt.
+    let color = window.sessionStorage.getItem("join-profile-color");
+    if (!color) {
+        color = createRandomProfileColor();
+        window.sessionStorage.setItem("join-profile-color", color);
+    }
     // Alle Profil-Buttons (Desktop-Header + Board-Mobile-Leiste) mit den Initialen befüllen.
     document.querySelectorAll(".profile-initials-btn, .board-mobile-profile-button")
-        .forEach(button => showProfileInitials(button, initials, label));
+        .forEach(button => showProfileInitials(button, initials, label, color));
 }
 
 
@@ -144,16 +155,22 @@ function getDemoInitials(name) {
  * @param {string} label - Der zugaengliche Profilname.
  * @returns {void}
  */
-function showProfileInitials(button, initials, label) {
+function showProfileInitials(button, initials, label, color) {
     // Kreis-SVG im Button.
     const svg = button.querySelector("svg");
     // Kein SVG -> nichts zu tun.
     if (!svg) return;
     // Initialen schon vorhanden -> nicht doppelt einfügen.
     if (svg.querySelector(".guest-profile-initial")) return;
+    const circle = svg.querySelector("circle");
+    if (circle) {
+        circle.setAttribute("fill", color);
+        circle.setAttribute("stroke", "#000000");
+        circle.setAttribute("stroke-width", "3");
+    }
     // Neues SVG-<text>-Element (muss mit SVG-Namespace erstellt werden).
     const initial = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    const attributes = {x: "28", y: "28", "text-anchor": "middle", "dominant-baseline": "central", fill: "#2A3647", "font-size": "20", "font-weight": "700", "font-family": "Inter, sans-serif", class: "guest-profile-initial"};
+    const attributes = {x: "28", y: "28", "text-anchor": "middle", "dominant-baseline": "central", fill: "#FFFFFF", "font-size": "20", "font-weight": "700", "font-family": "Inter, sans-serif", class: "guest-profile-initial"};
     // Alle Attribute (Position, Zentrierung, Farbe, Klasse ...) auf das <text>-Element setzen.
     Object.entries(attributes).forEach(([name, value]) => initial.setAttribute(name, value));
     // Initialen als Text eintragen.

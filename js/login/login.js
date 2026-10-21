@@ -51,6 +51,7 @@ function loginAsGuest() {
 
   // Evtl. alten Demo-Namen aus einer früheren Sitzung entfernen.
   window.sessionStorage.removeItem("join-demo-name");
+  window.sessionStorage.removeItem("join-profile-color");
   // Sitzungsmodus "guest" speichern -> wird in init.js (updateSessionHeader) für die Initialen "G" gelesen.
   window.sessionStorage.setItem("join-session-mode", "guest");
   // Beim Start einer neuen Gastsitzung die vorherigen Daten erneut laden.
@@ -106,6 +107,7 @@ function loginAsDemoUser(event) {
   window.sessionStorage.setItem("join-demo-name", name);
   // Sitzungsmodus "demo" speichern.
   window.sessionStorage.setItem("join-session-mode", "demo");
+  window.sessionStorage.setItem("join-profile-color", createRandomProfileColor());
   // Weiter zur Summary-Seite.
   window.location.href = "./pages/summary.html";
 }

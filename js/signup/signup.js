@@ -301,6 +301,7 @@ function initSignupPage() {
         const name = form.querySelector("#signup-name").value.trim();
         window.sessionStorage.setItem("join-demo-name", name);
         window.sessionStorage.setItem("join-session-mode", "demo");
+        window.sessionStorage.setItem("join-profile-color", createRandomProfileColor());
         // Button-Text auf "Signed up" ändern.
         signupButton.textContent = "Signed up";
         // Erfolgs-Overlay anzeigen und danach weiterleiten.
