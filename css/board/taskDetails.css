@@ -25,7 +25,7 @@
   align-items: center;
   justify-content: space-between;
   min-height: 32px;
-  color: #2f3d4c;
+  color: rgb(47, 61, 76);
   font-size: 1.125rem;
 }
 
@@ -57,7 +57,7 @@
 
 .board-detail-modal-body .board-detail-subtasks h4 {
   margin: 0 0 12px;
-  color: #2f3d4c;
+  color: rgb(47, 61, 76);
   font-size: 1.125rem;
   font-weight: 400;
 }
@@ -67,7 +67,7 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 10px;
-  color: #2f3d4c;
+  color: rgb(47, 61, 76);
   font-size: 1.125rem;
   line-height: 1.4;
   overflow-wrap: anywhere;
@@ -80,7 +80,7 @@
 .board-detail-modal-body .board-detail-subtask input[type="checkbox"] {
   width: 16px;
   height: 16px;
-  accent-color: #4589ff;
+  accent-color: rgb(69, 137, 255);
   flex-shrink: 0;
 }
 
@@ -97,7 +97,7 @@
   padding: 0;
   min-width: auto;
   height: auto;
-  color: #2f3d4c;
+  color: rgb(47, 61, 76);
   font-weight: 500;
   font-size: 1rem;
   line-height: 1;
@@ -108,7 +108,7 @@
 }
 
 .board-detail-modal-body .board-detail-button:hover {
-  color: #1b66d1;
+  color: rgb(27, 102, 209);
 }
 
 .board-detail-modal-body .board-detail-button-icon {

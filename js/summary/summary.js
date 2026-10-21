@@ -44,7 +44,7 @@ function showSummaryName() {
     username.textContent = mode === "demo" && name ? name.trim() : "";
     username.hidden = !username.textContent;
     if (!username.textContent) {
-        daytimeContainer.textContent = getCurrentDaytime().replace(/,$/, "");
+        daytimeContainer.textContent = getCurrentDaytime().replace(/,$/, "!");
     }
 }
 

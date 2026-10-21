@@ -16,7 +16,7 @@
   width: min(900px, calc(100vw - 48px));
   max-height: calc(100dvh - 48px);
   overflow-y: auto;
-  background: #ffffff;
+  background: rgb(255, 255, 255);
   border-radius: 18px;
   box-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
   padding: 20px 28px 18px;
@@ -54,7 +54,7 @@
 .board-task-header h2 {
   margin: 0;
   font-size: clamp(1.8rem, 2vw, 2.6rem);
-  color: #111827;
+  color: rgb(17, 24, 39);
 }
 
 .board-task-close {
@@ -63,7 +63,7 @@
   border-radius: 50%;
   border: none;
   background: transparent;
-  color: #334155;
+  color: rgb(51, 65, 85);
   font-size: 2rem;
   line-height: 1;
   cursor: pointer;
@@ -74,14 +74,14 @@
 }
 
 .board-task-cancel {
-  background: #fff;
-  color: #111827;
+  background: rgb(255, 255, 255);
+  color: rgb(17, 24, 39);
 }
 
 .board-task-save {
   background: var(--main-color);
   border-color: var(--main-color);
-  color: #fff;
+  color: rgb(255, 255, 255);
 }
 
 .board-detail-modal {
@@ -111,7 +111,7 @@
   flex-direction: column;
   margin: 0;
   box-sizing: border-box;
-  background: #ffffff;
+  background: rgb(255, 255, 255);
   border-radius: 18px;
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
   padding: 48px 40px 40px 48px;
@@ -135,14 +135,14 @@
 }
 
 .board-detail-modal-body .board-detail-card::-webkit-scrollbar-thumb {
-  background: #c4ccd8;
+  background: rgb(196, 204, 216);
   border-radius: 999px;
 }
 
 @supports not selector(::-webkit-scrollbar) {
   .board-detail-modal-body .board-detail-card {
     scrollbar-width: thin;
-    scrollbar-color: #c4ccd8 transparent;
+    scrollbar-color: rgb(196, 204, 216) transparent;
   }
 }
 
@@ -171,7 +171,7 @@
   min-width: 180px;
   padding: 0 18px;
   border-radius: 10px;
-  color: #ffffff;
+  color: rgb(255, 255, 255);
   font-weight: 700;
   font-size: 1.125rem;
   line-height: 1;
@@ -183,7 +183,7 @@
   flex-shrink: 0;
   border: none;
   background: transparent;
-  color: #2f3d4c;
+  color: rgb(47, 61, 76);
   font-size: 1.75rem;
   line-height: 1;
   cursor: pointer;
@@ -205,13 +205,13 @@
   margin: 18px 0 18px;
   font-size: clamp(2rem, 8vw, 3.8125rem);
   font-weight: 700;
-  color: #111827;
+  color: rgb(17, 24, 39);
   max-width: 445px;
   overflow-wrap: anywhere;
 }
 
 .board-detail-modal-body .board-detail-description {
-  color: #6b7280;
+  color: rgb(107, 114, 128);
   font-size: clamp(1rem, 3vw, 1.25rem);
   font-weight: 400;
   margin: 0 0 26px;
@@ -228,14 +228,14 @@
 
 .board-detail-modal-body .board-detail-label {
   min-width: clamp(96px, 20vw, 130px);
-  color: #2f3d4c;
+  color: rgb(47, 61, 76);
   font-size: clamp(1rem, 3vw, 1.25rem);
   font-weight: 400;
   line-height: 1.3;
 }
 
 .board-detail-modal-body .board-detail-value {
-  color: #2f3d4c;
+  color: rgb(47, 61, 76);
   font-size: clamp(1rem, 3vw, 1.25rem);
   font-weight: 400;
   line-height: 1.3;
@@ -247,7 +247,7 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  color: #111827;
+  color: rgb(17, 24, 39);
 }
 
 .board-card.is-dragging {
@@ -260,7 +260,7 @@
 .board-main-column.is-drop-target {
   background: rgba(111, 168, 255, 0.08);
   border-radius: 18px;
-  outline: 2px dashed #6fa8ff;
+  outline: 2px dashed rgb(111, 168, 255);
   outline-offset: -4px;
 }
 

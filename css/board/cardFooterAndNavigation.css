@@ -2,7 +2,7 @@
   .board-progress-label {
     font-size: 1rem;
     font-weight: 400;
-    color: #111827;
+    color: rgb(17, 24, 39);
     white-space: nowrap;
   }
 
@@ -29,11 +29,11 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    border: 2px solid #ffffff;
+    border: 2px solid rgb(255, 255, 255);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #ffffff;
+    color: rgb(255, 255, 255);
     font-size: 1rem;
     font-weight: 600;
     line-height: 1;
@@ -62,10 +62,10 @@
     grid-column: 1 / -1;
     margin: 28px 0 0;
     padding: 22px 24px;
-    border: 1px dashed #a8afb8;
+    border: 1px dashed rgb(168, 175, 184);
     border-radius: 14px;
     background: rgba(255, 255, 255, 0.9);
-    color: #556070;
+    color: rgb(85, 96, 112);
     font-size: 1.125rem;
     font-weight: 500;
     text-align: center;
@@ -80,7 +80,7 @@
     margin: 0;
     align-items: center;
     justify-content: space-between;
-    background: #ffffff;
+    background: rgb(255, 255, 255);
     box-shadow: 0 0 4px 4px rgba(110, 107, 107, 0.2);
     position: fixed;
     top: 0;
