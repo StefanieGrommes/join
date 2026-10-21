@@ -11,11 +11,8 @@ let activeProfileButton = null;
  * @returns {Promise<void>}
  */
 async function init() {
-    if (!isPublicJoinPage() && !hasJoinSession()) {
-        window.location.replace("../index.html");
-        return;
-    }
     await fetchFooterHeader();
+    await replaceNavLinksWithLogin();
     await renderMobilePolicyNavFooter();
     initNavbarButtonsBackground();
     await initSessionData();
@@ -43,6 +40,35 @@ function hasJoinSession() {
 }
 
 /**
+ * Replaces the navigation links with a single "Log In" link when no session is active.
+ * The original list items are hidden, the list itself stays.
+ *
+ * @returns {Promise<void>}
+ */
+async function replaceNavLinksWithLogin() {
+    if (hasJoinSession()) return;
+    const navList = document.querySelector(".nav-links");
+    if (!navList) return;
+    navList.querySelectorAll("li").forEach((item) => {
+        item.style.display = "none";
+    });
+    const response = await fetch("../templates/loginNavLink.txt");
+    navList.insertAdjacentHTML("beforeend", await response.text());
+}
+
+/**
+ * Hides the profile buttons when no guest or demo session is active.
+ *
+ * @returns {void}
+ */
+function hideProfileButtonsWithoutSession() {
+    if (hasJoinSession()) return;
+    document.querySelectorAll(".profile-initials-btn").forEach((button) => {
+        button.style.display = "none";
+    });
+}
+
+/**
  * Loads an HTML template file and inserts its content into the body.
  *
  * @param {string} path - Path of the template file.
@@ -62,6 +88,7 @@ async function insertTemplate(path, position) {
  */
 async function fetchFooterHeader() {
     await insertTemplate("../templates/header.txt", "afterbegin");
+    hideProfileButtonsWithoutSession();
     updateSessionHeader();
     initProfileMenu();
     await insertTemplate("../templates/footer.txt", "beforeend");
@@ -367,3 +394,16 @@ async function postData(path = "", data = {}) {
     });
     return response.json();
 }
+
+
+/**
+ * Redirects to the login page if the current page needs a session and none is active.
+ *
+ * @returns {void}
+ */
+function redirectWithoutSession() {
+    if (isPublicJoinPage() || hasJoinSession()) return;
+    window.location.replace("../index.html");
+}
+
+redirectWithoutSession();
