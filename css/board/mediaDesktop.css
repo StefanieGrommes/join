@@ -23,8 +23,6 @@
       margin-right: 0px;
     }
 
-
-
     main {
       flex: 1;
       min-width: 0;
@@ -34,6 +32,7 @@
       display: flex;
       flex-direction: column;
     }
+
     .sidebar-nav-item {
       gap: 10px;
       padding: 10px 20px;
@@ -60,9 +59,7 @@
       margin-left: 0px;
       margin-right: 0px;
     }
-
   }
-
 
   @media (max-width: 1040px) and (min-width: 769px) {
     .sidebar {
@@ -123,13 +120,9 @@
     }
 
     .board-column-title {
-      
-        font-size: 16px;
-        
+      font-size: 16px;
     }
-
   }
-
 
   @media (max-width: 860px) and (min-width: 769px) {
 
@@ -159,7 +152,6 @@
       padding: 4px 6px;
     }
 
-
     .board-header-container,
     .board-main-container {
       margin-left: 12px;
@@ -175,12 +167,10 @@
       gap: 10px;
     }
 
-
     .board-card--task {
-
-        border-radius: 12px;
-
+      border-radius: 12px;
     }
+
     .board-search-field {
       width: 240px;
       height: 42px;
@@ -189,6 +179,7 @@
     .board-search-field input {
       font-size: 16px;
     }
+
     .board-header-container, .board-main-container {
       margin-left: 0px;
       margin-right: 0px;
@@ -199,8 +190,7 @@
     }
 
     .board-main-container {
-        
-        gap: 18px;
+     gap: 18px;
     }
 
     .board-add-task-button {

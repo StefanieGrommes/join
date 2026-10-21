@@ -7,7 +7,7 @@
   <title>Join - Sign up</title>
   <link rel="shortcut icon" href="../assets/join-favicon.svg" type="image/x-icon">
   <link rel="stylesheet" href="../css/fonts.css">
-  <link rel="stylesheet" href="../css/menu.css">
+  <link rel="stylesheet" href="../css/menu/style.css">
   <link rel="stylesheet" href="../css/signup/style.css" />
   <script src="../js/Templates/init.js"></script>
 </head>
@@ -34,32 +34,29 @@
               </div>
 
               <div class="field input-with-icon">
-                <input id="signup-email" type="email" placeholder="Email" name="email" />
+                <input id="signup-email" type="email" placeholder="Email" name="email"
+                  aria-describedby="signup-feedback" />
                 <img src="../img/icons/mail.png" alt="Mail icon" class="input-icon" />
               </div>
 
               <div class="field input-with-icon">
-                <input id="signup-password" type="password" placeholder="Password" name="password" aria-describedby="signup-password-requirements" />
+                <input id="signup-password" type="password" placeholder="Password" name="password"
+                  aria-describedby="signup-feedback" />
                 <img src="../img/icons/lock.png" alt="Lock icon" class="input-icon" />
               </div>
-
-              <div id="signup-password-requirements" class="signup-password-feedback">
-              </div>
-
               <div class="field input-with-icon">
                 <input id="signup-confirm-password" type="password" placeholder="Confirm Password"
-                  name="confirmPassword" aria-describedby="signup-password-requirements signup-password-error" />
+                  name="confirmPassword" aria-describedby="signup-feedback" />
                 <img src="../img/icons/lock.png" alt="Lock icon" class="input-icon" />
               </div>
-
-              <p id="signup-password-error" class="signup-password-error" aria-live="polite"></p>
-
+              <div id="signup-feedback" class="signup-password-error" aria-live="polite"></div>
               <div class="checkbox-line">
-                <input id="privacy-policy-checkbox" type="checkbox" />
-                <span>I accept the <a href="../pages/privacy-notice.html">Privacy policy</a></span>
+                <div class="checkbox-line">
+                  <input id="privacy-policy-checkbox" type="checkbox" />
+                  <span>I accept the <a href="../pages/privacy-notice.html">Privacy policy</a></span>
+                </div>
               </div>
-            </div>
-            <button id="signup-submit-button" type="submit" class="btn btn--primary" disabled>Sign up</button>
+              <button id="signup-submit-button" type="submit" class="btn btn--primary" disabled>Sign up</button>
           </form>
         </section>
       </main>
@@ -78,4 +75,5 @@
 
 </body>
 <script src="../js/signup/signup.js"></script>
+
 </html>

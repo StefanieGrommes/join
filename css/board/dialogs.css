@@ -155,7 +155,6 @@
   cursor: pointer;
 }
 
-
 .board-task-date-wrap input {
   width: 100%;
 }
@@ -170,7 +169,6 @@
   border-color: #2d3d4d;
   color: #fff;
 }
-
 
 .board-detail-modal {
   position: fixed;

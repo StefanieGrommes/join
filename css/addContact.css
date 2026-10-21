@@ -144,6 +144,7 @@ button {
   border-color: #a8a8a8;
   cursor: not-allowed;
 }
+
 .cancel-btn {
   border: 1px solid var(--main-color);
   width: 126px;
