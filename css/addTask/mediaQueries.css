@@ -1,0 +1,147 @@
+@media (max-width: 1280px) {
+  .add-task-content {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (max-width: 1050px) {
+  .form-columns {
+    flex-direction: column;
+  }
+
+  .form-column-right {
+    border-left: none;
+    padding-left: 0;
+  }
+  .form-column-left,
+  .form-column-right {
+    max-width: 100%;
+  }
+
+  .priority-options {
+    justify-content: center;
+  }
+
+  .form-footer {
+    margin: 12px 0 12px;
+
+  }
+  .required-hint {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .add-task-content h1 {
+    font-size: 3rem;
+    margin: 28px 0 40px;
+  }
+
+  main:has(.add-task-content) {
+    padding: 20px 16px 12px 16px;
+  }
+  .add-task-content {
+    padding-right: 0px;
+    height: auto;
+  }
+
+  .form-field label {
+    font-size: 1rem;
+  }
+
+  .form-field input {
+    font-size: 1rem;
+  }
+
+  .form-field input,
+  .form-field textarea {
+    padding: 10px 21px;
+  }
+
+  .form-field textarea {
+    min-height: 88px;
+  }
+  .form-field input::placeholder,
+  .form-field textarea::placeholder {
+    font-size: 1rem;
+  }
+
+  .form-field label,
+  .field-label {
+    font-size: 1rem;
+  }
+
+  .priority-btn {
+    font-size: 1rem;
+    padding: 18px 10px;
+    height: 41px;
+    width: 121px;
+  }
+
+  .required-hint {
+    display: none;
+  }
+
+  .form-footer {
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 440px) {
+  main {
+    padding: 20px 16px 0 16px;
+  }
+
+  .form-columns {
+    gap: 24px;
+  }
+
+  .priority-options {
+    gap: 4px;
+  }
+
+  .priority-btn {
+    height: 31px;
+    width: 95px;
+    gap: 4px;
+  }
+
+  .priority-btn svg {
+    width: 16px;
+  }
+
+  .form-actions {
+    gap: 8px;
+  }
+
+  .btn-clear,
+  .btn-create {
+    font-size: 1rem;
+    justify-content: center;
+  }
+
+  .btn-clear {
+    width: 100px;
+    height: 44px;
+  }
+
+  .btn-create {
+    width: 150px;
+    height: 44px;
+  }
+
+  .icon-close {
+    width: 10.5px;
+    height: 10.5px;
+  }
+
+  .icon-check {
+    width: 10.5px;
+    height: 10.5px;
+  }
+
+  .form-footer {
+    margin: 12px 0 10px;
+  }
+}

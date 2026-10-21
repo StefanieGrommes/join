@@ -7,8 +7,8 @@
   <title>Join - Board</title>
   <link rel="shortcut icon" href="../assets/join-favicon.svg" type="image/x-icon" />
   <link rel="stylesheet" href="../css/fonts.css" />
-  <link rel="stylesheet" href="../css/menu.css">
-  <link rel="stylesheet" href="../css/addTask.css" />
+  <link rel="stylesheet" href="../css/menu/style.css">
+  <link rel="stylesheet" href="../css/addTask/style.css" />
   <link rel="stylesheet" href="../css/board/style.css" />
   <script src="../js/Templates/init.js"></script>
 </head>
@@ -33,7 +33,7 @@
             </div>
             <button id="board-open-add-task-modal" class="board-add-task-button" type="button" aria-label="Add task">
               Add task
-              <span class="board-add-task-plus" aria-hidden="true">+</span>
+              <span class="board-add-task-plus">+</span>
             </button>
           </div>
         </div>
@@ -239,8 +239,10 @@
   </template>
   <script src="../js/data/contacts.js"></script>
   <script src="../js/data/app-data.js"></script>
+  <script src="../js/Templates/templateRender.js"></script>
   <script src="../js/Templates/templates.js"></script>
-  <script src="../js/Templates/addTaskTemplates.js"></script>
+  <script src="../js/addTask/addTaskTemplates.js"></script>
+  <script src="../js/addTask/addTask.js"></script>
   <script src="../js/contactList.js"></script>
   <script src="../js/board/boardData.js"></script>
   <script src="../js/board/boardRender.js"></script>

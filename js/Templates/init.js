@@ -7,7 +7,6 @@ let activeProfileButton = null;
 
 /**
  * Starts every Join page: checks the session, loads header and footer and the session data.
- *
  * @returns {Promise<void>}
  */
 async function init() {
@@ -21,7 +20,6 @@ async function init() {
 
 /**
  * Checks whether the current page can be opened without a session.
- *
  * @returns {boolean} True for login, signup and legal pages.
  */
 function isPublicJoinPage() {
@@ -31,7 +29,6 @@ function isPublicJoinPage() {
 
 /**
  * Checks whether a guest or demo session is active.
- *
  * @returns {boolean} True if the user is logged in as guest or demo user.
  */
 function hasJoinSession() {
@@ -42,7 +39,6 @@ function hasJoinSession() {
 /**
  * Replaces the navigation links with a single "Log In" link when no session is active.
  * The original list items are hidden, the list itself stays.
- *
  * @returns {Promise<void>}
  */
 async function replaceNavLinksWithLogin() {
@@ -58,7 +54,6 @@ async function replaceNavLinksWithLogin() {
 
 /**
  * Hides the profile buttons when no guest or demo session is active.
- *
  * @returns {void}
  */
 function hideProfileButtonsWithoutSession() {
@@ -70,7 +65,6 @@ function hideProfileButtonsWithoutSession() {
 
 /**
  * Loads an HTML template file and inserts its content into the body.
- *
  * @param {string} path - Path of the template file.
  * @param {InsertPosition} position - Where to insert, e.g. "afterbegin" or "beforeend".
  * @returns {Promise<void>}
@@ -83,7 +77,6 @@ async function insertTemplate(path, position) {
 
 /**
  * Fetches the header and footer templates and inserts them into the page.
- *
  * @returns {Promise<void>}
  */
 async function fetchFooterHeader() {
@@ -96,7 +89,6 @@ async function fetchFooterHeader() {
 
 /**
  * Connects the profile circles with the shared desktop and mobile menu.
- *
  * @returns {void}
  */
 function initProfileMenu() {
@@ -113,7 +105,6 @@ function initProfileMenu() {
 
 /**
  * Prepares one profile button: accessibility attributes and click handler.
- *
  * @param {HTMLButtonElement} button - The profile button.
  * @returns {void}
  */
@@ -127,7 +118,6 @@ function setupProfileButton(button) {
 
 /**
  * Closes the profile menu and optionally restores the focus to its button.
- *
  * @param {boolean} [restoreFocus=false] - Whether to focus the button again.
  * @returns {void}
  */
@@ -142,7 +132,6 @@ function closeProfileMenu(restoreFocus = false) {
 
 /**
  * Opens the profile menu for a button or closes it if it is already open for this button.
- *
  * @param {HTMLButtonElement} button - The clicked profile button.
  * @returns {void}
  */
@@ -159,7 +148,6 @@ function toggleProfileMenu(button) {
 
 /**
  * Places the profile menu below its button and keeps it inside the viewport.
- *
  * @param {HTMLButtonElement} button - The profile button.
  * @returns {void}
  */
@@ -174,7 +162,6 @@ function positionProfileMenu(button) {
 
 /**
  * Checks whether an element belongs to the profile menu or one of its buttons.
- *
  * @param {EventTarget} target - The element to check.
  * @returns {boolean} True if the element is part of the profile menu area.
  */
@@ -185,7 +172,6 @@ function isInsideProfileMenu(target) {
 
 /**
  * Closes the profile menu when the user clicks or focuses something outside of it.
- *
  * @param {Event} event - The click or focusin event.
  * @returns {void}
  */
@@ -195,7 +181,6 @@ function handleProfileOutsideEvent(event) {
 
 /**
  * Closes the profile menu when Escape is pressed.
- *
  * @param {KeyboardEvent} event - The keydown event.
  * @returns {void}
  */
@@ -207,7 +192,6 @@ function handleProfileMenuKeydown(event) {
 
 /**
  * Registers all events that close the profile menu.
- *
  * @returns {void}
  */
 function bindProfileMenuCloseEvents() {
@@ -220,7 +204,6 @@ function bindProfileMenuCloseEvents() {
 
 /**
  * Removes the session data and returns to the login page.
- *
  * @returns {void}
  */
 function logoutJoinSession() {
@@ -231,7 +214,6 @@ function logoutJoinSession() {
 
 /**
  * Shows guest or demo initials in the existing profile circles.
- *
  * @returns {void}
  */
 function updateSessionHeader() {
@@ -246,7 +228,6 @@ function updateSessionHeader() {
 
 /**
  * Determines up to two initials from the demo display name.
- *
  * @param {string} name - The entered display name.
  * @returns {string} The initials for the profile circle.
  */
@@ -258,7 +239,6 @@ function getDemoInitials(name) {
 
 /**
  * Creates the SVG text element that shows the initials inside the profile circle.
- *
  * @param {string} initials - The visible initials.
  * @returns {SVGTextElement} The text element.
  */
@@ -272,7 +252,6 @@ function createInitialsElement(initials) {
 
 /**
  * Adds the initials to the profile circle of a button.
- *
  * @param {HTMLButtonElement} button - The profile button.
  * @param {string} initials - The visible initials.
  * @param {string} label - The accessible profile name.
@@ -288,7 +267,6 @@ function showProfileInitials(button, initials, label) {
 
 /**
  * Marks the navigation button of the current page as active.
- *
  * @returns {void}
  */
 function initNavbarButtonsBackground() {
@@ -302,7 +280,6 @@ function initNavbarButtonsBackground() {
 
 /**
  * Inserts the mobile navigation footer on the privacy and legal notice pages.
- *
  * @returns {Promise<void>}
  */
 async function renderMobilePolicyNavFooter() {
@@ -315,7 +292,6 @@ async function renderMobilePolicyNavFooter() {
 
 /**
  * Loads contacts and tasks from the database into the session storage once per session.
- *
  * @returns {Promise<void>}
  */
 async function initSessionData() {
@@ -329,7 +305,6 @@ async function initSessionData() {
 
 /**
  * Fetches contacts and tasks from the Firebase database.
- *
  * @returns {Promise<{userArray: Object, taskArray: Object}>} The raw contacts and tasks.
  */
 async function fetchTemplateData() {
@@ -340,7 +315,6 @@ async function fetchTemplateData() {
 
 /**
  * Reads a list from the session storage.
- *
  * @param {string} key - The session storage key.
  * @returns {Object[]} The stored list or an empty array.
  */
@@ -350,7 +324,6 @@ function getSessionData(key) {
 
 /**
  * Writes a list to the session storage.
- *
  * @param {string} key - The session storage key.
  * @param {Object[]} items - The list to store.
  * @returns {void}
@@ -361,7 +334,6 @@ function saveSessionData(key, items) {
 
 /**
  * Sorts the contacts alphabetically by first name (sorts the given array in place).
- *
  * @param {Object[]} userArray - The contacts.
  * @returns {Object[]} The sorted contacts.
  */
@@ -371,7 +343,6 @@ function createAlphabeticalList(userArray) {
 
 /**
  * Sorts the tasks by their state (sorts the given array in place).
- *
  * @param {Object[]} taskArray - The tasks.
  * @returns {Object[]} The sorted tasks.
  */
@@ -381,7 +352,6 @@ function sortTasks(taskArray) {
 
 /**
  * Sends data to the Firebase database.
- *
  * @param {string} [path=""] - Path inside the database.
  * @param {Object} [data={}] - The data to send.
  * @returns {Promise<Object>} The response of the database.
@@ -395,10 +365,8 @@ async function postData(path = "", data = {}) {
     return response.json();
 }
 
-
 /**
  * Redirects to the login page if the current page needs a session and none is active.
- *
  * @returns {void}
  */
 function redirectWithoutSession() {
