@@ -5,7 +5,7 @@
 
   .board-detail-modal-body .board-detail-badge {
     min-width: 0;
-    font-size: 16px;
+    font-size: 1rem;
   }
 
   .board-detail-modal-body .board-detail-assignee {

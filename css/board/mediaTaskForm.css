@@ -17,7 +17,7 @@
 
   .board-task-form-column--left .board-task-input,
   .board-task-form-column--left .board-task-textarea {
-    font-size: 16px;
+    font-size: 1rem;
     padding: 10px 12px;
   }
 

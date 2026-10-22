@@ -26,7 +26,7 @@
         <a href="../pages/help.html">Help</a>
         <a href="../pages/legal-notice.html">Legal Notice</a>
         <a href="../pages/privacy-notice.html">Privacy Policy</a>
-        <button type="button" disabled>Log out</button>
+        <button id="logout-button" type="button">Log out</button>
     </div>
     <div class="aside-blue-box-bg">
         <aside>
@@ -105,3 +105,6 @@
             </div>
         </aside>
     </div>
+    <div class="rotate-hint" role="alert">
+  Please rotate your device to portrait mode.
+</div>

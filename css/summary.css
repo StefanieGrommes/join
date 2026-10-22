@@ -1,4 +1,3 @@
-
 .summary {
     display: flex;
     height: 100%;
@@ -49,7 +48,6 @@ h5 {
     color: var(--main-color);
 }
 
-
 .amount-bold {
     font-weight: 600;
     font-size: min(3rem, 4rem);
@@ -61,7 +59,7 @@ h5 {
 }
 
 .blue-separator {
-    background-color: #29ABE2;
+    background-color: rgb(41, 171, 226);
     height: clamp(2.5rem, 5vw, 4rem);
     width: 3px;
 }
@@ -82,6 +80,7 @@ h5 {
     box-shadow: var(--box-shadow-default);
     background-color: white;
     padding: 18px;
+    cursor: pointer;
     transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
 }
 
@@ -158,8 +157,6 @@ h5 {
     height: 100%;
     object-fit:cover
 }
-
-
 
 .welcome-message {
     grid-column: 2;
@@ -279,7 +276,7 @@ h5 {
         display: block;
         width: 90px;
         height: 3px;
-        background-color: #29ABE2;
+        background-color: rgb(41, 171, 226);
     }
 
     .task-boxes {
@@ -306,8 +303,8 @@ h5 {
     }
 
     .task-boxes-img-wrapper {
-    width: 50px;
-    height: 50px;
+        width: 50px;
+        height: 50px;
     }
 
     .amount-bold {

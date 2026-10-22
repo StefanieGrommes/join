@@ -4,13 +4,12 @@
     height: 48px;
     border: 1px solid #a8afb8;
     border-radius: 10px;
-    background: #fff;
+    background: rgb(255, 255, 255);
     display: flex;
     align-items: center;
     padding: 0 8px 0 14px;
     min-width: 0;
   }
-
 
   .board-search-field input {
     width: 100%;
@@ -18,24 +17,21 @@
     border: none;
     outline: none;
     background: transparent;
-    font-size: 20px;
-    color: #2d3d4d;
+    font-size: 1.25rem;
+    color: var(--main-color);
   }
-
 
   .board-search-field input::placeholder {
-    color: #7f8896;
+    color: rgb(127, 136, 150);
   }
-
 
   .board-search-divider {
     width: 1px;
     height: 32px;
-    background: #d2d6dc;
+    background: rgb(210, 214, 220);
     margin: 0 10px;
     flex-shrink: 0;
   }
-
 
   .board-search-button {
     width: 30px;
@@ -47,9 +43,8 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #2d3d4d;
+    color: var(--main-color);
   }
-
 
   .board-search-button svg {
     width: 18px;
@@ -61,15 +56,14 @@
     stroke-linejoin: round;
   }
 
-
   .board-add-task-button {
     min-width: 160px;
     height: 48px;
     border: none;
     border-radius: 10px;
-    background: #2d3d4d;
-    color: #fff;
-    font-size: 21px;
+    background: var(--main-color);
+    color: rgb(255, 255, 255);
+    font-size: 1.3125rem;
     font-weight: 700;
     display: flex;
     align-items: center;
@@ -79,18 +73,15 @@
     padding: 0 14px;
   }
 
-
   .board-add-task-button:hover {
     background-color: var(--hover-secondary-button);
     box-shadow: var(--shadow-stronger);
   }
 
-
   .board-add-task-plus {
-    font-size: 32px;
+    font-size: 2rem;
     font-weight: 300;
   }
-
 
   .board-main-container {
     min-height: 688px;
@@ -101,9 +92,7 @@
     justify-content: space-between;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 26px;
-
   }
-
 
   .board-main-column {
     display: flex;
@@ -113,14 +102,11 @@
     min-width: 0;
   }
 
-
   .board-main-column-content {
     display: flex;
     flex-direction: column;
     width: 100%;
-
   }
-
 
   .board-main-column-header {
     display: none;
@@ -130,24 +116,22 @@
     margin: 0 0 10px;
   }
 
-
   .board-main-column-title {
     margin: 0;
-    font-size: 18px;
+    font-size: 1.125rem;
     line-height: 1.2;
     font-weight: 700;
-    color: #2f3d4c;
+    color: rgb(47, 61, 76);
   }
-
 
   .board-main-column-add-button {
     width: 22px;
     height: 22px;
-    border: 2px solid #3a4f67;
+    border: 2px solid rgb(58, 79, 103);
     border-radius: 50%;
     background: transparent;
-    color: #3a4f67;
-    font-size: 20px;
+    color: rgb(58, 79, 103);
+    font-size: 1.25rem;
     line-height: 1;
     display: flex;
     align-items: center;
@@ -159,20 +143,18 @@
     flex-shrink: 0;
   }
 
-
   .board-empty-state {
     min-height: 46px;
     width: 100%;
-    border: 1px dashed #a8afb8;
+    border: 1px dashed rgb(168, 175, 184);
     border-radius: 10px;
-    background: #f9fafb;
-    color: #9aa3b2;
+    background: rgb(249, 250, 251);
+    color: rgb(154, 163, 178);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
   }
-
 
   .board-card {
     width: 100%;
@@ -185,46 +167,38 @@
     overflow: hidden;
   }
 
-
   .board-card + .board-card {
     margin-top: 14px;
   }
-
 
   .board-main-column-content .board-card {
     flex: 0 0 auto;
   }
 
-
   .board-card--todo {
-    background: linear-gradient(135deg, #6fa8ff 0%, #d9e7ff 100%);
+    background: linear-gradient(135deg, rgb(111, 168, 255) 0%, rgb(217, 231, 255) 100%);
   }
-
 
   .board-card--in-progress {
-    background: linear-gradient(135deg, #43c7ff 0%, #c5efff 100%);
+    background: linear-gradient(135deg, rgb(67, 199, 255) 0%, rgb(197, 239, 255) 100%);
   }
-
 
   .board-card--await-feedback {
-    background: linear-gradient(135deg, #43d3b3 0%, #c8f5e9 100%);
+    background: linear-gradient(135deg, rgb(67, 211, 179) 0%, rgb(200, 245, 233) 100%);
   }
-
 
   .board-card--done {
-    background: linear-gradient(135deg, #ff8eb0 0%, #ffd4e2 100%);
+    background: linear-gradient(135deg, rgb(255, 142, 176) 0%, rgb(255, 212, 226) 100%);
   }
 
-
   .board-card--task {
-    background: #ffffff;
-    border: 1px solid #e6eaf0;
+    background: rgb(255, 255, 255);
+    border: 1px solid rgb(230, 234, 240);
     border-radius: 20px;
     box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
     padding: 12px 14px;
     width: 100%;
   }
-
 
   .board-card-header {
     display: flex;
@@ -233,13 +207,12 @@
     margin-bottom: 10px;
   }
 
-
   .board-card-move-button {
     display: none;
     width: 24px;
     height: 24px;
     padding: 0;
-    border: 1.5px solid #2f3d4c;
+    border: 1.5px solid rgb(47, 61, 76);
     border-radius: 6px;
     background: transparent;
     color: #2f3d4c;
@@ -249,7 +222,6 @@
     cursor: pointer;
   }
 
-
   .board-move-menu {
     position: fixed;
     z-index: 1000;
@@ -257,19 +229,17 @@
     max-width: calc(100vw - 16px);
     padding: 12px;
     border-radius: 0 18px 18px 18px;
-    background: #2a3647;
-    color: #ffffff;
+    background: var(--main-color);
+    color: rgb(255, 255, 255);
     box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
   }
-
 
   .board-move-menu-title {
     margin: 0 0 8px;
     padding: 0 8px;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 700;
   }
-
 
   .board-move-menu button {
     display: flex;
@@ -282,23 +252,20 @@
     background: transparent;
     color: inherit;
     font: inherit;
-    font-size: 16px;
+    font-size: 1rem;
     text-align: left;
     cursor: pointer;
   }
 
-
   .board-move-menu button:hover,
   .board-move-menu button:focus-visible {
-    background: #091931;
+    background: var(--hover-bg-color);
   }
-
 
   .board-move-menu button span {
-    font-size: 22px;
+    font-size: 1.375rem;
     line-height: 1;
   }
-
 
   .board-card-badge {
     display: inline-flex;
@@ -307,33 +274,30 @@
     min-height: 24px;
     padding: 2px 12px;
     border-radius: 10px;
-    color: #ffffff;
-    font-size: 16px;
+    color: rgb(255, 255, 255);
+    font-size: 1rem;
     font-weight: 500;
     line-height: 1;
   }
 
-
   .board-card-title {
     margin: 0;
-    font-size: 18px;
+    font-size: 1.125rem;
     line-height: 1.1;
     font-weight: 700;
-    color: #111827;
+    color: rgb(17, 24, 39);
     overflow-wrap: anywhere;
     word-break: break-word;
   }
-
 
   .board-card-description {
     margin: 10px 0 12px;
-    font-size: 16px;
+    font-size: 1rem;
     line-height: 1.3;
-    color: #6b7280;
+    color: rgb(107, 114, 128);
     overflow-wrap: anywhere;
     word-break: break-word;
   }
-
 
   .board-card-progress {
     display: flex;
@@ -342,20 +306,18 @@
     margin-bottom: 12px;
   }
 
-
   .board-progress-bar {
     flex: 1;
     height: 8px;
     border-radius: 99px;
-    background: #e5e7eb;
+    background: rgb(229, 231, 235);
     overflow: hidden;
   }
-
 
   .board-progress-bar span {
     display: block;
     height: 100%;
-    background: #4589ff;
+    background: rgb(69, 137, 255);
     border-radius: 99px;
   }
 }

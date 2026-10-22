@@ -1,256 +1,399 @@
+const BASE_URL = "https://join--testuser-default-rtdb.europe-west1.firebasedatabase.app/";
+const profileButtonSelector = ".profile-initials-btn, .board-mobile-profile-button";
 
- async function init(){
+let profileMenuElement = null;
+let profileMenuButtons = [];
+let activeProfileButton = null;
+
+/**
+ * Starts every Join page: checks the session, loads header and footer and the session data.
+ * @returns {Promise<void>}
+ */
+async function init() {
     await fetchFooterHeader();
-    renderNavFooterMobile2();
+    await replaceNavLinksWithLogin();
+    await renderMobilePolicyNavFooter();
     initNavbarButtonsBackground();
     await initSessionData();
     if (typeof renderContactList === "function") {
     renderContactList(getSessionData("session-contacts"));
 }
 }
-/**
- * this is a function that fetches the footer and header templates and inserts them into the pages
- */
 
-async function fetchFooterHeader() {
-    const headerResponse = await fetch('../templates/header.txt');
-    const headerHtml = await headerResponse.text();
-    document.body.insertAdjacentHTML('afterbegin', headerHtml);
-    // Gast-/Demo-Initialen in den Profilkreis des gerade eingefügten Headers schreiben.
-    updateSessionHeader();
-    initProfileMenu();
-    const footerResponse = await fetch('../templates/footer.txt');
-    const footerHtml = await footerResponse.text();
-    document.body.insertAdjacentHTML('beforeend', footerHtml);
+/**
+ * Checks whether the current page can be opened without a session.
+ * @returns {boolean} True for login, signup and legal pages.
+ */
+function isPublicJoinPage() {
+    const page = window.location.pathname.split("/").pop();
+    return ["index.html", "signup.html", "privacy-notice.html", "legal-notice.html"].includes(page);
 }
 
 /**
- * Verbindet die Profilkreise mit dem gemeinsamen Desktop-/Mobile-Menue.
+ * Checks whether a guest or demo session is active.
+ * @returns {boolean} True if the user is logged in as guest or demo user.
+ */
+function hasJoinSession() {
+    const mode = window.sessionStorage.getItem("join-session-mode");
+    return mode === "guest" || (mode === "demo" && Boolean(window.sessionStorage.getItem("join-demo-name")));
+}
+
+/**
+ * Replaces the navigation links with a single "Log In" link when no session is active.
+ * The original list items are hidden, the list itself stays.
+ * @returns {Promise<void>}
+ */
+async function replaceNavLinksWithLogin() {
+    if (hasJoinSession()) return;
+    const navList = document.querySelector(".nav-links");
+    if (!navList) return;
+    navList.querySelectorAll("li").forEach((item) => {
+        item.style.display = "none";
+    });
+    const response = await fetch("../templates/loginNavLink.txt");
+    navList.insertAdjacentHTML("beforeend", await response.text());
+}
+
+/**
+ * Hides the profile buttons when no guest or demo session is active.
+ * @returns {void}
+ */
+function hideProfileButtonsWithoutSession() {
+    if (hasJoinSession()) return;
+    document.querySelectorAll(".profile-initials-btn").forEach((button) => {
+        button.style.display = "none";
+    });
+}
+
+/**
+ * Loads an HTML template file and inserts its content into the body.
+ * @param {string} path - Path of the template file.
+ * @param {InsertPosition} position - Where to insert, e.g. "afterbegin" or "beforeend".
+ * @returns {Promise<void>}
+ */
+async function insertTemplate(path, position) {
+    const response = await fetch(path);
+    const html = await response.text();
+    document.body.insertAdjacentHTML(position, html);
+}
+
+/**
+ * Fetches the header and footer templates and inserts them into the page.
+ * @returns {Promise<void>}
+ */
+async function fetchFooterHeader() {
+    await insertTemplate("../templates/header.txt", "afterbegin");
+    hideProfileButtonsWithoutSession();
+    updateSessionHeader();
+    initProfileMenu();
+    await insertTemplate("../templates/footer.txt", "beforeend");
+}
+
+/**
+ * Connects the profile circles with the shared desktop and mobile menu.
+ * @returns {void}
  */
 function initProfileMenu() {
     const menu = document.getElementById("profile-menu");
     if (!menu || menu.dataset.initialized) return;
     menu.dataset.initialized = "true";
-    const buttons = document.querySelectorAll(".profile-initials-btn, .board-mobile-profile-button");
-    let activeButton = null;
-
-    const closeMenu = (restoreFocus = false) => {
-        menu.hidden = true;
-        if (activeButton) {
-            activeButton.setAttribute("aria-expanded", "false");
-            if (restoreFocus) activeButton.focus();
-        }
-        activeButton = null;
-    };
-
-    buttons.forEach((button) => {
-        button.type = "button";
-        if (!button.hasAttribute("aria-label")) button.setAttribute("aria-label", "Profile");
-        button.setAttribute("aria-controls", menu.id);
-        button.setAttribute("aria-expanded", "false");
-        button.addEventListener("click", () => {
-            const wasOpen = activeButton === button;
-            closeMenu();
-            if (wasOpen) return;
-            activeButton = button;
-            menu.hidden = false;
-            button.setAttribute("aria-expanded", "true");
-            const rect = button.getBoundingClientRect();
-            menu.style.left = `${Math.max(8, Math.min(rect.right - menu.offsetWidth, window.innerWidth - menu.offsetWidth - 8))}px`;
-            menu.style.top = `${Math.max(8, Math.min(rect.bottom + 8, window.innerHeight - menu.offsetHeight - 8))}px`;
-            menu.querySelector("a").focus();
-        });
-    });
-
-    document.addEventListener("click", (event) => {
-        if (!menu.contains(event.target) && !Array.from(buttons).some(button => button.contains(event.target))) closeMenu();
-    });
-    document.addEventListener("keydown", (event) => {
-        if (!menu.hidden && event.key === "Escape") {
-            event.preventDefault();
-            closeMenu(true);
-        }
-    });
-    document.addEventListener("focusin", (event) => {
-        if (!menu.contains(event.target) && !Array.from(buttons).some(button => button.contains(event.target))) closeMenu();
-    });
-    window.addEventListener("resize", () => closeMenu());
-    document.addEventListener("scroll", () => closeMenu(), true);
+    profileMenuElement = menu;
+    profileMenuButtons = Array.from(document.querySelectorAll(profileButtonSelector));
+    const logoutButton = menu.querySelector("#logout-button");
+    if (logoutButton) logoutButton.addEventListener("click", logoutJoinSession);
+    profileMenuButtons.forEach(setupProfileButton);
+    bindProfileMenuCloseEvents();
 }
 
 /**
- * Zeigt Gast- oder Demoinitialen in den vorhandenen Profilkreisen an.
- *
+ * Prepares one profile button: accessibility attributes and click handler.
+ * @param {HTMLButtonElement} button - The profile button.
+ * @returns {void}
+ */
+function setupProfileButton(button) {
+    button.type = "button";
+    if (!button.hasAttribute("aria-label")) button.setAttribute("aria-label", "Profile");
+    button.setAttribute("aria-controls", profileMenuElement.id);
+    button.setAttribute("aria-expanded", "false");
+    button.addEventListener("click", () => toggleProfileMenu(button));
+}
+
+/**
+ * Closes the profile menu and optionally restores the focus to its button.
+ * @param {boolean} [restoreFocus=false] - Whether to focus the button again.
+ * @returns {void}
+ */
+function closeProfileMenu(restoreFocus = false) {
+    profileMenuElement.hidden = true;
+    if (activeProfileButton) {
+        activeProfileButton.setAttribute("aria-expanded", "false");
+        if (restoreFocus) activeProfileButton.focus();
+    }
+    activeProfileButton = null;
+}
+
+/**
+ * Opens the profile menu for a button or closes it if it is already open for this button.
+ * @param {HTMLButtonElement} button - The clicked profile button.
+ * @returns {void}
+ */
+function toggleProfileMenu(button) {
+    const wasOpen = activeProfileButton === button;
+    closeProfileMenu();
+    if (wasOpen) return;
+    activeProfileButton = button;
+    profileMenuElement.hidden = false;
+    button.setAttribute("aria-expanded", "true");
+    positionProfileMenu(button);
+    profileMenuElement.querySelector("a").focus();
+}
+
+/**
+ * Places the profile menu below its button and keeps it inside the viewport.
+ * @param {HTMLButtonElement} button - The profile button.
+ * @returns {void}
+ */
+function positionProfileMenu(button) {
+    const rect = button.getBoundingClientRect();
+    const menu = profileMenuElement;
+    const maxLeft = window.innerWidth - menu.offsetWidth - 8;
+    const maxTop = window.innerHeight - menu.offsetHeight - 8;
+    menu.style.left = `${Math.max(8, Math.min(rect.right - menu.offsetWidth, maxLeft))}px`;
+    menu.style.top = `${Math.max(8, Math.min(rect.bottom + 8, maxTop))}px`;
+}
+
+/**
+ * Checks whether an element belongs to the profile menu or one of its buttons.
+ * @param {EventTarget} target - The element to check.
+ * @returns {boolean} True if the element is part of the profile menu area.
+ */
+function isInsideProfileMenu(target) {
+    const isInMenu = profileMenuElement.contains(target);
+    return isInMenu || profileMenuButtons.some((button) => button.contains(target));
+}
+
+/**
+ * Closes the profile menu when the user clicks or focuses something outside of it.
+ * @param {Event} event - The click or focusin event.
+ * @returns {void}
+ */
+function handleProfileOutsideEvent(event) {
+    if (!isInsideProfileMenu(event.target)) closeProfileMenu();
+}
+
+/**
+ * Closes the profile menu when Escape is pressed.
+ * @param {KeyboardEvent} event - The keydown event.
+ * @returns {void}
+ */
+function handleProfileMenuKeydown(event) {
+    if (profileMenuElement.hidden || event.key !== "Escape") return;
+    event.preventDefault();
+    closeProfileMenu(true);
+}
+
+/**
+ * Registers all events that close the profile menu.
+ * @returns {void}
+ */
+function bindProfileMenuCloseEvents() {
+    document.addEventListener("click", handleProfileOutsideEvent);
+    document.addEventListener("focusin", handleProfileOutsideEvent);
+    document.addEventListener("keydown", handleProfileMenuKeydown);
+    window.addEventListener("resize", () => closeProfileMenu());
+    document.addEventListener("scroll", () => closeProfileMenu(), true);
+}
+
+/**
+ * Removes the session data and returns to the login page.
+ * @returns {void}
+ */
+function logoutJoinSession() {
+    ["join-session-mode", "join-demo-name",  "join-profile-color", "session-initialized", "session-contacts", "session-tasks"]
+        .forEach((key) => window.sessionStorage.removeItem(key));
+    window.location.href = "../index.html";
+}
+
+/**
+ * Creates a random profile color for each user.
+ * @returns {void}
+ */
+function createRandomProfileColor() {
+    const profileColors = ["#2563EB", "#7C3AED", "#0F766E", "#BE123C", "#4338CA", "#047857", "#A16207", "#6D28D9"];
+    return profileColors[Math.floor(Math.random() * profileColors.length)];
+}
+
+/**
+ * Shows guest or demo initials in the existing profile circles.
  * @returns {void}
  */
 function updateSessionHeader() {
-    // Sitzungsmodus ("guest" oder "demo"), gesetzt in login.js.
     const mode = window.sessionStorage.getItem("join-session-mode");
-    // Beim Demo-Login eingegebener Name, gesetzt in login.js.
     const name = window.sessionStorage.getItem("join-demo-name");
-    // Weder Gast noch Demo mit Namen -> nichts anzeigen.
     if (mode !== "guest" && (mode !== "demo" || !name)) return;
-    // Gast -> "G", Demo -> Initialen aus dem Namen.
     const initials = mode === "guest" ? "G" : getDemoInitials(name);
-    // Text für Tooltip und Screenreader.
     const label = mode === "guest" ? "Guest profile" : `${name} (demo profile)`;
-    // Alle Profil-Buttons (Desktop-Header + Board-Mobile-Leiste) mit den Initialen befüllen.
-    document.querySelectorAll(".profile-initials-btn, .board-mobile-profile-button")
-        .forEach(button => showProfileInitials(button, initials, label));
+    let color = window.sessionStorage.getItem("join-profile-color");
+    if (!color) {
+        color = createRandomProfileColor();
+        window.sessionStorage.setItem("join-profile-color", color);
+    }
+    document.querySelectorAll(profileButtonSelector)
+        .forEach((button) => showProfileInitials(button, initials, label, color));
 }
 
-
 /**
- * Ermittelt bis zu zwei Initialen aus dem Demo-Anzeigenamen.
- *
- * @param {string} name - Der eingegebene Anzeigename.
- * @returns {string} Die Initialen fuer den Profilkreis.
+ * Determines up to two initials from the demo display name.
+ * @param {string} name - The entered display name.
+ * @returns {string} The initials for the profile circle.
  */
 function getDemoInitials(name) {
-    // Namen an Leerzeichen in Teile zerlegen.
     const parts = name.trim().split(/\s+/);
-    // Mehrere Teile -> erster + letzter, sonst nur der eine Teil.
     const selected = parts.length > 1 ? [parts[0], parts[parts.length - 1]] : parts;
-    // Jeweils ersten Buchstaben nehmen (Array.from unterstützt auch Emojis/Umlaute) und groß schreiben.
-    return selected.map(part => Array.from(part)[0]).join("").toUpperCase();
+    return selected.map((part) => Array.from(part)[0]).join("").toUpperCase();
 }
 
+/**
+ * Creates the SVG text element that shows the initials inside the profile circle.
+ * @param {string} initials - The visible initials.
+ * @returns {SVGTextElement} The text element.
+ */
+function createInitialsElement(initials) {
+    const element = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    const attributes = {x: "28", y: "28", "text-anchor": "middle", "dominant-baseline": "central", fill: "#2A3647", "font-size": "20", "font-weight": "700", "font-family": "Inter, sans-serif", class: "guest-profile-initial"};
+    Object.entries(attributes).forEach(([name, value]) => element.setAttribute(name, value));
+    element.textContent = initials;
+    return element;
+}
 
 /**
- * Ergaenzt den Profilkreis eines Buttons um Initialen.
- *
- * @param {HTMLButtonElement} button - Der vorhandene Profilbutton.
- * @param {string} initials - Die sichtbaren Initialen.
- * @param {string} label - Der zugaengliche Profilname.
+ * Adds the initials to the profile circle of a button.
+ * @param {HTMLButtonElement} button - The profile button.
+ * @param {string} initials - The visible initials.
+ * @param {string} label - The accessible profile name.
  * @returns {void}
  */
-function showProfileInitials(button, initials, label) {
-    // Kreis-SVG im Button.
+function showProfileInitials(button, initials, label, color) {
     const svg = button.querySelector("svg");
-    // Kein SVG -> nichts zu tun.
-    if (!svg) return;
-    // Initialen schon vorhanden -> nicht doppelt einfügen.
-    if (svg.querySelector(".guest-profile-initial")) return;
-    // Neues SVG-<text>-Element (muss mit SVG-Namespace erstellt werden).
-    const initial = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    const attributes = {x: "28", y: "28", "text-anchor": "middle", "dominant-baseline": "central", fill: "#2A3647", "font-size": "20", "font-weight": "700", "font-family": "Inter, sans-serif", class: "guest-profile-initial"};
-    // Alle Attribute (Position, Zentrierung, Farbe, Klasse ...) auf das <text>-Element setzen.
-    Object.entries(attributes).forEach(([name, value]) => initial.setAttribute(name, value));
-    // Initialen als Text eintragen.
-    initial.textContent = initials;
-    // <text> in den Kreis einfügen.
-    svg.appendChild(initial);
-    // Beschriftung für Screenreader.
+    if (!svg || svg.querySelector(".guest-profile-initial")) return;
+    const circle = svg.querySelector("circle");
+    if (circle) {
+        circle.setAttribute("fill", color);
+        circle.setAttribute("stroke", "#000000");
+        circle.setAttribute("stroke-width", "3");
+    }
+    svg.appendChild(createInitialsElement(initials));
     button.setAttribute("aria-label", label);
-    // Tooltip beim Hovern.
     button.setAttribute("title", label);
 }
 
+/**
+ * Marks the navigation button of the current page as active.
+ * @returns {void}
+ */
+function initNavbarButtonsBackground() {
+    const links = document.querySelectorAll(".nav-btn a");
+    const currentPage = window.location.pathname.split("/").pop();
+    links.forEach((link) => {
+        const linkPage = link.getAttribute("href").split("/").pop();
+        if (currentPage === linkPage) link.closest(".nav-btn").classList.add("is-active");
+    });
+}
 
 /**
- * this is a function that checks which html path is active and sets the background-color of the navbar
+ * Inserts the mobile navigation footer on the privacy and legal notice pages.
+ * @returns {Promise<void>}
  */
-
-function initNavbarButtonsBackground(){
-const links = document.querySelectorAll(".nav-btn a");
-const currentPage = window.location.pathname.split("/").pop();
-links.forEach(link => {
-    const linkPage = link.getAttribute("href").split("/").pop();
-    if (currentPage === linkPage) {
-        link.closest(".nav-btn").classList.add("is-active");
-    }
-});
-}
-
-function renderNavFooterMobile2(){
-    const navfooterMobile = document.getElementById("nav-footer-mobile");
+async function renderMobilePolicyNavFooter() {
+    const container = document.getElementById("nav-footer-mobile");
     const currentPage = window.location.pathname.split("/").pop();
-    if(currentPage === "privacy-notice.html" || currentPage === "legal-notice.html") {
-        navfooterMobile.innerHTML = displayNavFooterMobilePolicy();
-    }
+    if (!container || !["privacy-notice.html", "legal-notice.html"].includes(currentPage)) return;
+    const response = await fetch("../templates/mobileNavFooterPolicy.txt");
+    container.innerHTML = await response.text();
 }
 
-function displayNavFooterMobilePolicy() {
-    return `<div class="mobile-nav-btns">
-    <div class="nav-btn">
-            <a href="../index.html" class="nav-element mobile-design">
-                   <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-<mask id="mask0_268662_8754" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="30" height="30">
-<rect width="30" height="30" fill="#D9D9D9"/>
-</mask>
-<g mask="url(#mask0_268662_8754)">
-<mask id="mask1_268662_8754" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="2" y="2" width="26" height="27">
-<rect x="2" y="2.03418" width="26" height="26" fill="#D9D9D9"/>
-</mask>
-<g mask="url(#mask1_268662_8754)">
-<path d="M16.0833 24.7842C15.7764 24.7842 15.5191 24.6804 15.3115 24.4727C15.1038 24.2651 15 24.0078 15 23.7008C15 23.3939 15.1038 23.1366 15.3115 22.929C15.5191 22.7213 15.7764 22.6175 16.0833 22.6175H22.5833V7.45085H16.0833C15.7764 7.45085 15.5191 7.34703 15.3115 7.13939C15.1038 6.93175 15 6.67446 15 6.36751C15 6.06057 15.1038 5.80328 15.3115 5.59564C15.5191 5.388 15.7764 5.28418 16.0833 5.28418H22.5833C23.1792 5.28418 23.6892 5.49633 24.1135 5.92064C24.5378 6.34494 24.75 6.85501 24.75 7.45085V22.6175C24.75 23.2133 24.5378 23.7234 24.1135 24.1477C23.6892 24.572 23.1792 24.7842 22.5833 24.7842H16.0833ZM14.1063 16.1175H6.33333C6.02639 16.1175 5.7691 16.0137 5.56146 15.8061C5.35382 15.5984 5.25 15.3411 5.25 15.0342C5.25 14.7272 5.35382 14.4699 5.56146 14.2623C5.7691 14.0547 6.02639 13.9508 6.33333 13.9508H14.1063L12.075 11.9196C11.8764 11.721 11.7771 11.4772 11.7771 11.1883C11.7771 10.8995 11.8764 10.6467 12.075 10.43C12.2736 10.2133 12.5264 10.1005 12.8333 10.0915C13.1403 10.0824 13.4021 10.1863 13.6188 10.4029L17.4917 14.2758C17.7083 14.4925 17.8167 14.7453 17.8167 15.0342C17.8167 15.3231 17.7083 15.5758 17.4917 15.7925L13.6188 19.6654C13.4021 19.8821 13.1448 19.9859 12.8469 19.9769C12.549 19.9679 12.2917 19.855 12.075 19.6383C11.8764 19.4217 11.7816 19.1644 11.7906 18.8665C11.7997 18.5686 11.9035 18.3203 12.1021 18.1217L14.1063 16.1175Z" fill="#CDCDCD"/>
-</g>
-</g>
-</svg>
-                    <span>Log In</span>
-                </a>
-                </div>
-            <div class="legal-and-policy-mobile" id="mobile-nav-btns-legal-policy">
-            <div class="nav-btn">
-                <a href="../pages/privacy-notice.html" class="nav-element mobile-design">
-                    <span>Privacy Policy</span>
-                </a>
-                </div>
-            <div class="nav-btn">
-                <a href="../pages/legal-notice.html" class="nav-element mobile-design">
-                    <span>Legal Notice</span>
-                </a>
-                </div>
-            </div>
-            </div>`;
-}
-
+/**
+ * Loads contacts and tasks from the database into the session storage once per session.
+ * @returns {Promise<void>}
+ */
 async function initSessionData() {
-  if (sessionStorage.getItem("session-initialized")) return;
-  const { userArray, taskArray } = await fetchTemplateData();
-  if(!userArray) return;
-  sessionStorage.setItem("session-contacts", JSON.stringify(Object.values(userArray || {})));
-  sessionStorage.setItem("session-tasks", JSON.stringify(Object.values(taskArray || {})));
-  sessionStorage.setItem("session-initialized", "true");
+    if (sessionStorage.getItem("session-initialized")) return;
+    const { userArray, taskArray } = await fetchTemplateData();
+    if (!userArray) return;
+    sessionStorage.setItem("session-contacts", JSON.stringify(Object.values(userArray || {})));
+    sessionStorage.setItem("session-tasks", JSON.stringify(Object.values(taskArray || {})));
+    sessionStorage.setItem("session-initialized", "true");
 }
 
-const BASE_URL = "https://join--testuser-default-rtdb.europe-west1.firebasedatabase.app/";
-
-async function fetchTemplateData(){
-   let response = await fetch(BASE_URL + ".json");
-   let data = await response.json();
-   console.log(data);
-   const userArray = data.contacts;
-   const taskArray = data.tasks;
-   return { userArray, taskArray };
+/**
+ * Fetches contacts and tasks from the Firebase database.
+ * @returns {Promise<{userArray: Object, taskArray: Object}>} The raw contacts and tasks.
+ */
+async function fetchTemplateData() {
+    const response = await fetch(BASE_URL + ".json");
+    const data = await response.json();
+    return { userArray: data.contacts, taskArray: data.tasks };
 }
 
+/**
+ * Reads a list from the session storage.
+ * @param {string} key - The session storage key.
+ * @returns {Object[]} The stored list or an empty array.
+ */
 function getSessionData(key) {
-return JSON.parse(sessionStorage.getItem(key) || "[]");
+    return JSON.parse(sessionStorage.getItem(key) || "[]");
 }
 
+/**
+ * Writes a list to the session storage.
+ * @param {string} key - The session storage key.
+ * @param {Object[]} items - The list to store.
+ * @returns {void}
+ */
 function saveSessionData(key, items) {
-sessionStorage.setItem(key, JSON.stringify(items));
+    sessionStorage.setItem(key, JSON.stringify(items));
 }
 
+/**
+ * Sorts the contacts alphabetically by first name (sorts the given array in place).
+ * @param {Object[]} userArray - The contacts.
+ * @returns {Object[]} The sorted contacts.
+ */
 function createAlphabeticalList(userArray) {
-    const sortedUsers = userArray.sort((a, b) => a.firstName.localeCompare(b.firstName));
-    console.log(sortedUsers);
+    return userArray.sort((a, b) => a.firstName.localeCompare(b.firstName));
 }
 
+/**
+ * Sorts the tasks by their state (sorts the given array in place).
+ * @param {Object[]} taskArray - The tasks.
+ * @returns {Object[]} The sorted tasks.
+ */
 function sortTasks(taskArray) {
-    const sortedTasks = taskArray.sort((a, b) => a.state.localeCompare(b.state));
-    console.log(sortedTasks);
+    return taskArray.sort((a, b) => a.state.localeCompare(b.state));
 }
 
-async function postData(path="", data={}){
-    let response = await fetch(BASE_URL + path + ".json", {
+/**
+ * Sends data to the Firebase database.
+ * @param {string} [path=""] - Path inside the database.
+ * @param {Object} [data={}] - The data to send.
+ * @returns {Promise<Object>} The response of the database.
+ */
+async function postData(path = "", data = {}) {
+    const response = await fetch(BASE_URL + path + ".json", {
         method: "POST",
-        header: {
-            "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data)
     });
-    let responseToJson= await response.json();
-    console.log(responseToJson);
+    return response.json();
 }
+
+/**
+ * Redirects to the login page if the current page needs a session and none is active.
+ * @returns {void}
+ */
+function redirectWithoutSession() {
+    if (isPublicJoinPage() || hasJoinSession()) return;
+    window.location.replace("../index.html");
+}
+
+redirectWithoutSession();

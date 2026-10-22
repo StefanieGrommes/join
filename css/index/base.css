@@ -1,10 +1,10 @@
 :root {
-  --bg: #ffffff;
-  --text: #1d2a38;
-  --muted: #5f6874;
-  --input-bg: #ffffff;
-  --input-border: #677076;
-  --button-dark: #2d3d4d;
+  --bg: rgb(255, 255, 255);
+  --text: rgb(29, 42, 56);
+  --muted: rgb(95, 104, 116);
+  --input-bg:rgb(255, 255, 255);
+  --input-border: rgb(103, 112, 118);
+  --button-dark: rgb(45, 61, 77);
 }
 
 * {
@@ -88,7 +88,7 @@ body {
   border: none;
   border-radius: 10px;
   background: var(--button-dark);
-  color: #fff;
+  color: rgb(255, 255, 255);
   font-weight: 700;
   cursor: pointer;
 }
@@ -144,7 +144,7 @@ body {
   display: flex;
   justify-content: center;
   border-radius: 24px;
-  background: #ffffff;
+  background: rgb(255, 255, 255);
   padding: 48px 115px;
   border: 1px solid rgba(224, 230, 236, 0.9);
   box-shadow: 0 -8px 18px rgba(17, 24, 39, 0.08), 0 8px 18px rgba(17, 24, 39, 0.06), 0 16px 28px rgba(17, 24, 39, 0.04);
@@ -173,7 +173,7 @@ body {
   font-weight: 700;
   font-size: clamp(48px, 4.5vw, 61px);
   line-height: 1;
-  color: #000;
+  color: rgb(0, 0, 0);
 }
 
 .login-title::after {
@@ -182,7 +182,7 @@ body {
   height: 4px;
   margin: 16px auto 0;
   border-radius: 2px;
-  background: #24a6e9;
+  background: rgb(36, 166, 233);
 }
 
 .login-form {
@@ -253,7 +253,7 @@ body {
 }
 
 .field input::placeholder {
-  color: #2f3b4a;
+  color: rgb(47, 59, 74);
   opacity: 1;
   font-size: 1.25rem;
 }
@@ -281,15 +281,15 @@ body {
 .btn--primary {
   width: 146px;
   border: none;
-  background: #2a3442;
-  color: #fff;
+  background: rgb(42, 52, 66);
+  color: rgb(255, 255, 255);
 }
 
 .btn--secondary {
   width: 204px;
-  border: 1px solid #1d2a38;
-  background: #ffffff;
-  color: #1d2a38;
+  border: 1px solid rgb(29, 42, 56);
+  background: rgb(255, 255, 255);
+  color: rgb(29, 42, 56);
 }
 
 .btn--primary:not(:disabled):hover {

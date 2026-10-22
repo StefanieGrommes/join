@@ -2,6 +2,8 @@
   @media (max-width: 768px) {
     .page-layout {
       flex-direction: column;
+      padding-right: 0px;
+      padding-left: 0px;
     }
 
     .sidebar {
@@ -12,13 +14,6 @@
     .aside-blue-box-bg,
     aside {
       display: none !important;
-    }
-
-
-
-    .page-layout {
-
-      padding-right: 0px;
     }
 
     .board-mobile-top-nav {
@@ -41,8 +36,6 @@
     .board-header-container {
       min-height: auto;
       position: relative;
-      margin-left: 0px;
-      margin-right: 0px;
       margin-top: 48px;
     }
 
@@ -57,20 +50,10 @@
       margin-bottom: 12px;
     }
 
-    .page-layout {
-
-      padding-left: 0px;
-    }
-
     .board-header-title {
       grid-area: title;
       flex: 1 1 auto;
-      font-size: 47px;
-    }
-
-    .board-main-container {
-      margin-left: 0px;
-      margin-right: 0px;
+      font-size: 2.9375rem;
     }
 
     .board-header-actions {
@@ -89,7 +72,7 @@
     }
 
     .board-search-field input {
-      font-size: 16px;
+      font-size: 1rem;
     }
 
     .board-search-divider {
@@ -124,12 +107,10 @@
       align-items: center;
       justify-content: center;
       color: #ffffff;
-      font-size: 28px;
+      font-size: 1.75rem;
       line-height: 1;
       font-weight: 400;
     }
-
-
 
     .board-header-columns {
       display: none;
@@ -141,10 +122,10 @@
       gap: 26px;
       padding-top: 4px;
     }
+
     .board-main-column.extra-done {
       padding-bottom: 110px;
     }
-
 
     .board-main-column {
       width: 100%;
@@ -183,7 +164,6 @@
       border-radius: 999px;
     }
 
-
     .board-main-column-content .board-card {
       width: 220px;
       min-width: 220px;
@@ -202,10 +182,9 @@
     .board-search-empty-state {
       margin-top: 20px;
       padding: 18px 16px;
-      font-size: 16px;
+      font-size: 1rem;
     }
   }
-
 
   @media (max-width: 480px) {
     .board-mobile-top-nav {
@@ -213,22 +192,10 @@
       padding: 12px 14px;
     }
 
-    .board-header-container {
-      margin-left: 0px;
-      margin-right: 0px;
-    }
-
-    .board-main-container {
-      margin-left: 0px;
-      margin-right: 0px;
-    }
-
     .board-main-column-title {
-      font-size: 17px;
+      font-size: 1.0625rem;
     }
-
   }
-
 
   @media (max-width: 360px) {
     .board-card-header {
@@ -240,30 +207,18 @@
       display: inline-flex;
     }
 
-    .board-header-container,
-    .board-main-container {
-      margin-left: 0;
-    }
-
     .board-header-inner {
       width: 100%;
-    }
-
-    .board-header-inner {
       gap: 12px;
-    }
-
-    .board-search-field input {
-      font-size: 16px;
+      padding-right: 0px;
     }
 
     .board-main-container {
       width: 100%;
-
     }
 
     .board-header-container {
-      margin-top: 10px;;
+      margin-top: 10px;
     }
 
     .board-add-task-button {
@@ -280,11 +235,6 @@
     main {
       padding-left: 6px;
       padding-right: 6px;
-    }
-
-
-    .board-header-inner {
-      padding-right: 0px;
     }
   }
 }

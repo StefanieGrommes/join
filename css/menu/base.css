@@ -6,7 +6,7 @@
   --hover-menu: rgba(42, 61, 89, 1);
   --hover-primary-button: rgb(18, 70, 88);
   --hover-secondary-button: rgb(41, 171, 226);
-  --hover-bg-color-grey: #eeeeee;
+  --hover-bg-color-grey: rgb(255, 255, 255);
   --hover-btn-grey: rgb(226, 230, 236);
   --navbar-color: rgba(231, 231, 231, 1);
   --active-btn-border: rgb(9, 25, 49);
@@ -20,7 +20,7 @@
   --second-font: "Open Sans", sans-serif;
 }
 
-* {
+*, ::before, ::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -33,7 +33,7 @@ html {
 
 body {
   margin: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   grid-template-columns: var(--sidebar-width) 1fr;
   grid-template-rows: var(--header-height) 1fr;
@@ -168,8 +168,15 @@ nav p {
 }
 
 .profile-menu a:hover,
-.profile-menu a:focus-visible {
+.profile-menu a:focus-visible,
+.profile-menu button:hover,
+.profile-menu button:focus-visible {
   background-color: var(--hover-menu);
+}
+
+.profile-menu button {
+  cursor: pointer;
+  transition: background-color 100ms ease-in-out;
 }
 
 .profile-menu button:disabled {
@@ -309,128 +316,6 @@ main {
   display: flex;
 }
 
-/*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
-
-@media (max-width: 768px) {
-  nav {
-    display: none;
-    padding: 0;
-  }
-
-  .nav-btn {
-    width: auto;
-  }
-
-  .nav-mobile {
-    min-height: var(--header-height);
-    top: 0;
-    position: sticky;
-    z-index: 10;
-    grid-area: navbar-mobile;
-    background-color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px 16px 20px;
-    border-width: 0;
-    box-shadow: 0 0 4px 4px rgba(110, 107, 107, 0.3);
-    width: 100%;
-  }
-
-  .is-active {
-    border-radius: 16px;
-  }
-
-  .profile-initials-btn {
-    border: inherit;
-    background-color: transparent;
-  }
-
-  .profile-initials-btn svg {
-    width: 40px;
-    height: 40px;
-  }
-
-  aside {
-    display: none;
-  }
-
-  .aside-blue-box-bg {
-    display: none;
-  }
-
-  body {
-    min-height: 100dvh;
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: var(--header-height) 1fr var(--header-height);
-    grid-template-areas: "navbar-mobile" "main" "nav-footer";
-  }
-
-  .nav-footer-mobile .nav-element {
-    width: auto;
-  }
-
-  .nav-element a {
-    width: auto;
-  }
-
-  .nav-footer-mobile {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: var(--header-height);
-    z-index: 10;
-    grid-area: nav-footer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--main-color);
-  }
-
-  .mobile-nav-btns {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 0 16px;
-    cursor: pointer;
-  }
-
-  .mobile-nav-btns a {
-    height: 76px;
-    color: var(--navbar-color);
-    border-radius: 16px;
-    text-decoration: none;
-  }
-
-  .mobile-nav-btns a:hover {
-    background-color: var(--hover-menu);
-  }
-
-  #mobile-nav-btns-legal-policy {
-    white-space: nowrap;
-  }
-
-  .mobile-design {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .mobile-design a {
-    text-decoration: none;
-    font-family: var(--second-font);
-    font-size: 16px;
-    color: var(--navbar-color);
-  }
-
-  .nav-element {
-    padding: min(4px, 2vw);
-  }
-}
-
-@media (max-width: 428px) {
-  .mobile-nav-btns {
-    padding: 0;
-  }
+.rotate-hint {
+  display: none;
 }

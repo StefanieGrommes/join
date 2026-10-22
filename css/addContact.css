@@ -140,10 +140,11 @@ button {
 }
 
 .create-contact-btn:disabled {
-  background-color: #a8a8a8;
-  border-color: #a8a8a8;
+  background-color: rgb(168, 168, 168);
+  border-color: rgb(168, 168, 168);
   cursor: not-allowed;
 }
+
 .cancel-btn {
   border: 1px solid var(--main-color);
   width: 126px;
@@ -188,7 +189,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border: 1px solid #6b6b6bb6;
+  border: 1px solid rgba(107, 107, 107, 0.714);
   border-radius: 10px;
   padding: 0 12px;
   height: 50px;
@@ -206,7 +207,7 @@ button {
 }
 
 .input-wrapper:has(input.is-invalid) {
-  border-color: #ff8190;
+  border-color: rgb(255, 129, 144);
 }
 
 .form-input-fields {
