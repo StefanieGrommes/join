@@ -18,6 +18,7 @@ const CONTACT_COLORS = [
 ];
 
 let allContacts = [];
+let editingContactId = null;
 
 /**
  * Picks a stable color for a contact based on its id.
@@ -132,10 +133,10 @@ function getContactDetailTemplate(contact) {
       <div class="contact-detail-head">
         <p class="contact-detail-name">${contact.firstName} ${contact.lastName}</p>
         <div class="contact-detail-actions">
-          <button class="detail-action-btn">
+          <button class="detail-action-btn" onclick="openEditDialog('${contact.id}')">
             <img src="../assets/edit.svg" alt="" /> Edit
           </button>
-          <button class="detail-action-btn">
+          <button class="detail-action-btn" onclick="deleteContact('${contact.id}')">
             <img src="../assets/delete.svg" alt="" /> Delete
           </button>
         </div>
@@ -154,8 +155,9 @@ function getContactDetailTemplate(contact) {
       <img src="../assets/more-vert.svg" alt="More options" />
     </button>
     <div class="detail-menu" id="detailMenu">
-      <button class="detail-action-btn"><img src="../assets/edit.svg" alt="" />Edit</button>
-      <button class="detail-action-btn">
+      <button class="detail-action-btn" onclick="openEditDialog('${contact.id}')">
+      <img src="../assets/edit.svg" alt="" />Edit</button>
+      <button class="detail-action-btn" onclick="deleteContact('${contact.id}')">
         <img src="../assets/delete.svg" alt="" />Delete
       </button>
     </div>`;
@@ -255,30 +257,108 @@ function buildContactFromForm(form) {
 }
 
 /**
- * Creates a new contact from the form and updates list and storage.
- * @param {HTMLFormElement} from - The add contact form
- * @returns {void}
+ * Creates a new contact, saves it to the database and shows it in the list.
+ * @param {HTMLFormElement} form - The add contact form
+ * @returns {Promise<void}
  */
-function addNewContact(form) {
-let contact = buildContactFromForm(form);
-allContacts.push(contact);
-saveSessionData("session-contacts", allContacts);
-renderContactList(allContacts);
-let element = document.querySelector(`[data-id="${contact.id}"]`);
-openContactDetail(contact.id, element);
-form.reset();
-closeDialog();
-showSuccessToast();
+async function addNewContact(form) {
+  let contact = buildContactFromForm(form);
+  await putData("contacts/" + contact.id, contact);
+  allContacts.push(contact);
+  renderContactList(allContacts);
+  let element = document.querySelector(`[data-id="${contact.id}"]`);
+  openContactDetail(contact.id, element);
+  form.reset();
+  closeDialog();
+  showSuccessToast("Contact successfully created");
 }
 
 /**
- * Shows the succes message and hides it again after a short delay.
+ * Loads all contacts from the database and renders the list.
+ * @returns {Promise<void}
+ */
+async function loadContacts() {
+  let response = await fetch(BASE_URL + "contacts.json");
+  let data = await response.json();
+  allContacts = Object.values(data || {}).filter(Boolean);
+  renderContactList(allContacts);
+}
+
+/**
+ * Opens the contact dialog prefilled with an existing contact.
+ * @param {string} id - The id of the contact to edit.
  * @returns {void}
  */
+function openEditDialog(id) {
+  let contact = allContacts.find((c) => c.id === id);
+  if (!contact) return;
+  editingContactId = id;
+  let form = document.querySelector(".add-contact-form");
+  form.querySelector('[name="name"]').value = contact.firstName + " " + contact.lastName;
+  form.querySelector('[name="email"]').value = contact.email;
+  form.querySelector('[name="phone"]').value = contact.phone;
+  document.getElementById("dialogHeadline").textContent = "Edit contact";
+  document.getElementById("dialogSubline").style.display = "none";
+  document.getElementById("submitBtnText").textContent = "Save";
+  showDialogAvatar(contact);
+  showDialog();
+}
 
-function showSuccessToast() {
+/**
+ * Saves the changes of an edited contact to the database.
+ * @param {HTMLFormElement} form - The contact form.
+ * @returns {Promise<void>}
+ */
+async function saveEditedContact(form) {
+  let contact = buildContactFromForm(form);
+  contact.id = editingContactId;
+  await putData("contacts/" + contact.id, contact);
+  let index = allContacts.findIndex((c) => c.id === contact.id);
+  allContacts[index] = contact;
+  renderContactList(allContacts);
+  openContactDetail(contact.id, document.querySelector(`[data-id="${contact.id}"]`));
+  closeDialog();
+  showSuccessToast("Contact successfully edited");
+}
+/**
+ * Saves the changes of an edited contact to the database.
+ * @param {HTMLFormElement} form - The contact form.
+ * @returns {Promise<void>}
+ */
+
+/**
+ * Shows the colored initials of a contact inside the dialog.
+ * @param {Object} contact - The contact to show.
+ * @returns {void}
+ */
+function showDialogAvatar(contact) {
+  let avatar = document.getElementById("dialogAvatar");
+  avatar.innerHTML = /* HTML */ `<div
+  class="contact-avatar-large"
+  style="background-color: ${getContactColor(contact.id)}"
+  >
+  ${getInitials(contact.firstName, contact.lastName)}
+  </div>`;
+}
+
+
+
+async function deleteContact(id) {
+  await deleteData("contacts/" + id);
+  allContacts = allContacts.filter((contact) => contact.id !== id);
+  renderContactList(allContacts);
+  closeContactDetail();
+}
+
+/**
+ * Shows a message at the center of the screen and hides it after a short delay.
+ * @param {string} message - The text to show.
+ * @returns {void}
+ */
+function showSuccessToast(message) {
   let toast = document.getElementById("successToast");
   if (!toast) return;
+  toast.textContent = message;
   toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 1500)
+  setTimeout(() => toast.classList.remove("show"), 1500);
 }

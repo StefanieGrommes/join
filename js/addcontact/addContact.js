@@ -2,7 +2,7 @@
 const contactFieldRules = [
   { key: "name", check: isValidName, message: "Please enter first and last name" },
   { key: "email", check: isValidEmail, message: "Please enter a valid email address." },
-  { key: "phone", check: isValidPhoneNr, message: "Please enter a valid phone number." }
+  { key: "phone", check: isValidPhoneNr, message: "Please enter a valid phone number." },
 ];
 
 /**
@@ -15,12 +15,27 @@ function showDialog() {
 }
 
 /**
- * Closes the dialog for adding a contact.
+ * Resets the dialog content back to the add contact state..
+ * @returns {void}
+ */
+function resetDialogContent() {
+  document.querySelector(".add-contact-form").reset();
+  document.getElementById("dialogHeadline").textContent = "Add contact";
+  document.getElementById("dialogSubline").style.display = "";
+  document.getElementById("submitBtnText").textContent = "Create contact";
+  document.getElementById("dialogAvatar").innerHTML =
+    `<img src="../assets/contact-guest-img.svg" alt="Guest Image" />`;
+}
+
+/**
+ * Closes the dialog for adding or editing a contact.
  * @returns {void}
  */
 function closeDialog() {
   const dialog = document.querySelector("dialog");
   if (dialog) dialog.close();
+  editingContactId = null;
+  resetDialogContent();
 }
 
 /**
@@ -29,7 +44,8 @@ function closeDialog() {
  * @returns {HTMLElement|null} The toast element or null.
  */
 function getToastElement(input) {
-  const toastId = input && input.dataset.toastId ? input.dataset.toastId : "toast-wrapper-mail";
+  const toastId =
+    input && input.dataset.toastId ? input.dataset.toastId : "toast-wrapper-mail";
   return document.getElementById(toastId) || document.getElementById("toast-wrapper-mail");
 }
 
@@ -163,7 +179,11 @@ function handleContactSubmit(event, form, fields, updateSubmitButtonState) {
     updateSubmitButtonState();
     return;
   }
-  addNewContact(form);
+  if (editingContactId) {
+    saveEditedContact(form);
+  } else {
+    addNewContact(form);
+  }
 }
 
 /**
@@ -180,7 +200,9 @@ function initAddContactForm() {
     if (submitButton) submitButton.disabled = !fields.every((field) => isFieldValid(field));
   };
   fields.forEach((field) => bindContactFieldEvents(field, updateSubmitButtonState));
-  form.addEventListener("submit", (event) => handleContactSubmit(event, form, fields, updateSubmitButtonState));
+  form.addEventListener("submit", (event) =>
+    handleContactSubmit(event, form, fields, updateSubmitButtonState),
+  );
   updateSubmitButtonState();
 }
 
