@@ -7,6 +7,22 @@ main {
   justify-content: flex-start;
 }
 
+.success-toast {
+  position: FIXED;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 100vh);
+  padding: 20px 24px;
+  background-color: #2a3647;
+  color: white;
+  border-radius: 20px;
+  transition: transform 300ms ease-in-out;
+  z-index: 1000;
+}
+.success-toast.show {
+  transform: translate(-50%, -50%);
+}
+
 .add-contact-btn {
   border: 1px solid var(--main-color);
   width: 352px;

@@ -4,7 +4,9 @@
     renderNavFooterMobile2();
     initNavbarButtonsBackground();
     await initSessionData();
+    if (typeof renderContactList === "function") {
     renderContactList(getSessionData("session-contacts"));
+}
 }
 /**
  * this is a function that fetches the footer and header templates and inserts them into the pages

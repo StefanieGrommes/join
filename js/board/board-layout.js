@@ -1029,7 +1029,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // "Move to"-Menü für kleine Bildschirme.
   initBoardMoveMenu();
   // Add-/Edit-Task-Dialog.
-  initAddTaskModal();
+  initBoardAddTask();
   // Task-Detail-Dialog.
   initTaskDetailModal();
 });

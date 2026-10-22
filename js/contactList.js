@@ -47,7 +47,7 @@ function getInitials(firstName, lastName) {
  */
 function getContactTemplate(contact) {
   return `
-    <li class="contact-item" onclick="openContactDetail('${contact.id}', this)">
+    <li class="contact-item" data-id="${contact.id}"onclick="openContactDetail('${contact.id}', this)">
       <div class="contact-avatar" style="background-color: ${getContactColor(contact.id)}">${getInitials(contact.firstName, contact.lastName)}</div>
       <div class="contact-info">
         <p class="contact-name">${contact.firstName} ${contact.lastName}</p>
@@ -263,6 +263,21 @@ let contact = buildContactFromForm(form);
 allContacts.push(contact);
 saveSessionData("session-contacts", allContacts);
 renderContactList(allContacts);
+let element = document.querySelector(`[data-id="${contact.id}"]`);
+openContactDetail(contact.id, element);
 form.reset();
 closeDialog();
+showSuccessToast();
+}
+
+/**
+ * Shows the succes message and hides it again after a short delay.
+ * @returns {void}
+ */
+
+function showSuccessToast() {
+  let toast = document.getElementById("successToast");
+  if (!toast) return;
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 1500)
 }
