@@ -1,7 +1,6 @@
 :root {
   --page-bg: rgb(246, 247, 251);
   --content-bg: rgb(246, 247, 251);
-  --frame-border: rgb(217, 220, 227);
 
   * {
     box-sizing: border-box;
@@ -22,6 +21,7 @@
   }
 
   .page-layout {
+  grid-area: main;
   width: 100%;
   max-width: calc(1440px - var(--sidebar-width));
   display: flex;
@@ -134,7 +134,6 @@
     flex: 1;
     width: 100%;
     background: var(--content-bg);
-    border-left: 1px solid var(--frame-border);
   }
 
   .board-top-container {

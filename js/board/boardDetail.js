@@ -138,3 +138,29 @@ function initTaskDetailModal() {
   taskDetailModal.addEventListener("click", handleDetailBackdropClick);
   document.addEventListener("keydown", handleDetailEscape);
 }
+
+
+/**
+ * Closes the detailed Task Dialog.
+ *
+ * @returns {void}
+ */
+function closeDetailModal() {
+  taskDetailModal.classList.remove("is-open");
+  taskDetailModal.inert = true;
+  taskDetailRoot.innerHTML = "";
+  taskDetailRoot.removeAttribute("data-task-id");
+}
+
+/**
+ * Opens the detailed Task Dialog.
+ *
+ * @returns {void}
+ */
+function openDetailModal(task) {
+  if (!task) return;
+  taskDetailRoot.innerHTML = renderTaskDetail(task);
+  taskDetailRoot.dataset.taskId = task.id;
+  taskDetailModal.classList.add("is-open");
+  taskDetailModal.inert = false;
+}

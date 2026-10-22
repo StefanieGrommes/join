@@ -105,3 +105,6 @@
             </div>
         </aside>
     </div>
+    <div class="rotate-hint" role="alert">
+  Please rotate your device to portrait mode.
+</div>
