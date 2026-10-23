@@ -359,3 +359,26 @@ function initAddTaskModal() {
   addTaskClearButton.addEventListener("click", resetAddTaskForm);
   addTaskModal.addEventListener("click", handleAddTaskBackdropClick);
 }
+
+/**
+ * Opens up the dialog.
+ *
+ * @returns {void}
+ */
+function showAddTaskModal() {
+  addTaskModal.classList.add("is-open");
+  addTaskModal.inert = false;
+}
+
+/**
+ * Closes the dialog.
+ *
+ * @returns {void}
+ */
+function closeAddTaskModal() {
+  addTaskModal.classList.remove("is-open");
+  addTaskModal.inert = true;
+  resetAddTaskState();
+}
+
+

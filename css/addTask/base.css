@@ -3,6 +3,7 @@
   width: 100%;
   padding-left: clamp(20px, 3vw, 96px);
   padding-right: clamp(20px, 3vw, 96px);
+  padding-bottom: 20px;
   display: flex;
   flex-direction: column;
 
@@ -78,6 +79,11 @@
 .form-field input {
   height: 48px;
 }
+
+#subtaskInput {
+  padding-right: 96px;
+}
+
 
 .form-field textarea {
   min-height: 120px;
@@ -254,6 +260,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .contact-avatar {
   width: 42px;
   height: 42px;
+  flex-shrink: 0;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -318,6 +325,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   box-shadow: none;
   font: inherit;
   padding: 0;
+  padding-right: 72px;
   margin: 0;
 }
 
@@ -373,6 +381,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   border: unset;
   background-color: transparent;
   cursor: pointer;
+}
+
+.subtask-list-item .subtask-text {
+  display: inline-block;
+  max-width: calc(100% - 100px);
+  vertical-align: bottom;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .subtask-list {

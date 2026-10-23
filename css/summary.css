@@ -59,7 +59,7 @@ h5 {
 }
 
 .blue-separator {
-    background-color: #29ABE2;
+    background-color: rgb(41, 171, 226);
     height: clamp(2.5rem, 5vw, 4rem);
     width: 3px;
 }
@@ -276,7 +276,7 @@ h5 {
         display: block;
         width: 90px;
         height: 3px;
-        background-color: #29ABE2;
+        background-color: rgb(41, 171, 226);
     }
 
     .task-boxes {

@@ -10,12 +10,14 @@ let activeProfileButton = null;
  * @returns {Promise<void>}
  */
 async function init() {
-    await fetchFooterHeader();
-    await replaceNavLinksWithLogin();
-    await renderMobilePolicyNavFooter();
-    initNavbarButtonsBackground();
-    await initSessionData();
-    if (typeof renderContactList === "function") renderContactList(getSessionData("session-contacts"));
+  await fetchFooterHeader();
+  await replaceNavLinksWithLogin();
+  await renderMobilePolicyNavFooter();
+  initNavbarButtonsBackground();
+  await initSessionData();
+  if (typeof loadContacts === "function") {
+    await loadContacts();
+  }
 }
 
 /**
@@ -23,8 +25,10 @@ async function init() {
  * @returns {boolean} True for login, signup and legal pages.
  */
 function isPublicJoinPage() {
-    const page = window.location.pathname.split("/").pop();
-    return ["", "index.html", "signup.html", "privacy-notice.html", "legal-notice.html"].includes(page);
+  const page = window.location.pathname.split("/").pop();
+  return ["", "index.html", "signup.html", "privacy-notice.html", "legal-notice.html"].includes(
+    page,
+  );
 }
 
 /**
@@ -42,14 +46,14 @@ function hasJoinSession() {
  * @returns {Promise<void>}
  */
 async function replaceNavLinksWithLogin() {
-    if (hasJoinSession()) return;
-    const navList = document.querySelector(".nav-links");
-    if (!navList) return;
-    navList.querySelectorAll("li").forEach((item) => {
-        item.style.display = "none";
-    });
-    const response = await fetch("../templates/loginNavLink.txt");
-    navList.insertAdjacentHTML("beforeend", await response.text());
+  if (hasJoinSession()) return;
+  const navList = document.querySelector(".nav-links");
+  if (!navList) return;
+  navList.querySelectorAll("li").forEach((item) => {
+    item.style.display = "none";
+  });
+  const response = await fetch("../templates/loginNavLink.txt");
+  navList.insertAdjacentHTML("beforeend", await response.text());
 }
 
 /**
@@ -57,10 +61,10 @@ async function replaceNavLinksWithLogin() {
  * @returns {void}
  */
 function hideProfileButtonsWithoutSession() {
-    if (hasJoinSession()) return;
-    document.querySelectorAll(".profile-initials-btn").forEach((button) => {
-        button.style.display = "none";
-    });
+  if (hasJoinSession()) return;
+  document.querySelectorAll(".profile-initials-btn").forEach((button) => {
+    button.style.display = "none";
+  });
 }
 
 /**
@@ -70,9 +74,9 @@ function hideProfileButtonsWithoutSession() {
  * @returns {Promise<void>}
  */
 async function insertTemplate(path, position) {
-    const response = await fetch(path);
-    const html = await response.text();
-    document.body.insertAdjacentHTML(position, html);
+  const response = await fetch(path);
+  const html = await response.text();
+  document.body.insertAdjacentHTML(position, html);
 }
 
 /**
@@ -80,11 +84,11 @@ async function insertTemplate(path, position) {
  * @returns {Promise<void>}
  */
 async function fetchFooterHeader() {
-    await insertTemplate("../templates/header.txt", "afterbegin");
-    hideProfileButtonsWithoutSession();
-    updateSessionHeader();
-    initProfileMenu();
-    await insertTemplate("../templates/footer.txt", "beforeend");
+  await insertTemplate("../templates/header.txt", "afterbegin");
+  hideProfileButtonsWithoutSession();
+  updateSessionHeader();
+  initProfileMenu();
+  await insertTemplate("../templates/footer.txt", "beforeend");
 }
 
 /**
@@ -92,15 +96,15 @@ async function fetchFooterHeader() {
  * @returns {void}
  */
 function initProfileMenu() {
-    const menu = document.getElementById("profile-menu");
-    if (!menu || menu.dataset.initialized) return;
-    menu.dataset.initialized = "true";
-    profileMenuElement = menu;
-    profileMenuButtons = Array.from(document.querySelectorAll(profileButtonSelector));
-    const logoutButton = menu.querySelector("#logout-button");
-    if (logoutButton) logoutButton.addEventListener("click", logoutJoinSession);
-    profileMenuButtons.forEach(setupProfileButton);
-    bindProfileMenuCloseEvents();
+  const menu = document.getElementById("profile-menu");
+  if (!menu || menu.dataset.initialized) return;
+  menu.dataset.initialized = "true";
+  profileMenuElement = menu;
+  profileMenuButtons = Array.from(document.querySelectorAll(profileButtonSelector));
+  const logoutButton = menu.querySelector("#logout-button");
+  if (logoutButton) logoutButton.addEventListener("click", logoutJoinSession);
+  profileMenuButtons.forEach(setupProfileButton);
+  bindProfileMenuCloseEvents();
 }
 
 /**
@@ -109,11 +113,11 @@ function initProfileMenu() {
  * @returns {void}
  */
 function setupProfileButton(button) {
-    button.type = "button";
-    if (!button.hasAttribute("aria-label")) button.setAttribute("aria-label", "Profile");
-    button.setAttribute("aria-controls", profileMenuElement.id);
-    button.setAttribute("aria-expanded", "false");
-    button.addEventListener("click", () => toggleProfileMenu(button));
+  button.type = "button";
+  if (!button.hasAttribute("aria-label")) button.setAttribute("aria-label", "Profile");
+  button.setAttribute("aria-controls", profileMenuElement.id);
+  button.setAttribute("aria-expanded", "false");
+  button.addEventListener("click", () => toggleProfileMenu(button));
 }
 
 /**
@@ -122,12 +126,12 @@ function setupProfileButton(button) {
  * @returns {void}
  */
 function closeProfileMenu(restoreFocus = false) {
-    profileMenuElement.hidden = true;
-    if (activeProfileButton) {
-        activeProfileButton.setAttribute("aria-expanded", "false");
-        if (restoreFocus) activeProfileButton.focus();
-    }
-    activeProfileButton = null;
+  profileMenuElement.hidden = true;
+  if (activeProfileButton) {
+    activeProfileButton.setAttribute("aria-expanded", "false");
+    if (restoreFocus) activeProfileButton.focus();
+  }
+  activeProfileButton = null;
 }
 
 /**
@@ -136,14 +140,14 @@ function closeProfileMenu(restoreFocus = false) {
  * @returns {void}
  */
 function toggleProfileMenu(button) {
-    const wasOpen = activeProfileButton === button;
-    closeProfileMenu();
-    if (wasOpen) return;
-    activeProfileButton = button;
-    profileMenuElement.hidden = false;
-    button.setAttribute("aria-expanded", "true");
-    positionProfileMenu(button);
-    profileMenuElement.querySelector("a").focus();
+  const wasOpen = activeProfileButton === button;
+  closeProfileMenu();
+  if (wasOpen) return;
+  activeProfileButton = button;
+  profileMenuElement.hidden = false;
+  button.setAttribute("aria-expanded", "true");
+  positionProfileMenu(button);
+  profileMenuElement.querySelector("a").focus();
 }
 
 /**
@@ -152,12 +156,12 @@ function toggleProfileMenu(button) {
  * @returns {void}
  */
 function positionProfileMenu(button) {
-    const rect = button.getBoundingClientRect();
-    const menu = profileMenuElement;
-    const maxLeft = window.innerWidth - menu.offsetWidth - 8;
-    const maxTop = window.innerHeight - menu.offsetHeight - 8;
-    menu.style.left = `${Math.max(8, Math.min(rect.right - menu.offsetWidth, maxLeft))}px`;
-    menu.style.top = `${Math.max(8, Math.min(rect.bottom + 8, maxTop))}px`;
+  const rect = button.getBoundingClientRect();
+  const menu = profileMenuElement;
+  const maxLeft = window.innerWidth - menu.offsetWidth - 8;
+  const maxTop = window.innerHeight - menu.offsetHeight - 8;
+  menu.style.left = `${Math.max(8, Math.min(rect.right - menu.offsetWidth, maxLeft))}px`;
+  menu.style.top = `${Math.max(8, Math.min(rect.bottom + 8, maxTop))}px`;
 }
 
 /**
@@ -166,8 +170,8 @@ function positionProfileMenu(button) {
  * @returns {boolean} True if the element is part of the profile menu area.
  */
 function isInsideProfileMenu(target) {
-    const isInMenu = profileMenuElement.contains(target);
-    return isInMenu || profileMenuButtons.some((button) => button.contains(target));
+  const isInMenu = profileMenuElement.contains(target);
+  return isInMenu || profileMenuButtons.some((button) => button.contains(target));
 }
 
 /**
@@ -176,7 +180,7 @@ function isInsideProfileMenu(target) {
  * @returns {void}
  */
 function handleProfileOutsideEvent(event) {
-    if (!isInsideProfileMenu(event.target)) closeProfileMenu();
+  if (!isInsideProfileMenu(event.target)) closeProfileMenu();
 }
 
 /**
@@ -185,9 +189,9 @@ function handleProfileOutsideEvent(event) {
  * @returns {void}
  */
 function handleProfileMenuKeydown(event) {
-    if (profileMenuElement.hidden || event.key !== "Escape") return;
-    event.preventDefault();
-    closeProfileMenu(true);
+  if (profileMenuElement.hidden || event.key !== "Escape") return;
+  event.preventDefault();
+  closeProfileMenu(true);
 }
 
 /**
@@ -195,11 +199,11 @@ function handleProfileMenuKeydown(event) {
  * @returns {void}
  */
 function bindProfileMenuCloseEvents() {
-    document.addEventListener("click", handleProfileOutsideEvent);
-    document.addEventListener("focusin", handleProfileOutsideEvent);
-    document.addEventListener("keydown", handleProfileMenuKeydown);
-    window.addEventListener("resize", () => closeProfileMenu());
-    document.addEventListener("scroll", () => closeProfileMenu(), true);
+  document.addEventListener("click", handleProfileOutsideEvent);
+  document.addEventListener("focusin", handleProfileOutsideEvent);
+  document.addEventListener("keydown", handleProfileMenuKeydown);
+  window.addEventListener("resize", () => closeProfileMenu());
+  document.addEventListener("scroll", () => closeProfileMenu(), true);
 }
 
 /**
@@ -245,9 +249,12 @@ function updateSessionHeader() {
  * @returns {string} The initials for the profile circle.
  */
 function getDemoInitials(name) {
-    const parts = name.trim().split(/\s+/);
-    const selected = parts.length > 1 ? [parts[0], parts[parts.length - 1]] : parts;
-    return selected.map((part) => Array.from(part)[0]).join("").toUpperCase();
+  const parts = name.trim().split(/\s+/);
+  const selected = parts.length > 1 ? [parts[0], parts[parts.length - 1]] : parts;
+  return selected
+    .map((part) => Array.from(part)[0])
+    .join("")
+    .toUpperCase();
 }
 
 /**
@@ -256,11 +263,21 @@ function getDemoInitials(name) {
  * @returns {SVGTextElement} The text element.
  */
 function createInitialsElement(initials) {
-    const element = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    const attributes = {x: "28", y: "28", "text-anchor": "middle", "dominant-baseline": "central", fill: "#FFFFFF", "font-size": "20", "font-weight": "700", "font-family": "Inter, sans-serif", class: "guest-profile-initial"};
-    Object.entries(attributes).forEach(([name, value]) => element.setAttribute(name, value));
-    element.textContent = initials;
-    return element;
+  const element = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  const attributes = {
+    x: "28",
+    y: "28",
+    "text-anchor": "middle",
+    "dominant-baseline": "central",
+    fill: "#FFFFFF",
+    "font-size": "20",
+    "font-weight": "700",
+    "font-family": "Inter, sans-serif",
+    class: "guest-profile-initial",
+  };
+  Object.entries(attributes).forEach(([name, value]) => element.setAttribute(name, value));
+  element.textContent = initials;
+  return element;
 }
 
 /**
@@ -272,17 +289,17 @@ function createInitialsElement(initials) {
  * @returns {void}
  */
 function showProfileInitials(button, initials, label, color) {
-    const svg = button.querySelector("svg");
-    if (!svg || svg.querySelector(".guest-profile-initial")) return;
-    const circle = svg.querySelector("circle");
-    if (circle) {
-        circle.setAttribute("fill", color);
-        circle.setAttribute("stroke", "#000000");
-        circle.setAttribute("stroke-width", "3");
-    }
-    svg.appendChild(createInitialsElement(initials));
-    button.setAttribute("aria-label", label);
-    button.setAttribute("title", label);
+  const svg = button.querySelector("svg");
+  if (!svg || svg.querySelector(".guest-profile-initial")) return;
+  const circle = svg.querySelector("circle");
+  if (circle) {
+    circle.setAttribute("fill", color);
+    circle.setAttribute("stroke", "#000000");
+    circle.setAttribute("stroke-width", "3");
+  }
+  svg.appendChild(createInitialsElement(initials));
+  button.setAttribute("aria-label", label);
+  button.setAttribute("title", label);
 }
 
 /**
@@ -290,12 +307,12 @@ function showProfileInitials(button, initials, label, color) {
  * @returns {void}
  */
 function initNavbarButtonsBackground() {
-    const links = document.querySelectorAll(".nav-btn a");
-    const currentPage = window.location.pathname.split("/").pop();
-    links.forEach((link) => {
-        const linkPage = link.getAttribute("href").split("/").pop();
-        if (currentPage === linkPage) link.closest(".nav-btn").classList.add("is-active");
-    });
+  const links = document.querySelectorAll(".nav-btn a");
+  const currentPage = window.location.pathname.split("/").pop();
+  links.forEach((link) => {
+    const linkPage = link.getAttribute("href").split("/").pop();
+    if (currentPage === linkPage) link.closest(".nav-btn").classList.add("is-active");
+  });
 }
 
 /**
@@ -303,11 +320,12 @@ function initNavbarButtonsBackground() {
  * @returns {Promise<void>}
  */
 async function renderMobilePolicyNavFooter() {
-    const container = document.getElementById("nav-footer-mobile");
-    const currentPage = window.location.pathname.split("/").pop();
-    if (!container || !["privacy-notice.html", "legal-notice.html"].includes(currentPage)) return;
-    const response = await fetch("../templates/mobileNavFooterPolicy.txt");
-    container.innerHTML = await response.text();
+  const container = document.getElementById("nav-footer-mobile");
+  const currentPage = window.location.pathname.split("/").pop();
+  if (!container || !["privacy-notice.html", "legal-notice.html"].includes(currentPage))
+    return;
+  const response = await fetch("../templates/mobileNavFooterPolicy.txt");
+  container.innerHTML = await response.text();
 }
 
 /**
@@ -315,12 +333,12 @@ async function renderMobilePolicyNavFooter() {
  * @returns {Promise<void>}
  */
 async function initSessionData() {
-    if (sessionStorage.getItem("session-initialized")) return;
-    const { userArray, taskArray } = await fetchTemplateData();
-    if (!userArray) return;
-    sessionStorage.setItem("session-contacts", JSON.stringify(Object.values(userArray || {})));
-    sessionStorage.setItem("session-tasks", JSON.stringify(Object.values(taskArray || {})));
-    sessionStorage.setItem("session-initialized", "true");
+  if (sessionStorage.getItem("session-initialized")) return;
+  const { userArray, taskArray } = await fetchTemplateData();
+  if (!userArray) return;
+  sessionStorage.setItem("session-contacts", JSON.stringify(Object.values(userArray || {}).filter(Boolean)));
+  sessionStorage.setItem("session-tasks", JSON.stringify(Object.values(taskArray || {}).filter(Boolean)));
+  sessionStorage.setItem("session-initialized", "true");
 }
 
 /**
@@ -328,9 +346,9 @@ async function initSessionData() {
  * @returns {Promise<{userArray: Object, taskArray: Object}>} The raw contacts and tasks.
  */
 async function fetchTemplateData() {
-    const response = await fetch(BASE_URL + ".json");
-    const data = await response.json();
-    return { userArray: data.contacts, taskArray: data.tasks };
+  const response = await fetch(BASE_URL + ".json");
+  const data = await response.json();
+  return { userArray: data.contacts, taskArray: data.tasks };
 }
 
 /**
@@ -339,7 +357,7 @@ async function fetchTemplateData() {
  * @returns {Object[]} The stored list or an empty array.
  */
 function getSessionData(key) {
-    return JSON.parse(sessionStorage.getItem(key) || "[]");
+  return JSON.parse(sessionStorage.getItem(key) || "[]");
 }
 
 /**
@@ -349,7 +367,7 @@ function getSessionData(key) {
  * @returns {void}
  */
 function saveSessionData(key, items) {
-    sessionStorage.setItem(key, JSON.stringify(items));
+  sessionStorage.setItem(key, JSON.stringify(items));
 }
 
 /**
@@ -358,7 +376,7 @@ function saveSessionData(key, items) {
  * @returns {Object[]} The sorted contacts.
  */
 function createAlphabeticalList(userArray) {
-    return userArray.sort((a, b) => a.firstName.localeCompare(b.firstName));
+  return userArray.sort((a, b) => a.firstName.localeCompare(b.firstName));
 }
 
 /**
@@ -367,7 +385,7 @@ function createAlphabeticalList(userArray) {
  * @returns {Object[]} The sorted tasks.
  */
 function sortTasks(taskArray) {
-    return taskArray.sort((a, b) => a.state.localeCompare(b.state));
+  return taskArray.sort((a, b) => a.state.localeCompare(b.state));
 }
 
 /**
@@ -377,12 +395,39 @@ function sortTasks(taskArray) {
  * @returns {Promise<Object>} The response of the database.
  */
 async function postData(path = "", data = {}) {
-    const response = await fetch(BASE_URL + path + ".json", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-    });
-    return response.json();
+  const response = await fetch(BASE_URL + path + ".json", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return response.json();
+}
+
+/**
+ * Writes data to a fixed path in the Firebase database.
+ * @param {string} [path=""] - Path inside the database, e.g. "contacts/5"
+ * @param {Object} [data={}] - The data to send.
+ * @returns {Promise<Object>} The response of the database.
+ */
+async function putData(path = "", data = {}) {
+  const response = await fetch(BASE_URL + path + ".json", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return response.json();
+}
+
+/**
+ * Delete data at a fixed path in the Firebase database.
+ * @param {string} [path=""] - Path inside the database, e.g. "contacts/5"
+ * @returns {Promise<Object>} The response of the database.
+ */
+async function deleteData(path = "") {
+  const response = await fetch(BASE_URL + path + ".json", {
+    method: "Delete",
+  });
+  return response.json();
 }
 
 /**
@@ -390,8 +435,8 @@ async function postData(path = "", data = {}) {
  * @returns {void}
  */
 function redirectWithoutSession() {
-    if (isPublicJoinPage() || hasJoinSession()) return;
-    window.location.replace("../index.html");
+  if (isPublicJoinPage() || hasJoinSession()) return;
+  window.location.replace("../index.html");
 }
 
 redirectWithoutSession();

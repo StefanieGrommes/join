@@ -6,7 +6,7 @@
   --hover-menu: rgba(42, 61, 89, 1);
   --hover-primary-button: rgb(18, 70, 88);
   --hover-secondary-button: rgb(41, 171, 226);
-  --hover-bg-color-grey: #eeeeee;
+  --hover-bg-color-grey: rgb(255, 255, 255);
   --hover-btn-grey: rgb(226, 230, 236);
   --navbar-color: rgba(231, 231, 231, 1);
   --active-btn-border: rgb(9, 25, 49);
@@ -314,4 +314,8 @@ main {
 
 .legal-and-policy-mobile {
   display: flex;
+}
+
+.rotate-hint {
+  display: none;
 }
