@@ -15,7 +15,7 @@ async function init() {
   await renderMobilePolicyNavFooter();
   initNavbarButtonsBackground();
   await initSessionData();
-  if (typeof loadContacts === "function") {
+  if (document.getElementById("contactListWrapper")) {
     await loadContacts();
   }
 }
@@ -348,6 +348,24 @@ async function renderMobilePolicyNavFooter() {
 }
 
 /**
+ * Converts the raw firebase tasks into a list and uses the firebase key as id.
+ * Subtask strings are converted to {label, done} objects.
+ * @param {Object|Array} obj - The raw tasks from firebase.
+ * @returns {Object[]} The tasks with id.
+ */
+function withId(obj) {
+  return Object.entries(obj || {})
+    .filter(([, item]) => item)
+    .map(([key, item]) => ({
+      ...item,
+      id: key,
+      subtasks: (item.subtasks || []).map((s) =>
+        typeof s === "string" ? { label: s, done: false } : s,
+      ),
+    }));
+}
+
+/**
  * Loads contacts and tasks from the database into the session storage once per session.
  * @returns {Promise<void>}
  */
@@ -356,7 +374,7 @@ async function initSessionData() {
   const { userArray, taskArray } = await fetchTemplateData();
   if (!userArray) return;
   sessionStorage.setItem("session-contacts", JSON.stringify(Object.values(userArray || {}).filter(Boolean)));
-  sessionStorage.setItem("session-tasks", JSON.stringify(Object.values(taskArray || {}).filter(Boolean)));
+  sessionStorage.setItem("session-tasks", JSON.stringify(withId(taskArray)));
   sessionStorage.setItem("session-initialized", "true");
 }
 

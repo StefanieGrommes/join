@@ -107,6 +107,7 @@ function groupContactsByLetter(contacts) {
 function renderContactList(contacts) {
   if (!contacts) return;
   allContacts = contacts;
+  saveSessionData("session-contacts", allContacts);
   let wrapper = document.getElementById("contactListWrapper");
   if (!wrapper) return;
   let groups = groupContactsByLetter(sortContactsByName(contacts));
@@ -227,7 +228,7 @@ document.addEventListener("click", closeMenuOnOutsideClick);
  */
 function splitName(fullName) {
   let parts = fullName.trim().split(" ");
-  lastName = parts.pop();
+  let lastName = parts.pop();
   return { firstName: parts.join(" "), lastName: lastName };
 }
 
@@ -237,7 +238,7 @@ function splitName(fullName) {
  */
 function getNextContactId() {
   let numbers = allContacts.map((c) => Number(c.id));
-  return String(Math.max(...numbers) + 1);
+  return String(Math.max(0, ...numbers) + 1);
 }
 
 /**
@@ -320,11 +321,6 @@ async function saveEditedContact(form) {
   closeDialog();
   showSuccessToast("Contact successfully edited");
 }
-/**
- * Saves the changes of an edited contact to the database.
- * @param {HTMLFormElement} form - The contact form.
- * @returns {Promise<void>}
- */
 
 /**
  * Shows the colored initials of a contact inside the dialog.
@@ -341,8 +337,11 @@ function showDialogAvatar(contact) {
   </div>`;
 }
 
-
-
+/**
+ * Deletes the contact and closes the detail vue.
+ * @param {HTMLFormElement} form - The contact form.
+ * @returns {Promise<void>}
+ */
 async function deleteContact(id) {
   await deleteData("contacts/" + id);
   allContacts = allContacts.filter((contact) => contact.id !== id);

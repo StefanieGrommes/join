@@ -99,24 +99,23 @@ function getBoardContactInitials(contact) {
 }
 
 /**
- * Finds a contact by its id or its initials.
- * @param {string} contactId - Id or initials (e.g. "AM" from task.assignedTo).
+ * Finds a contact by its id in the session storage.
+ * @param {{id: string}|string} ref - Assigned entry ({id}) or plain id.
  * @returns {Object|null} The found contact or null.
  */
-function getContactById(contactId) {
-  const contactList = typeof contacts !== 'undefined' ? contacts : [];
-  if (!Array.isArray(contactList)) return null;
-  return contactList.find((contact) => (contact.id || getBoardContactInitials(contact)) === contactId) || null;
+function getContactById(ref) {
+  const id = typeof ref === 'object' && ref ? ref.id : ref;
+  return getSessionData('session-contacts').find((contact) => contact.id === id) || null;
 }
 
 /**
  * Renders a round avatar with initials in the contact color.
- * @param {Object|null} contact - Contact with name and color.
+ * @param {Object|null} contact - Contact from the session storage.
  * @returns {string} HTML string of the avatar, empty if there is no contact.
  */
 function renderAvatar(contact) {
   if (!contact) return '';
-  return getBoardAvatarTemplate(contact.color, getBoardContactInitials(contact));
+  return getBoardAvatarTemplate(getContactColor(contact.id), getUserInitials(contact));
 }
 
 /**
@@ -136,14 +135,14 @@ function renderAssignedContacts(assignedIds) {
 
 /**
  * Returns the file name of the priority icon in the assets folder.
- * @param {"Urgent"|"Medium"|"Low"} priority - Priority of the task.
+ * @param {"urgent"|"medium"|"low"} priority - Priority of the task.
  * @returns {string|undefined} File name of the SVG or undefined.
  */
 function getTaskPriorityIcon(priority) {
   const priorityIcons = {
-    Urgent: 'priorityUrgent.svg',
-    Medium: 'medium.svg',
-    Low: 'low.svg',
+    urgent: 'priorityUrgent.svg',
+    medium: 'medium.svg',
+    low: 'low.svg',
   };
   return priorityIcons[priority];
 }
@@ -186,7 +185,7 @@ function renderDetailAssignees(assignedIds) {
   return (assignedIds || [])
     .map((contactId) => getContactById(contactId))
     .filter(Boolean)
-    .map((contact) => getDetailAssigneeTemplate(renderAvatar(contact), contact.name))
+    .map((contact) => getDetailAssigneeTemplate(renderAvatar(contact), getFullUserName(contact)))
     .join('');
 }
 

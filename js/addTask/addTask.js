@@ -2,6 +2,8 @@ const list = document.getElementById("assigned-to-list");
 const priorityBtns = document.getElementsByClassName("priority-btn");
 const subtaskInput = document.getElementById("subtaskInput");
 const subTaskList = document.querySelector(".subtask-list");
+let editingTaskId = null;
+let newTaskState = "todo";
 
 /**
  * Loads the session data (contacts and tasks) for the add-task page.
@@ -246,7 +248,7 @@ subTaskList.addEventListener("click", (event) => {
   startEditSubtask(item);
 });
 
-const form = document.getElementById("addTaskForm");
+const form = document.getElementById("add-task-form");
 const taskTitleInput = document.getElementById("task-title");
 const taskCategory = document.getElementById("task-category");
 const errorMessage = document.getElementById("error-message");
@@ -291,14 +293,6 @@ function getSelectedPriority() {
 }
 
 /**
- * Returns the texts of all subtasks in the list.
- * @returns {string[]} The subtask texts.
- */
-function getSubtasks() {
-  return Array.from(subTaskList.querySelectorAll(".subtask-text")).map((el) => el.textContent);
-}
-
-/**
  * Returns the selected contacts in the assigned-to dropdown.
  * @returns {{id: string}[]} The selected contacts as id objects.
  */
@@ -309,24 +303,48 @@ function getAssignedContactIds() {
 }
 
 /**
- * Builds the task object from the form and posts it to the firebase.
+ * Reads the subtasks and keeps the done state of unchanged labels.
+ * @param {{label: string, done: boolean}[]} [previous=[]] - Subtasks of the edited task.
+ * @returns {{label: string, done: boolean}[]} The subtasks.
+ */
+function getSubtasks(previous = []) {
+  saveSubtask();
+  return Array.from(subTaskList.querySelectorAll(".subtask-text")).map((el) => {
+    const label = el.textContent.trim();
+    const old = previous.find((subtask) => subtask.label === label);
+    return { label, done: old ? Boolean(old.done) : false };
+  });
+}
+
+/**
+ * Creates or updates a task in the session storage and the firebase.
  * @returns {Promise<void>}
  */
 async function submitForm() {
+  const all = getSessionData("session-tasks");
+  const existing = editingTaskId ? all.find((t) => t.id === editingTaskId) : null;
   const task = {
+    id: existing ? existing.id : String(Date.now()),
     title: taskTitleInput.value.trim(),
-    state: "todo",
+    state: existing ? existing.state : newTaskState,
     description: document.getElementById("task-description").value.trim(),
     dueDate: dueDate.value,
     priority: getSelectedPriority(),
     assignedTo: getAssignedContactIds(),
     category: taskCategory.value,
-    subtasks: getSubtasks(),
+    subtasks: getSubtasks(existing ? existing.subtasks : []),
   };
-  console.log(task);
-  await postData("tasks", task);
+  saveSessionData(
+    "session-tasks",
+    existing ? all.map((t) => (t.id === task.id ? task : t)) : [...all, task],
+  );
+  await putData("tasks/" + task.id, task);
   resetForm();
+  if (typeof onTaskSaved === "function") onTaskSaved();
 }
+
+list.style.display = "none";
+document.getElementById("assigned-to-dropdown").classList.remove("open");
 
 /**
  * Resets the whole add-task form including priority, contacts and subtasks.

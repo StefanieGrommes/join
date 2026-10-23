@@ -58,13 +58,13 @@ function initBoardLayout() {
  *
  * @returns {void}
  */
-function initBoardPage() {
-  restoreStoredTasks();
+async function initBoardPage() {
+  await initSessionData();
   syncBoardMobileNavigation();
   initBoardLayout();
   initBoardMoveMenu();
-  initAddTaskModal();
   initTaskDetailModal();
+  initBoardTaskForm();
 }
 
 document.addEventListener("DOMContentLoaded", initBoardPage);

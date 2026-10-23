@@ -92,17 +92,17 @@
         <button id="board-task-close-button" class="board-task-close" type="button"
           aria-label="Close add task dialog">×</button>
       </div>
-      <form id="board-task-form" class="add-task-form" novalidate>
+      <form id="add-task-form" class="add-task-form" novalidate>
         <div class="form-columns">
           <div class="form-column-left">
             <div class="form-field">
-              <label for="taskTitle">Title<span class="required-star">*</span></label>
-              <input id="taskTitle" type="text" placeholder="Enter a title" />
+              <label for="task-title">Title<span class="required-star">*</span></label>
+              <input id="task-title" type="text" placeholder="Enter a title" />
               <span class="field-error"></span>
             </div>
             <div class="form-field">
-              <label for="taskDescription">Description</label>
-              <textarea id="taskDescription" placeholder="Enter a Description"></textarea>
+              <label for="task-description">Description</label>
+              <textarea id="task-description" placeholder="Enter a Description"></textarea>
             </div>
             <div class="form-field">
               <label for="taskDueDate">Due date<span class="required-star">*</span></label>
@@ -170,10 +170,10 @@
             <div class="form-field">
               <p class="field-label">Category<span class="required-star">*</span></p>
               <div class="dropdown-container">
-                <select id="taskCategory" class="toggle-task">
+                <select id="task-category" class="toggle-task">
                   <option value="" selected>Select task category</option>
-                  <option value="Technical Task">Technical Task</option>
-                  <option value="User Story">User Story</option>
+                  <option value="TechnicalTask">Technical Task</option>
+                  <option value="UserStory">User Story</option>
                 </select>
                 <button type="button"><img src="../assets/arrowdropdown.svg" alt="Dropdown arrow"></button>
               </div>
@@ -198,14 +198,23 @@
           </div>
         </div>
         <div class="form-footer">
-          <p class="required-hint"><span class="required-star">*</span>This field is required</p>
-          <div class="form-actions">
-            <button id="board-task-clear-button" type="button" class="btn-clear">Clear <span
-                class="icon-close"></span></button>
-            <button id="board-task-save-button" type="submit" class="btn-create">Create Task <span
-                class="icon-check"></span></button>
+            <div class="error-wrapper">
+               <p class="error-message" id="error-message"></p>
+            </div>
+            <div class="required-and-form-actions">
+              <p class="required-hint">
+              <span class="required-star">*</span>This field is required
+            </p>
+            <div class="form-actions">
+              <button type="button" class="btn-clear" onclick="resetForm()">
+                Clear <span class="icon-close"></span>
+              </button>
+              <button type="submit" class="btn-create">
+                Create Task <span class="icon-check"></span>
+              </button>
+            </div>
+            </div>
           </div>
-        </div>
       </form>
     </div>
   </div>
@@ -245,9 +254,9 @@
   <script src="../js/addTask/addTask.js"></script>
   <script src="../js/contactList.js"></script>
   <script src="../js/board/boardData.js"></script>
+  <script src="../js/board/boardTaskForm.js"></script>
   <script src="../js/board/boardRender.js"></script>
   <script src="../js/board/boardMove.js"></script>
-  <script src="../js/board/boardTaskForm.js"></script>
   <script src="../js/board/boardDetail.js"></script>
   <script src="../js/board/boardLayout.js"></script>
 </body>
