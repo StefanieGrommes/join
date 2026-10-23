@@ -13,9 +13,8 @@ window.addEventListener("load", summaryInit, true);
  *
  * @returns {void}
  */
-function summaryInit() {
-    init();
-    restoreStoredTasks();
+async function summaryInit() {
+    await init();
     showCurrentDayTime();
     showSummaryName();
     showTaskCounts();
@@ -38,14 +37,15 @@ function showCurrentDayTime() {
  * @returns {void}
  */
 function showSummaryName() {
-    const mode = window.localStorage.getItem("join-session-mode");
-    const name = window.localStorage.getItem("join-demo-name");
+    const mode = window.sessionStorage.getItem("join-session-mode");
+    const name = (window.sessionStorage.getItem("join-demo-name") || "").trim();
     const username = document.getElementById("username");
-    username.textContent = mode === "demo" && name +"!" ? name.trim() : "";
-    username.hidden = !username.textContent;
-    if (!username.textContent) {
-        daytimeContainer.textContent = getCurrentDaytime().replace(/,$/, "!");
-    }
+    const hasName = mode === "demo" && name !== "";
+    username.textContent = hasName ? name + "!" : "";
+    username.hidden = !hasName;
+    daytimeContainer.textContent = hasName
+        ? getCurrentDaytime()
+        : getCurrentDaytime().replace(/,$/, "!");
 }
 
 /**
@@ -71,17 +71,16 @@ function getCurrentDaytime() {
  * @returns {Object[]} The tasks of this column.
  */
 function getTasksInColumn(columnId) {
-    const boardState = getBoardState();
-    return tasks.filter((task) => getTaskColumnId(task, boardState) === columnId);
+    return getTasks().filter((task) => getTaskColumnId(task) === columnId);
 }
 
 /**
- * Returns all tasks with the priority "Urgent".
+ * Returns all tasks with the priority "urgent".
  *
  * @returns {Object[]} The urgent tasks.
  */
 function getUrgentTasks() {
-    return tasks.filter((task) => task.priority === "Urgent");
+     return getTasks().filter((task) => task.priority === "urgent");
 }
 
 /**
@@ -113,7 +112,7 @@ function showColumnCounts() {
  */
 function showTaskCounts() {
     showColumnCounts();
-    setBoxAmount("tasks-in-board", tasks.length);
+    setBoxAmount("tasks-in-board", getTasks().length);
     setBoxAmount("urgent-and-calendar", getUrgentTasks().length);
 }
 
@@ -149,10 +148,9 @@ function getStartOfToday() {
  * @returns {Date[]} The upcoming due dates.
  */
 function getUpcomingUrgentDates() {
-    const boardState = getBoardState();
     const today = getStartOfToday();
     return getUrgentTasks()
-        .filter((task) => getTaskColumnId(task, boardState) !== "done")
+        .filter((task) => getTaskColumnId(task) !== "done")
         .map((task) => parseDueDate(task.dueDate))
         .filter((date) => date && date >= today);
 }

@@ -34,7 +34,7 @@ function getContactOptionTemplate(contact) {
 function getSubtaskItemTemplate(text) {
   return `
     <li class="subtask-list-item">
-      <span class="subtask-text">${text}</span>
+      <span class="subtask-text">${escapeHtml(text)}</span>
       <div class="subtask-list-buttons">
         <button type="button" class="edit-subtask-item-btn"><img src="../assets/edit-subtask.png" alt="edit subtask item"></button>
         <span class="action-divider"></span>
