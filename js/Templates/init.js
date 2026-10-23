@@ -15,7 +15,7 @@ async function init() {
     await renderMobilePolicyNavFooter();
     initNavbarButtonsBackground();
     await initSessionData();
-    renderContactList(getSessionData("session-contacts"));
+    if (typeof renderContactList === "function") renderContactList(getSessionData("session-contacts"));
 }
 
 /**
@@ -24,7 +24,7 @@ async function init() {
  */
 function isPublicJoinPage() {
     const page = window.location.pathname.split("/").pop();
-    return ["index.html", "signup.html", "privacy-notice.html", "legal-notice.html"].includes(page);
+    return ["", "index.html", "signup.html", "privacy-notice.html", "legal-notice.html"].includes(page);
 }
 
 /**
@@ -32,8 +32,8 @@ function isPublicJoinPage() {
  * @returns {boolean} True if the user is logged in as guest or demo user.
  */
 function hasJoinSession() {
-    const mode = window.sessionStorage.getItem("join-session-mode");
-    return mode === "guest" || (mode === "demo" && Boolean(window.sessionStorage.getItem("join-demo-name")));
+    const mode = window.localStorage.getItem("join-session-mode");
+    return mode === "guest" || (mode === "demo" && Boolean(window.localStorage.getItem("join-demo-name")));
 }
 
 /**
@@ -207,9 +207,11 @@ function bindProfileMenuCloseEvents() {
  * @returns {void}
  */
 function logoutJoinSession() {
-    ["join-session-mode", "join-demo-name", "join-profile-color", "session-initialized", "session-contacts", "session-tasks"]
+    ["join-session-mode", "join-demo-name", "join-user-email", "join-profile-color"]
+        .forEach((key) => window.localStorage.removeItem(key));
+    ["session-initialized", "session-contacts", "session-tasks"]
         .forEach((key) => window.sessionStorage.removeItem(key));
-    window.location.href = "../index.html";
+    window.location.replace("../index.html");
 }
 
 function createRandomProfileColor() {
@@ -222,16 +224,16 @@ function createRandomProfileColor() {
  * @returns {void}
  */
 function updateSessionHeader() {
-    const mode = window.sessionStorage.getItem("join-session-mode");
-    const name = window.sessionStorage.getItem("join-demo-name");
+    const mode = window.localStorage.getItem("join-session-mode");
+    const name = window.localStorage.getItem("join-demo-name");
     if (mode !== "guest" && (mode !== "demo" || !name)) return;
     const initials = mode === "guest" ? "G" : getDemoInitials(name);
-    const label = mode === "guest" ? "Guest profile" : `${name} (demo profile)`;
+    const label = mode === "guest" ? "Guest profile" : `${name} (profile)`;
     // Keep one profile color for the whole session.
-    let color = window.sessionStorage.getItem("join-profile-color");
+    let color = window.localStorage.getItem("join-profile-color");
     if (!color) {
         color = createRandomProfileColor();
-        window.sessionStorage.setItem("join-profile-color", color);
+        window.localStorage.setItem("join-profile-color", color);
     }
     document.querySelectorAll(profileButtonSelector)
         .forEach((button) => showProfileInitials(button, initials, label, color));
@@ -393,3 +395,5 @@ function redirectWithoutSession() {
 }
 
 redirectWithoutSession();
+window.addEventListener("pageshow", redirectWithoutSession);
+window.addEventListener("storage", redirectWithoutSession);

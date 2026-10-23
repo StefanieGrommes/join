@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="./css/index/style.css"/>
     <!-- Gemeinsame Seitenelemente und Login-Verhalten bereitstellen. -->
     <script src="./js/Templates/init.js"></script>
+    <script src="./js/auth/users.js"></script>
     <script src="./js/login/login.js"></script>
   </head>
 
@@ -49,24 +50,24 @@
           <section class="content-card" aria-labelledby="login-title">
             <h1 id="login-title" class="login-title">Log in</h1>
 
-            <!-- Demo-Login-Formular; die Prüfung und Weiterleitung übernimmt login.js. -->
-            <form id="demo-login-form" class="login-form" novalidate>
-              <!-- Name für den Demo-Zugang; aria-describedby verweist auf den Feedback-Text. -->
+            <!-- Login-Formular; login.js prüft E-Mail und Passwort gegen die gespeicherten Accounts. -->
+            <form id="login-form" class="login-form" novalidate>
+              <!-- E-Mail des Accounts; aria-describedby verweist auf den Feedback-Text. -->
               <div class="field input-with-icon">
-                <input id="demo-login-name" type="text" placeholder="Name" aria-label="Name for demo login" aria-describedby="demo-login-feedback" autocomplete="name" />
+                <input id="login-email" type="email" placeholder="Email" aria-label="Email" aria-describedby="login-feedback" autocomplete="email" />
                 <img src="./img/icons/mail.png" alt="Mail icon" class="input-icon" />
               </div>
-              <!-- Passwortfeld zur Anzeige; im Demo-Modus wird das Passwort nicht geprüft oder gespeichert. -->
+              <!-- Passwort des Accounts. -->
               <div class="field input-with-icon">
-                <input type="password" placeholder="Password" aria-label="Password (not checked or saved in demo)" autocomplete="off" />
+                <input id="login-password" type="password" placeholder="Password" aria-label="Password" aria-describedby="login-feedback" autocomplete="current-password" />
                 <img src="./img/icons/lock.png" alt="Lock icon" class="input-icon" />
               </div>
               <!-- login.js schreibt hier eine Fehlermeldung hinein; aria-live meldet sie Screenreadern. -->
-              <p id="demo-login-feedback" class="demo-login-feedback" aria-live="polite"></p>
+              <p id="login-feedback" class="login-feedback" aria-live="polite"></p>
 
-              <!-- Formular-Aktionen: normales Demo-Login oder Anmeldung als Gast. -->
+              <!-- Formular-Aktionen: Login mit Account oder Anmeldung als Gast. -->
               <div class="button-row">
-                <button type="submit" class="btn btn--primary">Log in</button>
+                <button id="login-submit-button" type="submit" class="btn btn--primary">Log in</button>
                 <button id="guest-login-button" type="button" class="btn btn--secondary">Guest Log in</button>
               </div>
             </form>

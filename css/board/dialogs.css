@@ -14,7 +14,7 @@
 }
 
 .board-main-column.is-drop-target {
-  background: rgba(111, 168, 255, 0.08);
+  background: rgba(0, 0, 0, 0.08);
   border-radius: 18px;
   outline: 2px dashed #6fa8ff;
   outline-offset: -4px;
