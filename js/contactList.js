@@ -134,10 +134,10 @@ function getContactDetailTemplate(contact) {
         <p class="contact-detail-name">${contact.firstName} ${contact.lastName}</p>
         <div class="contact-detail-actions">
           <button class="detail-action-btn" onclick="openEditDialog('${contact.id}')">
-            <img src="../assets/edit.svg" alt="" /> Edit
+            <img class="icon-edit" src="../assets/edit.svg" alt="" /> Edit
           </button>
           <button class="detail-action-btn" onclick="deleteContact('${contact.id}')">
-            <img src="../assets/delete.svg" alt="" /> Delete
+            <img class="icon-delete" src="../assets/delete.svg" alt="" /> Delete
           </button>
         </div>
       </div>
@@ -156,9 +156,10 @@ function getContactDetailTemplate(contact) {
     </button>
     <div class="detail-menu" id="detailMenu">
       <button class="detail-action-btn" onclick="openEditDialog('${contact.id}')">
-      <img src="../assets/edit.svg" alt="" />Edit</button>
+        <img class="icon-edit" src="../assets/edit.svg" alt="" />Edit
+      </button>
       <button class="detail-action-btn" onclick="deleteContact('${contact.id}')">
-        <img src="../assets/delete.svg" alt="" />Delete
+        <img class="icon-delete" src="../assets/delete.svg" alt="" />Delete
       </button>
     </div>`;
 }
@@ -263,7 +264,10 @@ function buildContactFromForm(form) {
  */
 async function addNewContact(form) {
   let contact = buildContactFromForm(form);
+  let button = form.querySelector(".create-contact-btn");
+  button.disabled = true;
   await putData("contacts/" + contact.id, contact);
+  button.disabled = false;
   allContacts.push(contact);
   renderContactList(allContacts);
   let element = document.querySelector(`[data-id="${contact.id}"]`);
@@ -312,7 +316,10 @@ function openEditDialog(id) {
 async function saveEditedContact(form) {
   let contact = buildContactFromForm(form);
   contact.id = editingContactId;
+  let button = form.querySelector(".create-contact-btn");
+  button.disabled = true;
   await putData("contacts/" + contact.id, contact);
+  button.disabled = false;
   let index = allContacts.findIndex((c) => c.id === contact.id);
   allContacts[index] = contact;
   renderContactList(allContacts);
@@ -320,6 +327,7 @@ async function saveEditedContact(form) {
   closeDialog();
   showSuccessToast("Contact successfully edited");
 }
+
 /**
  * Saves the changes of an edited contact to the database.
  * @param {HTMLFormElement} form - The contact form.
@@ -334,20 +342,25 @@ async function saveEditedContact(form) {
 function showDialogAvatar(contact) {
   let avatar = document.getElementById("dialogAvatar");
   avatar.innerHTML = /* HTML */ `<div
-  class="contact-avatar-large"
-  style="background-color: ${getContactColor(contact.id)}"
+    class="contact-avatar-large"
+    style="background-color: ${getContactColor(contact.id)}"
   >
-  ${getInitials(contact.firstName, contact.lastName)}
+    ${getInitials(contact.firstName, contact.lastName)}
   </div>`;
 }
 
-
-
+/**
+ * Deletes a contact from the database, from all tasks and from the list.
+ * @param {string} id - The id of the contact to delete.
+ * @returns {Promise<void>}
+ */
 async function deleteContact(id) {
+  await removeContactFromTasks(id);
   await deleteData("contacts/" + id);
   allContacts = allContacts.filter((contact) => contact.id !== id);
   renderContactList(allContacts);
   closeContactDetail();
+  document.getElementById("contactDetail").innerHTML = "";
 }
 
 /**

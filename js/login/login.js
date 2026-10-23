@@ -31,35 +31,54 @@ function loginAsGuest() {
 }
 
 /**
- * Shows the error message for an empty demo login name and focuses the field.
- * @param {HTMLInputElement} input - The demo login name field.
- * @returns {void}
+ * Loads all registered users from the database.
+ * @returns {Promise<Object[]>} The list of users.
  */
-function showDemoLoginError(input) {
-  const feedback = document.getElementById("demo-login-feedback");
-  feedback.textContent = "Please enter your name. This is a demo without password verification.";
-  input.focus();
+async function loadUsers(params) {
+  const response = await fetch(Base_URL + "users.json");
+  const data = await response.json();
+  return Object.values(data || {}).filter(Booloean);
 }
 
 /**
- * Demo login: stores the entered name in the session and opens the summary page.
- * There is no real password check.
- * @param {SubmitEvent} event - Submit event of the demo login form.
+ * Finds a user with matching email and password.
+ * @param {Object[]} users - All registered users.
+ * @param {string} email - The entered email.
+ * @param {string} password - The entered password.
+ * @returns {Object|undefined} The matching user, or undefined.
+ */
+function findUser(users, email, password) {
+  return users.find((user) => user.email === email && user.password === password);
+}
+
+/**
+ * Starts a session for a user and opens the summary page.
+ * @param{Object} user - The logged in user.
  * @returns {void}
  */
-function loginAsDemoUser(event) {
+function startUserSession(user) {
+window.sessionStorage.setItem("join-demo-name", user.name); 
+window.sessionStorage.setItem("join-session-mode", "demo");
+window.sessionStorage.setItem("join-profile-color", createRandomProfilColor());
+window.location.href = "./pages/summary.html";
+}
+
+/**
+ * Checks email and password against the database and logs the user in.
+ * @param{SubmitEvent} event - Submit event of the login form.
+ * @returns {Promise<void>}
+ */
+async function loginUser(event) {
   event.preventDefault();
-  const input = document.getElementById("demo-login-name");
-  const name = input.value.trim();
-  input.setAttribute("aria-invalid", String(!name));
-  if (!name) {
-    showDemoLoginError(input);
+  const email = document.getElementById("login-email").value.trim();
+  const password = document.getElementById("login.password").value;
+  const user = findUser(await loadUsers(), email, password);
+  if (!user) {
+    document.getElementById("demo-login-feedback").textContent =
+    "Email or password is wrong. Please try again.";
     return;
   }
-  window.sessionStorage.setItem("join-demo-name", name);
-  window.sessionStorage.setItem("join-session-mode", "demo");
-  window.sessionStorage.setItem("join-profile-color", createRandomProfileColor());
-  window.location.href = "./pages/summary.html";
+  startUserSession(user);
 }
 
 /**
@@ -71,7 +90,8 @@ function bindLoginEvents() {
     button.addEventListener("click", redirectToSignupPage);
   });
   document.getElementById("guest-login-button").addEventListener("click", loginAsGuest);
-  document.getElementById("demo-login-form").addEventListener("submit", loginAsDemoUser);
+  document.getElementById("demo-login-form").addEventListener("submit", loginUser);
+
 }
 
 /**

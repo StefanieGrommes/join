@@ -30,7 +30,6 @@
 
   .contact-detail-name {
     font-size: 36px;
-    font-weight: 700;
     padding-left: 10px;
   }
 
@@ -58,6 +57,9 @@
     width: 80px;
     font-size: 27px;
     font-weight: 400;
+  }
+  .contact-detail-actions {
+    margin-left: 10px;
   }
 }
 
@@ -137,6 +139,11 @@
     width: 80px;
     height: 80px;
     font-size: 27px;
+  }
+
+  .contact-detail-actions {
+    justify-content: flex-start;
+    margin-left: 0;
   }
 }
 

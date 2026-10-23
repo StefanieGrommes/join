@@ -131,6 +131,12 @@ main {
   border-radius: 10px;
 }
 
+.contact-item .contact-email {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .contact-item:hover {
   background-color: rgb(245, 245, 245);
 }
@@ -157,6 +163,7 @@ main {
 }
 
 .contact-info {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -251,12 +258,18 @@ h1 {
 
 .detail-action-btn:hover {
   color: var(--hover-primary-button);
-  font-weight: 700;
+
+  text-shadow: 0.4px 0 0 currentColor;
 }
 
-.detail-action-btn img {
-  height: 24px;
-  width: 24px;
+.detail-action-btn .icon-edit {
+  height: 18px;
+  width: 18px;
+}
+
+.detail-action-btn .icon-delete {
+  height: 18px;
+  width: 16px;
 }
 
 .section-label {
