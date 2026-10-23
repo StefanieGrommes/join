@@ -48,7 +48,7 @@ function getInitials(firstName, lastName) {
  */
 function getContactTemplate(contact) {
   return `
-    <li class="contact-item" data-id="${contact.id}"onclick="openContactDetail('${contact.id}', this)">
+    <li class="contact-item" data-id="${contact.id}" onclick="openContactDetail('${contact.id}', this)">
       <div class="contact-avatar" style="background-color: ${getContactColor(contact.id)}">${getInitials(contact.firstName, contact.lastName)}</div>
       <div class="contact-info">
         <p class="contact-name">${contact.firstName} ${contact.lastName}</p>
@@ -107,7 +107,6 @@ function groupContactsByLetter(contacts) {
 function renderContactList(contacts) {
   if (!contacts) return;
   allContacts = contacts;
-  saveSessionData("session-contacts", allContacts);
   let wrapper = document.getElementById("contactListWrapper");
   if (!wrapper) return;
   let groups = groupContactsByLetter(sortContactsByName(contacts));
@@ -235,7 +234,7 @@ function splitName(fullName) {
 
 /**
  * Return the next free contact id as a string.
- * @returns {Object}Object with firstName and lastName
+ * @returns {string} The next free contact id
  */
 function getNextContactId() {
   let numbers = allContacts.map((c) => Number(c.id));
@@ -261,7 +260,7 @@ function buildContactFromForm(form) {
 /**
  * Creates a new contact, saves it to the database and shows it in the list.
  * @param {HTMLFormElement} form - The add contact form
- * @returns {Promise<void}
+ * @returns {Promise<void>}
  */
 async function addNewContact(form) {
   let contact = buildContactFromForm(form);
@@ -280,7 +279,7 @@ async function addNewContact(form) {
 
 /**
  * Loads all contacts from the database and renders the list.
- * @returns {Promise<void}
+ * @returns {Promise<void>}
  */
 async function loadContacts() {
   let response = await fetch(BASE_URL + "contacts.json");
@@ -345,8 +344,8 @@ function showDialogAvatar(contact) {
 }
 
 /**
- * Deletes the contact and closes the detail vue.
- * @param {HTMLFormElement} form - The contact form.
+ * Deletes the contact from the database, from all tasks and from the list
+ * @param {string} id - The id of the contact to delete.
  * @returns {Promise<void>}
  */
 async function deleteContact(id) {
@@ -356,6 +355,22 @@ async function deleteContact(id) {
   renderContactList(allContacts);
   closeContactDetail();
   document.getElementById("contactDetail").innerHTML = "";
+}
+
+/**
+ * Removes a deleted contact from the assigned list of all tasks.
+ * @param {string} id - The id of the deleted contact.
+ * @returns {Promise<void>}
+ */
+async function removeContactFromTasks(id) {
+  let response = await fetch(BASE_URL + "tasks.json");
+  let tasks = await response.json();
+  for (let key in tasks) {
+    let assigned = tasks[key].assignedTo;
+    if (!assigned) continue;
+    let left = assigned.filter((entry) => entry.id !== id);
+    if (left.length !== assigned.length) await putData(`tasks/${key}/assignedTo`, left);
+  }
 }
 
 /**
