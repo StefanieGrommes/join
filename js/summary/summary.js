@@ -41,7 +41,7 @@ function showSummaryName() {
     const mode = window.sessionStorage.getItem("join-session-mode");
     const name = window.sessionStorage.getItem("join-demo-name");
     const username = document.getElementById("username");
-    username.textContent = mode === "demo" && name ? name.trim() : "";
+    username.textContent = mode === "demo" && name +"!" ? name.trim() : "";
     username.hidden = !username.textContent;
     if (!username.textContent) {
         daytimeContainer.textContent = getCurrentDaytime().replace(/,$/, "!");

@@ -15,7 +15,7 @@ function getAvatarTemplate(initials, avatarColor) {
  */
 function getContactOptionTemplate(contact) {
   return `
-    <li class="contact-option">
+    <li class="contact-option" data-contact-id="${contact.id}">
       <div class="name-and-initials">
         <span class="contact-avatar" style="background-color: ${getContactColor(contact.id)}">${getUserInitials(contact)}</span>
         <span class="contact-name">${getFullUserName(contact)}</span>

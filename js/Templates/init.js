@@ -355,8 +355,8 @@ async function initSessionData() {
   if (sessionStorage.getItem("session-initialized")) return;
   const { userArray, taskArray } = await fetchTemplateData();
   if (!userArray) return;
-  sessionStorage.setItem("session-contacts", JSON.stringify(Object.values(userArray || {})));
-  sessionStorage.setItem("session-tasks", JSON.stringify(Object.values(taskArray || {})));
+  sessionStorage.setItem("session-contacts", JSON.stringify(Object.values(userArray || {}).filter(Boolean)));
+  sessionStorage.setItem("session-tasks", JSON.stringify(Object.values(taskArray || {}).filter(Boolean)));
   sessionStorage.setItem("session-initialized", "true");
 }
 
