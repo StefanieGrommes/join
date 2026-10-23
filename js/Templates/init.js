@@ -15,7 +15,7 @@ async function init() {
   await renderMobilePolicyNavFooter();
   initNavbarButtonsBackground();
   await initSessionData();
-  if (typeof loadContacts === "function") {
+  if (document.getElementById("contactListWrapper")) {
     await loadContacts();
   }
 }
@@ -26,7 +26,7 @@ async function init() {
  */
 function isPublicJoinPage() {
   const page = window.location.pathname.split("/").pop();
-  return ["index.html", "signup.html", "privacy-notice.html", "legal-notice.html"].includes(
+  return ["", "index.html", "signup.html", "privacy-notice.html", "legal-notice.html"].includes(
     page,
   );
 }
@@ -36,11 +36,8 @@ function isPublicJoinPage() {
  * @returns {boolean} True if the user is logged in as guest or demo user.
  */
 function hasJoinSession() {
-  const mode = window.sessionStorage.getItem("join-session-mode");
-  return (
-    mode === "guest" ||
-    (mode === "demo" && Boolean(window.sessionStorage.getItem("join-demo-name")))
-  );
+    const mode = window.localStorage.getItem("join-session-mode");
+    return mode === "guest" || (mode === "demo" && Boolean(window.localStorage.getItem("join-demo-name")));
 }
 
 /**
@@ -214,33 +211,16 @@ function bindProfileMenuCloseEvents() {
  * @returns {void}
  */
 function logoutJoinSession() {
-  [
-    "join-session-mode",
-    "join-demo-name",
-    "join-profile-color",
-    "session-initialized",
-    "session-contacts",
-    "session-tasks",
-  ].forEach((key) => window.sessionStorage.removeItem(key));
-  window.location.href = "../index.html";
+    ["join-session-mode", "join-demo-name", "join-user-email", "join-profile-color"]
+        .forEach((key) => window.localStorage.removeItem(key));
+    ["session-initialized", "session-contacts", "session-tasks"]
+        .forEach((key) => window.sessionStorage.removeItem(key));
+    window.location.replace("../index.html");
 }
 
-/**
- * Creates a random profile color for each user.
- * @returns {void}
- */
 function createRandomProfileColor() {
-  const profileColors = [
-    "#2563EB",
-    "#7C3AED",
-    "#0F766E",
-    "#BE123C",
-    "#4338CA",
-    "#047857",
-    "#A16207",
-    "#6D28D9",
-  ];
-  return profileColors[Math.floor(Math.random() * profileColors.length)];
+    const profileColors = ["#2563EB", "#7C3AED", "#0F766E", "#BE123C", "#4338CA", "#047857", "#A16207", "#6D28D9"];
+    return profileColors[Math.floor(Math.random() * profileColors.length)];
 }
 
 /**
@@ -248,19 +228,19 @@ function createRandomProfileColor() {
  * @returns {void}
  */
 function updateSessionHeader() {
-  const mode = window.sessionStorage.getItem("join-session-mode");
-  const name = window.sessionStorage.getItem("join-demo-name");
-  if (mode !== "guest" && (mode !== "demo" || !name)) return;
-  const initials = mode === "guest" ? "G" : getDemoInitials(name);
-  const label = mode === "guest" ? "Guest profile" : `${name} (demo profile)`;
-  let color = window.sessionStorage.getItem("join-profile-color");
-  if (!color) {
-    color = createRandomProfileColor();
-    window.sessionStorage.setItem("join-profile-color", color);
-  }
-  document
-    .querySelectorAll(profileButtonSelector)
-    .forEach((button) => showProfileInitials(button, initials, label, color));
+    const mode = window.localStorage.getItem("join-session-mode");
+    const name = window.localStorage.getItem("join-demo-name");
+    if (mode !== "guest" && (mode !== "demo" || !name)) return;
+    const initials = mode === "guest" ? "G" : getDemoInitials(name);
+    const label = mode === "guest" ? "Guest profile" : `${name} (profile)`;
+    // Keep one profile color for the whole session.
+    let color = window.localStorage.getItem("join-profile-color");
+    if (!color) {
+        color = createRandomProfileColor();
+        window.localStorage.setItem("join-profile-color", color);
+    }
+    document.querySelectorAll(profileButtonSelector)
+        .forEach((button) => showProfileInitials(button, initials, label, color));
 }
 
 /**
@@ -289,7 +269,7 @@ function createInitialsElement(initials) {
     y: "28",
     "text-anchor": "middle",
     "dominant-baseline": "central",
-    fill: "#2A3647",
+    fill: "#FFFFFF",
     "font-size": "20",
     "font-weight": "700",
     "font-family": "Inter, sans-serif",
@@ -305,6 +285,7 @@ function createInitialsElement(initials) {
  * @param {HTMLButtonElement} button - The profile button.
  * @param {string} initials - The visible initials.
  * @param {string} label - The accessible profile name.
+ * @param {string} color - The session profile color.
  * @returns {void}
  */
 function showProfileInitials(button, initials, label, color) {
@@ -348,6 +329,24 @@ async function renderMobilePolicyNavFooter() {
 }
 
 /**
+ * Converts the raw firebase tasks into a list and uses the firebase key as id.
+ * Subtask strings are converted to {label, done} objects.
+ * @param {Object|Array} obj - The raw tasks from firebase.
+ * @returns {Object[]} The tasks with id.
+ */
+function withId(obj) {
+  return Object.entries(obj || {})
+    .filter(([, item]) => item)
+    .map(([key, item]) => ({
+      ...item,
+      id: key,
+      subtasks: (item.subtasks || []).map((s) =>
+        typeof s === "string" ? { label: s, done: false } : s,
+      ),
+    }));
+}
+
+/**
  * Loads contacts and tasks from the database into the session storage once per session.
  * @returns {Promise<void>}
  */
@@ -355,8 +354,8 @@ async function initSessionData() {
   if (sessionStorage.getItem("session-initialized")) return;
   const { userArray, taskArray } = await fetchTemplateData();
   if (!userArray) return;
-  sessionStorage.setItem("session-contacts", JSON.stringify(Object.values(userArray || {})));
-  sessionStorage.setItem("session-tasks", JSON.stringify(Object.values(taskArray || {})));
+  sessionStorage.setItem("session-contacts", JSON.stringify(Object.values(userArray || {}).filter(Boolean)));
+  sessionStorage.setItem("session-tasks", JSON.stringify(withId(taskArray)));
   sessionStorage.setItem("session-initialized", "true");
 }
 
@@ -459,3 +458,5 @@ function redirectWithoutSession() {
 }
 
 redirectWithoutSession();
+window.addEventListener("pageshow", redirectWithoutSession);
+window.addEventListener("storage", redirectWithoutSession);

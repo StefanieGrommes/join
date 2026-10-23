@@ -1,21 +1,30 @@
-<!doctype html>
+<!DOCTYPE html>
+<!-- Seitensprache ist Deutsch; Browser und Screenreader können sie so erkennen. -->
 <html lang="de">
   <head>
+    <!-- Zeichensatz und Darstellung passend zur Breite von Handy, Tablet und Desktop. -->
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Titel im Browser-Tab. -->
     <title>Join - Login</title>
-    <link rel="shortcut icon" href="./assets/join-favicon.svg" type="image/x-icon" />
-    <link rel="stylesheet" href="./css/fonts.css" />
-    <link rel="stylesheet" href="../css/menu/style.css" />
-    <link rel="stylesheet" href="./css/index/style.css" />
+    <!-- Favicon sowie globale und Login-spezifische Schrift- und CSS-Dateien laden. -->
+    <link rel="shortcut icon" href="./assets/join-favicon.svg" type="image/x-icon">
+    <link rel="stylesheet" href="./css/fonts.css">
+    <link rel="stylesheet" href="./css/menu/style.css">
+    <link rel="stylesheet" href="./css/index/style.css"/>
+    <!-- Gemeinsame Seitenelemente und Login-Verhalten bereitstellen. -->
     <script src="./js/Templates/init.js"></script>
+    <script src="./js/auth/users.js"></script>
     <script src="./js/login/login.js"></script>
   </head>
 
   <body>
-    <div class="page login-page">
+  <!-- Äußerer Seitencontainer; login-page wird vom Login-CSS und login.js verwendet. -->
+  <div class="page login-page">
+      <!-- Start-Intro mit Join-Logo; login.js blendet es nach der Animation aus. -->
       <div class="app-intro" aria-hidden="true">
         <div class="join-logo" aria-label="Join logo">
+          <!-- Für kleine Bildschirme SVG, sonst PNG als Logo anzeigen. -->
           <picture>
             <source media="(max-width: 768px)" srcset="./assets/join-logo.svg" />
             <img class="join-preview" src="./img/icons/join_icon.png" alt="Join logo" />
@@ -23,6 +32,7 @@
         </div>
       </div>
 
+      <!-- Kopfbereich mit der Anmelde-/Registrierungs-Aktion. -->
       <header class="page-header">
         <div class="header-icon-wrapper">
           <img class="header-icon" src="./img/icons/join_icon.png" alt="Join icon" />
@@ -33,57 +43,66 @@
         </div>
       </header>
 
+      <!-- Hauptbereich des Login-Bildschirms. -->
       <div class="panel-area">
         <main class="login-shell">
+          <!-- Login-Karte; aria-labelledby verknüpft sie barrierefrei mit der Überschrift. -->
           <section class="content-card" aria-labelledby="login-title">
             <h1 id="login-title" class="login-title">Log in</h1>
 
-            <form id="demo-login-form" class="login-form" novalidate>
+            <!-- Login-Formular; login.js prüft E-Mail und Passwort gegen die gespeicherten Accounts. -->
+            <form id="login-form" class="login-form" novalidate>
+              <!-- E-Mail des Accounts; aria-describedby verweist auf den Feedback-Text. -->
               <div class="field input-with-icon">
-                <input
-                  id="login-email"
-                  type="email"
-                  placeholder="Email"
-                  aria-label="Email"
-                  aria-describedby="demo-login-feedback"
-                  autocomplete="email"
-                />
+                <input id="login-email" type="email" placeholder="Email" aria-label="Email" aria-describedby="login-feedback" autocomplete="email" />
                 <img src="./img/icons/mail.png" alt="Mail icon" class="input-icon" />
               </div>
+              <!-- Passwort des Accounts. -->
               <div class="field input-with-icon">
-                <input
-                  id="login-password"
-                  type="password"
-                  placeholder="Password"
-                  aria-label="Password"
-                  autocomplete="current-password"
-                />
+                <input id="login-password" type="password" placeholder="Password" aria-label="Password" aria-describedby="login-feedback" autocomplete="current-password" />
                 <img src="./img/icons/lock.png" alt="Lock icon" class="input-icon" />
               </div>
-              <p id="demo-login-feedback" class="demo-login-feedback" aria-live="polite"></p>
+              <!-- login.js schreibt hier eine Fehlermeldung hinein; aria-live meldet sie Screenreadern. -->
+              <p id="login-feedback" class="login-feedback" aria-live="polite"></p>
 
+              <!-- Formular-Aktionen: Login mit Account oder Anmeldung als Gast. -->
               <div class="button-row">
-                <button type="submit" class="btn btn--primary">Log in</button>
-                <button id="guest-login-button" type="button" class="btn btn--secondary">
-                  Guest Log in
-                </button>
+                <button id="login-submit-button" type="submit" class="btn btn--primary">Log in</button>
+                <button id="guest-login-button" type="button" class="btn btn--secondary">Guest Log in</button>
               </div>
             </form>
           </section>
         </main>
       </div>
 
+      <!-- Unterer Bereich für den mobilen Registrierungs-Hinweis und Seitenabschluss. -->
       <div class="mobile-bottom-area">
+        <!-- Mobile Sign-up-Aktion; login.js verbindet den Button mit der Signup-Seite. -->
         <section class="mobile-signup-cta" aria-label="Signup Hinweis mobil">
           <span class="mobile-signup-copy">Not a Join user?</span>
           <button type="button" class="top-link">Sign up</button>
         </section>
 
+        <!-- Footer-Container am unteren Rand der Login-Seite. -->
         <footer class="footer">
           <a href="./pages/privacy-notice.html">Privacy Policy</a>
           <a href="./pages/legal-notice.html">Legal notice</a>
         </footer>
       </div>
     </div>
+
+
+
+
+
   </body>
+
+
+
+
+
+
+
+
+
 </html>

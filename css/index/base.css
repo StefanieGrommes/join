@@ -201,7 +201,7 @@ body {
   max-width: 422px;
 }
 
-.demo-login-feedback {
+.login-feedback {
   width: 100%;
   margin: 0;
   color: var(--muted);
@@ -209,16 +209,16 @@ body {
   line-height: 1.3;
 }
 
-#demo-login-form {
+#login-form {
   gap: 16px;
 }
 
-#demo-login-form .button-row {
+#login-form .button-row {
   position: static;
   margin-top: 32px;
 }
 
-.login-shell:has(#demo-login-form) {
+.login-shell:has(#login-form) {
   height: auto;
   min-height: 449px;
 }

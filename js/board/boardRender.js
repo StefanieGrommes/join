@@ -114,12 +114,13 @@ function hasActiveSearch() {
  * @returns {Object[]} All tasks if no search is active, otherwise the matches.
  */
 function getVisibleTasks() {
-  if (!Array.isArray(tasks)) return [];
-  if (!hasActiveSearch()) return tasks;
+  const allTasks = getTasks();
+  if (!Array.isArray(allTasks)) return [];
+  if (!hasActiveSearch()) return allTasks;
   const query = boardSearchQuery.trim().toLowerCase();
-  return tasks.filter((task) => {
-    const title = String(task.title || "").toLowerCase();
-    const description = String(task.description || "").toLowerCase();
+  return allTasks.filter((allTasks) => {
+    const title = String(allTasks.title || "").toLowerCase();
+    const description = String(allTasks.description || "").toLowerCase();
     return title.includes(query) || description.includes(query);
   });
 }
@@ -131,8 +132,8 @@ function getVisibleTasks() {
  * @param {Object<string, string>} boardState - Mapping { taskId: columnId }.
  * @returns {void}
  */
-function appendTaskCard(task, boardState) {
-  const columnId = getTaskColumnId(task, boardState);
+function appendTaskCard(task) {
+  const columnId = getTaskColumnId(task);
   const column = getBoardColumns().find((item) => item.dataset.column === columnId);
   const content = column && column.querySelector(".board-main-column-content");
   if (!content) return;
@@ -156,8 +157,7 @@ function renderBoard() {
     renderSearchEmptyState();
     return;
   }
-  const boardState = getBoardState();
-  visibleTasks.forEach((task) => appendTaskCard(task, boardState));
+  visibleTasks.forEach((task) => appendTaskCard(task));
   renderEmptyColumnHints();
 }
 

@@ -1,3 +1,28 @@
+const categoryInfo = {
+  TechnicalTask: { label: "Technical Task", color: "#2bc7b7" },
+  UserStory: { label: "User Story", color: "#2d8cff" },
+};
+
+/**
+ * Returns label and color of a category.
+ * @param {string} category - "TechnicalTask" or "UserStory".
+ * @returns {{label: string, color: string}} Display values.
+ */
+function getCategoryInfo(category) {
+  return categoryInfo[category] || { label: category || "", color: "#2d8cff" };
+}
+
+/**
+ * Escapes text for safe use in HTML.
+ * @param {string} text - The raw text.
+ * @returns {string} The escaped text.
+ */
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = String(text ?? "");
+  return div.innerHTML;
+}
+
 /**
  * Returns the HTML of one sidebar navigation button.
  * @param {{id: string, label: string, icon: string}} item - Navigation entry.
@@ -99,9 +124,9 @@ function getAssignedContactsTemplate(avatars) {
 function getTaskCardTemplate(task, view) {
   const { assigned, priorityIcon, progressWidth, progressLabel } = view;
   return `
-    <article class="board-card board-card--task" data-card-id="${task.id}" draggable="true" aria-label="${task.title}">
+    <article class="board-card board-card--task" data-card-id="${task.id}" draggable="true" aria-label="${escapeHtml(task.title)}">
       <div class="board-card-header">
-        <span class="board-card-badge" style="background:${task.categoryColor};">${task.category}</span>
+        <span class="board-card-badge" style="background:${getCategoryInfo(task.category).color};">${getCategoryInfo(task.category).label}</span>
         <button class="board-card-move-button" type="button" aria-label="Move task" aria-haspopup="menu" aria-expanded="false" aria-controls="board-move-menu">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M8 16V4M4 8l4-4 4 4M16 8v12M12 16l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -109,8 +134,8 @@ function getTaskCardTemplate(task, view) {
         </button>
       </div>
 
-      <h3 class="board-card-title">${task.title}</h3>
-      <p class="board-card-description">${task.description}</p>
+      <h3 class="board-card-title">${escapeHtml(task.title)}</h3>
+      <p class="board-card-description">${escapeHtml(task.description)}</p>
 
       <div class="board-card-progress">
         <div class="board-progress-bar">
@@ -152,7 +177,7 @@ function getDetailSubtaskTemplate(subtask, index) {
   return `
     <label class="board-detail-subtask">
       <input type="checkbox" data-subtask-index="${index}" ${subtask.done ? 'checked' : ''} />
-      <span>${subtask.label}</span>
+      <span>${escapeHtml(subtask.label)}</span>
     </label>
   `;
 }
@@ -168,12 +193,12 @@ function getTaskDetailTemplate(task, view) {
   return `
     <article class="board-detail-card">
       <div class="board-detail-topbar">
-        <span class="board-detail-badge" style="background:${task.categoryColor};">${task.category}</span>
+        <span class="board-detail-badge" style="background:${getCategoryInfo(task.category).color};">${getCategoryInfo(task.category).label}</span>
         <button class="board-detail-close" type="button" aria-label="Close task">×</button>
       </div>
 
-      <h2 class="board-detail-title">${task.title}</h2>
-      <p class="board-detail-description">${task.description}</p>
+      <h2 class="board-detail-title">${escapeHtml(task.title)}</h2>
+      <p class="board-detail-description">${escapeHtml(task.description)}</p>
 
       <div class="board-detail-content">
         <div class="board-detail-row">

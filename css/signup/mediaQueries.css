@@ -33,7 +33,6 @@
   }
 
    .auth-panel {
-    max-height: 595px;
     width: 100%;
   }
 }
@@ -89,5 +88,20 @@
 
   .auth-panel {
     min-height: 520px;
+  }
+}
+
+@media (min-width: 441px) and (max-height: 850px) {
+  .page-header {
+    position: relative;
+    padding-top: 24px;
+  }
+
+  .panel-area {
+    padding: 24px 0;
+  }
+
+  .mobile-bottom-area {
+    position: static;
   }
 }

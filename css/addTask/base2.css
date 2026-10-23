@@ -1,9 +1,16 @@
 .form-footer {
   display: flex;
+  flex-direction: column;
+  margin-top: 124px;
+  gap: 12px;
+}
+
+.required-and-form-actions {
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 124px;
 }
+
 
 .required-hint {
   display: flex;
@@ -124,3 +131,7 @@
   height: 25px;
 }
 
+.error-message {
+  font-size: 1.25rem;
+  color: rgb(198, 40, 40);
+}

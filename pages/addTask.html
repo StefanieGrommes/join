@@ -15,18 +15,16 @@
     <main>
       <section class="add-task-content">
         <h1>Add Task</h1>
-        <form class="add-task-form" novalidate>
+        <form class="add-task-form" id="add-task-form">
           <div class="form-columns">
             <div class="form-column-left">
               <div class="form-field">
-                <label for="taskTitle">Title<span class="required-star">*</span></label>
-                <input id="taskTitle" type="text" placeholder="Enter a title" />
-                <span class="field-error"></span>
+                <label for="task-title">Title<span class="required-star">*</span></label>
+                <input id="task-title" type="text" placeholder="Enter a title" />
               </div>
-
               <div class="form-field">
                 <label for="taskDescription">Description</label>
-                <textarea id="taskDescription" placeholder="Enter a Description"></textarea>
+                <textarea id="task-description" placeholder="Enter a Description"></textarea>
               </div>
 
               <div class="form-field">
@@ -36,7 +34,6 @@
   max="2030-12-31" />
                   <img src="../assets/calendar.svg" alt="" />
                 </div>
-                <span class="field-error"></span>
               </div>
             </div>
             <div class="form-column-right">
@@ -85,10 +82,10 @@
               <div class="form-field">
                 <p class="field-label">Category<span class="required-star">*</span></p>
                 <div class="dropdown-container">
-                  <select name="task-category" class="toggle-task">
+                  <select name="task-category" class="toggle-task" id="task-category">
                   <option value="none" selected>Select task category</option>
-                  <option value="technical">Technical Task</option>
-                  <option value="user">User Story</option>
+                  <option value="TechnicalTask">Technical Task</option>
+                  <option value="UserStory">User Story</option>
                 </select>
                 <button><img src="../assets/arrowdropdown.svg" alt="Dropdown arrow"></button>
                 </div>
@@ -112,16 +109,21 @@
             </div>
           </div>
           <div class="form-footer">
-            <p class="required-hint">
+            <div class="error-wrapper">
+               <p class="error-message" id="error-message"></p>
+            </div>
+            <div class="required-and-form-actions">
+              <p class="required-hint">
               <span class="required-star">*</span>This field is required
             </p>
             <div class="form-actions">
-              <button type="button" class="btn-clear">
+              <button type="button" class="btn-clear" onclick="resetForm()">
                 Clear <span class="icon-close"></span>
               </button>
               <button type="submit" class="btn-create">
                 Create Task <span class="icon-check"></span>
               </button>
+            </div>
             </div>
           </div>
         </form>
@@ -132,6 +134,7 @@
       </div>
     </main>
   </body>
+  <script src="../js/Templates/templates.js"></script>
   <script src="../js/addTask/addTaskTemplates.js"></script>
   <script src="../js/addTask/addTask.js"></script>
   <script src="../js/contactList.js"></script>

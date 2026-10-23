@@ -20,9 +20,10 @@ function redirectToSignupPage() {
  * @returns {void}
  */
 function loginAsGuest() {
-  window.sessionStorage.removeItem("join-demo-name");
-  window.sessionStorage.removeItem("join-profile-color");
-  window.sessionStorage.setItem("join-session-mode", "guest");
+  window.localStorage.removeItem("join-demo-name");
+  window.localStorage.removeItem("join-user-email");
+  window.localStorage.removeItem("join-profile-color");
+  window.localStorage.setItem("join-session-mode", "guest");
   window.sessionStorage.removeItem("session-initialized");
   window.sessionStorage.removeItem("session-contacts");
   window.sessionStorage.removeItem("session-tasks");
@@ -31,54 +32,71 @@ function loginAsGuest() {
 }
 
 /**
- * Loads all registered users from the database.
- * @returns {Promise<Object[]>} The list of users.
+ * Shows a login error message and marks the login fields as invalid.
+ * @param {string} message - The error message.
+ * @returns {void}
  */
-async function loadUsers(params) {
-  const response = await fetch(Base_URL + "users.json");
-  const data = await response.json();
-  return Object.values(data || {}).filter(Booloean);
+function showLoginError(message) {
+  document.getElementById("login-feedback").textContent = message;
+  ["login-email", "login-password"].forEach((id) => {
+    document.getElementById(id).setAttribute("aria-invalid", "true");
+  });
 }
 
 /**
- * Finds a user with matching email and password.
- * @param {Object[]} users - All registered users.
- * @param {string} email - The entered email.
- * @param {string} password - The entered password.
- * @returns {Object|undefined} The matching user, or undefined.
+ * Resets the login error message and the invalid state of the fields.
+ * @returns {void}
  */
-function findUser(users, email, password) {
-  return users.find((user) => user.email === email && user.password === password);
+function clearLoginError() {
+  document.getElementById("login-feedback").textContent = "";
+  ["login-email", "login-password"].forEach((id) => {
+    document.getElementById(id).setAttribute("aria-invalid", "false");
+  });
 }
 
 /**
- * Starts a session for a user and opens the summary page.
- * @param{Object} user - The logged in user.
+ * Starts the session of a logged in user and opens the summary page.
+ * The keys "join-demo-name" and mode "demo" are kept because header and summary read them.
+ * @param {Object} user - The logged in user.
  * @returns {void}
  */
 function startUserSession(user) {
-window.sessionStorage.setItem("join-demo-name", user.name); 
-window.sessionStorage.setItem("join-session-mode", "demo");
-window.sessionStorage.setItem("join-profile-color", createRandomProfilColor());
-window.location.href = "./pages/summary.html";
+  saveJoinUserSession(user);
+  window.location.href = "./pages/summary.html";
 }
 
 /**
- * Checks email and password against the database and logs the user in.
- * @param{SubmitEvent} event - Submit event of the login form.
+ * Looks up the user for the entered login data.
+ * @param {string} email - The entered email.
+ * @param {string} password - The entered password.
+ * @returns {Promise<{user: Object|null, message: string}>} The user or an error message.
+ */
+async function checkLoginData(email, password) {
+  try {
+    const user = await findJoinLoginUser(email, password);
+    return { user, message: user ? "" : "Check your email and password. Please try again." };
+  } catch (error) {
+    return { user: null, message: "Login failed. Please check your connection and try again." };
+  }
+}
+
+/**
+ * Login with email and password: checks the data against the stored accounts.
+ * @param {SubmitEvent} event - Submit event of the login form.
  * @returns {Promise<void>}
  */
-async function loginUser(event) {
+async function loginWithAccount(event) {
   event.preventDefault();
+  const button = document.getElementById("login-submit-button");
+  if (button.disabled) return;
   const email = document.getElementById("login-email").value.trim();
-  const password = document.getElementById("login.password").value;
-  const user = findUser(await loadUsers(), email, password);
-  if (!user) {
-    document.getElementById("demo-login-feedback").textContent =
-    "Email or password is wrong. Please try again.";
-    return;
-  }
-  startUserSession(user);
+  const password = document.getElementById("login-password").value;
+  if (!email || !password) return showLoginError("Please enter your email and password.");
+  button.disabled = true;
+  const { user, message } = await checkLoginData(email, password);
+  button.disabled = false;
+  if (user) return startUserSession(user);
+  showLoginError(message);
 }
 
 /**
@@ -90,8 +108,9 @@ function bindLoginEvents() {
     button.addEventListener("click", redirectToSignupPage);
   });
   document.getElementById("guest-login-button").addEventListener("click", loginAsGuest);
-  document.getElementById("demo-login-form").addEventListener("submit", loginUser);
-
+  const form = document.getElementById("login-form");
+  form.addEventListener("submit", loginWithAccount);
+  form.addEventListener("input", clearLoginError);
 }
 
 /**

@@ -2,46 +2,15 @@ const taskDetailModal = document.getElementById("board-task-detail-modal");
 const taskDetailRoot = document.getElementById("board-task-detail-root");
 
 /**
- * Deletes a task from the data, the saved state and the board.
+ * Deletes the taks.
  *
- * @param {string} taskId - Id of the task.
+ * @param {number} taskID - The task to be deleted.
  * @returns {void}
  */
 function deleteTask(taskId) {
-  const taskIndex = tasks.findIndex((task) => task.id === taskId);
-  if (taskIndex === -1) return;
-  const boardState = loadBoardState();
-  tasks.splice(taskIndex, 1);
-  delete boardState[taskId];
-  saveBoardState(boardState);
-  saveTasks();
+  saveTasks(getTasks().filter((task) => task.id !== taskId));
+  deleteData("tasks/" + taskId).catch(console.error);
   renderBoard();
-}
-
-/**
- * Closes the task detail dialog and clears its content.
- *
- * @returns {void}
- */
-function closeDetailModal() {
-  taskDetailModal.classList.remove("is-open");
-  taskDetailModal.setAttribute("aria-hidden", "true");
-  taskDetailRoot.innerHTML = "";
-  taskDetailRoot.removeAttribute("data-task-id");
-}
-
-/**
- * Opens the task detail dialog.
- *
- * @param {Object|null} task - The task to show.
- * @returns {void}
- */
-function openDetailModal(task) {
-  if (!task) return;
-  taskDetailRoot.innerHTML = renderTaskDetail(task);
-  taskDetailRoot.dataset.taskId = task.id;
-  taskDetailModal.classList.add("is-open");
-  taskDetailModal.setAttribute("aria-hidden", "false");
 }
 
 /**
@@ -88,7 +57,7 @@ function handleSubtaskToggle(event) {
   const subtask = task.subtasks[Number(checkbox.dataset.subtaskIndex)];
   if (!subtask) return;
   subtask.done = checkbox.checked;
-  saveTasks();
+  updateTask(task);
   syncCardContent(task);
 }
 

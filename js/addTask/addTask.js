@@ -2,6 +2,8 @@ const list = document.getElementById("assigned-to-list");
 const priorityBtns = document.getElementsByClassName("priority-btn");
 const subtaskInput = document.getElementById("subtaskInput");
 const subTaskList = document.querySelector(".subtask-list");
+let editingTaskId = null;
+let newTaskState = "todo";
 
 /**
  * Loads the session data (contacts and tasks) for the add-task page.
@@ -199,21 +201,43 @@ function finishEditSubtask(item, input) {
   input.replaceWith(span);
 }
 
+/**
+ * Selects or deselects a contact when an option in the assigned-to dropdown is clicked.
+ * @param {MouseEvent} event - The click event.
+ * @returns {void}
+ */
 list.addEventListener("click", (event) => {
   const option = event.target.closest(".contact-option");
   if (option) toggleContactSelection(option);
 });
 
+/**
+ * Registers a click handler on every priority button that activates the clicked button.
+ * Each handler takes no event parameter and returns nothing.
+ * @returns {void}
+ */
 for (let i = 0; i < priorityBtns.length; i++) {
   priorityBtns[i].addEventListener("click", () => changePriority(priorityBtns[i]));
 }
 
+/**
+ * Saves the entered subtask when Enter is pressed in the subtask input.
+ * Prevents the default form submission.
+ * @param {KeyboardEvent} event - The keydown event.
+ * @returns {void}
+ */
 subtaskInput.addEventListener("keydown", (event) => {
   if (event.key !== "Enter") return;
   event.preventDefault();
   saveSubtask();
 });
 
+/**
+ * Handles clicks inside the subtask list. A click on the delete button removes the
+ * subtask, any other click on an item that is not being edited starts the edit mode.
+ * @param {MouseEvent} event - The click event.
+ * @returns {void}
+ */
 subTaskList.addEventListener("click", (event) => {
   const item = event.target.closest(".subtask-list-item");
   if (!item || item.classList.contains("editing")) return;
@@ -223,3 +247,134 @@ subTaskList.addEventListener("click", (event) => {
   }
   startEditSubtask(item);
 });
+
+const form = document.getElementById("add-task-form");
+const taskTitleInput = document.getElementById("task-title");
+const taskCategory = document.getElementById("task-category");
+const errorMessage = document.getElementById("error-message");
+const dueDate = document.getElementById("taskDueDate");
+const errorMessageArray = [];
+
+/**
+ * Checks if the required fields are valid and shows error message if not.
+ * Prevents the form of submitting if the fields do not pass the test.
+ * @returns {void}
+ */
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    errorMessageArray.length = 0;
+    errorMessage.innerText = "";
+    if (taskTitleInput.value.trim().length <= 2) {
+      errorMessageArray.push("The title must be at least 3 characters!");
+    }
+    if (taskCategory.value === "none") {
+      errorMessageArray.push("Please enter a task category!");
+    }
+    if (dueDate.value === ""){
+        errorMessageArray.push("Please enter a due date!");
+    }
+    if (errorMessageArray.length > 0) {
+      event.preventDefault();
+      errorMessage.innerText = errorMessageArray.join (' , ');
+      return;
+    }
+    await submitForm();
+
+    })
+
+/**
+ * Returns the priority of the active priority button.
+ * @returns {string} "urgent", "medium" or "low".
+ */
+function getSelectedPriority() {
+  const btn = document.querySelector(".priority-btn.priority-active");
+  return btn.classList.contains("priority-urgent") ? "urgent"
+    : btn.classList.contains("priority-low") ? "low" : "medium";
+}
+
+/**
+ * Returns the selected contacts in the assigned-to dropdown.
+ * @returns {{id: string}[]} The selected contacts as id objects.
+ */
+function getAssignedContactIds() {
+  return Array.from(document.querySelectorAll(".contact-option.selected")).map(
+    (option) => ({ id: option.dataset.contactId }),
+  );
+}
+
+/**
+ * Reads the subtasks and keeps the done state of unchanged labels.
+ * @param {{label: string, done: boolean}[]} [previous=[]] - Subtasks of the edited task.
+ * @returns {{label: string, done: boolean}[]} The subtasks.
+ */
+function getSubtasks(previous = []) {
+  saveSubtask();
+  return Array.from(subTaskList.querySelectorAll(".subtask-text")).map((el) => {
+    const label = el.textContent.trim();
+    const old = previous.find((subtask) => subtask.label === label);
+    return { label, done: old ? Boolean(old.done) : false };
+  });
+}
+
+/**
+ * Creates or updates a task in the session storage and the firebase.
+ * @returns {Promise<void>}
+ */
+async function submitForm() {
+  const all = getSessionData("session-tasks");
+  const existing = editingTaskId ? all.find((t) => t.id === editingTaskId) : null;
+  const task = {
+    id: existing ? existing.id : String(Date.now()),
+    title: taskTitleInput.value.trim(),
+    state: existing ? existing.state : newTaskState,
+    description: document.getElementById("task-description").value.trim(),
+    dueDate: dueDate.value,
+    priority: getSelectedPriority(),
+    assignedTo: getAssignedContactIds(),
+    category: taskCategory.value,
+    subtasks: getSubtasks(existing ? existing.subtasks : []),
+  };
+  saveSessionData(
+    "session-tasks",
+    existing ? all.map((t) => (t.id === task.id ? task : t)) : [...all, task],
+  );
+  await putData("tasks/" + task.id, task);
+  resetForm();
+  if (typeof onTaskSaved === "function") onTaskSaved();
+}
+
+list.style.display = "none";
+document.getElementById("assigned-to-dropdown").classList.remove("open");
+
+/**
+ * Resets the whole add-task form including priority, contacts and subtasks.
+ * @returns {void}
+ */
+function resetForm() {
+  form.reset();
+  errorMessageArray.length = 0;
+  errorMessage.innerText = "";
+  subTaskList.innerHTML = "";
+  showSubtaskActions();
+  resetPriority();
+  resetAssignedContacts();
+}
+
+/**
+ * Sets the priority back to "medium".
+ * @returns {void}
+ */
+function resetPriority() {
+  changePriority(document.querySelector(".priority-medium"));
+}
+
+/**
+ * Deselects all contacts and clears the avatars.
+ * @returns {void}
+ */
+function resetAssignedContacts() {
+  list.innerHTML = "";
+  document.getElementById("assigned-avatars").innerHTML = "";
+}
+
+
