@@ -279,7 +279,6 @@ const errorMessageArray = [];
       return;
     }
     await submitForm();
-
     })
 
 /**
