@@ -13,7 +13,7 @@
   </head>
 
   <body onload="init()">
-    <dialog>
+    <dialog aria-labelledby="dialogHeadline" aria-describedby="dialogSubline">
       <div class="dialog-grid-area">
         <div class="dialog-aside">
           <div class="headlines-and-separator">
@@ -32,8 +32,8 @@
             </div>
             <div class="right-side-add-contact">
               <div class="close-dialog-wrapper">
-                <button class="close-dialog-btn" onclick="closeDialog()">
-                  <svg
+                <button class="close-dialog-btn" onclick="closeDialog()" aria-label="Close dialog">
+                  <svg aria-hidden="true" focusable="false"
                     width="32"
                     height="32"
                     viewBox="0 0 32 32"
@@ -70,6 +70,7 @@
                       data-validation="name"
                       data-toast-id="toast-wrapper"
                       aria-invalid="false"
+                      aria-describedby="toast-wrapper"
                     />
                     <img src="../assets/contact-form-name.svg" alt="name icon" />
                   </div>
@@ -81,6 +82,7 @@
                       name="email"
                       data-validation="email"
                       data-toast-id="toast-wrapper-mail"
+                      aria-describedby="toast-wrapper-mail"
                       aria-invalid="false"
                     />
                     <img src="../assets/contact-form-mail.svg" alt="email icon" />
@@ -93,11 +95,12 @@
                       name="phone"
                       data-validation="phone"
                       data-toast-id="toast-wrapper-phone"
+                      aria-describedby="toast-wrapper-phone"
                       aria-invalid="false"
                     />
                     <img src="../assets/contact-form-phone.svg" alt="phone icon" />
                   </div>
-                  <div class="toast-wrapper" id="toast-wrapper-phone"></div>
+                  <div class="toast-wrapper" id="toast-wrapper-phone" aria-live="polite"></div>
                 </div>
                 <div class="form-btn-wrapper">
                   <button type="button" class="contact-form-btn cancel-btn">
@@ -140,7 +143,7 @@
         </div>
       </section>
     </main>
-    <div class="success-toast" id="successToast"></div>
+    <div class="success-toast" id="successToast" role="status"></div>
     <script src="../js/contactList.js"></script>
     <script src="../js/addcontact/addContact.js"></script>
   </body>
