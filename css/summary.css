@@ -206,6 +206,10 @@ h5 {
     color: var(--accent-color);
 }
 
+ .boxes-and-welcome-message {
+       margin-bottom: 127px;
+    }
+
 
 /*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
 
