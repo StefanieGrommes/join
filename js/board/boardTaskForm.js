@@ -2,11 +2,19 @@ const boardTaskModal = document.getElementById("board-add-task-modal");
 const boardTaskTitle = document.getElementById("board-task-dialog-title");
 const boardTaskSaveLabel = document.querySelector("#board-add-task-modal .btn-create");
 
+/**
+ * Shows the add-task overlay.
+ * @returns {void}
+ */
 function openBoardTaskModal() {
   boardTaskModal.classList.add("is-open");
   boardTaskModal.inert = false;
 }
 
+/**
+ * Closes the overlay and resets it to the "Add Task" state.
+ * @returns {void}
+ */
 function closeBoardTaskModal() {
   boardTaskModal.classList.remove("is-open");
   boardTaskModal.inert = true;
@@ -17,12 +25,22 @@ function closeBoardTaskModal() {
   resetForm();
 }
 
+/**
+ * Opens the overlay for a new task in the given column.
+ * @param {string} columnId - Id of the target column, e.g. "in-progress".
+ * @returns {void}
+ */
 function openAddTaskModalForColumn(columnId) {
   closeBoardTaskModal();
   newTaskState = columnToState[columnId] || "todo";
   openBoardTaskModal();
 }
 
+/**
+ * Selects the assigned contacts in the dropdown and renders their avatars.
+ * @param {{id: string}[]} assigned - The assigned contacts.
+ * @returns {void}
+ */
 function fillAssignedContacts(assigned) {
   const ids = assigned.map((contact) => contact.id);
   renderContactOptions(getSessionData("session-contacts"));
@@ -32,6 +50,11 @@ function fillAssignedContacts(assigned) {
   renderAssignedAvatars();
 }
 
+/**
+ * Opens the overlay in edit mode and fills it with the task data.
+ * @param {Object} task - The task to edit.
+ * @returns {void}
+ */
 function openAddTaskEditModal(task) {
   closeBoardTaskModal();
   editingTaskId = task.id;
@@ -49,11 +72,19 @@ function openAddTaskEditModal(task) {
   openBoardTaskModal();
 }
 
+/**
+ * Called by submitForm() after saving. Closes the overlay and redraws the board.
+ * @returns {void}
+ */
 function onTaskSaved() {
   closeBoardTaskModal();
   renderBoard();
 }
 
+/**
+ * Connects the buttons and the backdrop of the overlay.
+ * @returns {void}
+ */
 function initBoardTaskForm() {
   document.getElementById("board-open-add-task-modal")
     .addEventListener("click", () => openAddTaskModalForColumn("todo"));

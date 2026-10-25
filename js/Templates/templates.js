@@ -3,16 +3,32 @@ const categoryInfo = {
   UserStory: { label: "User Story", color: "#2d8cff" },
 };
 
+/**
+ * Returns label and color of a category.
+ * @param {string} category - "TechnicalTask" or "UserStory".
+ * @returns {{label: string, color: string}} Display values.
+ */
 function getCategoryInfo(category) {
   return categoryInfo[category] || { label: category || "", color: "#2d8cff" };
 }
 
+/**
+ * Escapes text for safe use in HTML.
+ * @param {string} text - The raw text.
+ * @returns {string} The escaped text.
+ */
 function escapeHtml(text) {
   const div = document.createElement("div");
   div.textContent = String(text ?? "");
   return div.innerHTML;
 }
 
+/**
+ * Returns the HTML of one sidebar navigation button.
+ * @param {{id: string, label: string, icon: string}} item - Navigation entry.
+ * @param {string} activePage - Id of the currently active page.
+ * @returns {string} HTML string of the button.
+ */
 function getSidebarButtonTemplate(item, activePage) {
   return `
     <button
@@ -27,10 +43,21 @@ function getSidebarButtonTemplate(item, activePage) {
   `;
 }
 
+/**
+ * Returns the HTML of one footer link in the sidebar.
+ * @param {{href: string, label: string}} item - Footer link entry.
+ * @returns {string} HTML string of the link.
+ */
 function getSidebarFooterLinkTemplate(item) {
   return `<a href="${item.href}">${item.label}</a>`;
 }
 
+/**
+ * Returns the HTML of one info page section.
+ * @param {string} heading - Heading of the section.
+ * @param {string} body - Prepared HTML of the section content.
+ * @returns {string} HTML string of the section.
+ */
 function getInfoSectionTemplate(heading, body) {
   return `
     <section class="info-section">
@@ -40,6 +67,12 @@ function getInfoSectionTemplate(heading, body) {
   `;
 }
 
+/**
+ * Returns the HTML of a complete info page (Help, Privacy Policy, Legal Notice).
+ * @param {{title: string, intro: string}} pageData - Title and intro of the page.
+ * @param {string} sectionsHtml - Prepared HTML of all sections.
+ * @returns {string} HTML string of the page.
+ */
 function getInfoPageTemplate(pageData, sectionsHtml) {
   return `
     <article class="info-page">
@@ -59,6 +92,12 @@ function getInfoPageTemplate(pageData, sectionsHtml) {
   `;
 }
 
+/**
+ * Returns the HTML of a round board avatar with initials.
+ * @param {string} color - Background color of the avatar.
+ * @param {string} initials - Initials shown in the avatar.
+ * @returns {string} HTML string of the avatar.
+ */
 function getBoardAvatarTemplate(color, initials) {
   return `
     <span class="board-contact-avatar" style="background:${color};">
@@ -67,10 +106,21 @@ function getBoardAvatarTemplate(color, initials) {
   `;
 }
 
+/**
+ * Returns the HTML container for the avatars of the assigned contacts.
+ * @param {string} avatars - Prepared HTML of all avatars.
+ * @returns {string} HTML string of the container.
+ */
 function getAssignedContactsTemplate(avatars) {
   return `<div class="board-assigned-contacts">${avatars}</div>`;
 }
 
+/**
+ * Returns the HTML of the small task card of a board column.
+ * @param {Object} task - Task with id, title, description, category and categoryColor.
+ * @param {{assigned: string, priorityIcon: (string|undefined), progressWidth: number, progressLabel: string}} view - Prepared display values.
+ * @returns {string} HTML string of the card.
+ */
 function getTaskCardTemplate(task, view) {
   const { assigned, priorityIcon, progressWidth, progressLabel } = view;
   return `
@@ -102,6 +152,12 @@ function getTaskCardTemplate(task, view) {
   `;
 }
 
+/**
+ * Returns the HTML of one assignee row in the task detail view.
+ * @param {string} avatarHtml - Prepared HTML of the avatar.
+ * @param {string} name - Full name of the contact.
+ * @returns {string} HTML string of the row.
+ */
 function getDetailAssigneeTemplate(avatarHtml, name) {
   return `
     <div class="board-detail-assignee">
@@ -111,6 +167,12 @@ function getDetailAssigneeTemplate(avatarHtml, name) {
   `;
 }
 
+/**
+ * Returns the HTML of one subtask checkbox in the task detail view.
+ * @param {{label: string, done: boolean}} subtask - The subtask.
+ * @param {number} index - Index of the subtask (read as data-subtask-index).
+ * @returns {string} HTML string of the checkbox.
+ */
 function getDetailSubtaskTemplate(subtask, index) {
   return `
     <label class="board-detail-subtask">
@@ -120,6 +182,12 @@ function getDetailSubtaskTemplate(subtask, index) {
   `;
 }
 
+/**
+ * Returns the HTML of the large task detail card.
+ * @param {Object} task - Task with title, description, category, categoryColor, dueDate and priority.
+ * @param {{priorityIcon: (string|undefined), assigned: string, subtasks: string}} view - Prepared display values.
+ * @returns {string} HTML string of the detail card.
+ */
 function getTaskDetailTemplate(task, view) {
   const { priorityIcon, assigned, subtasks } = view;
   return `

@@ -2,12 +2,23 @@ let draggedCard = null;
 let moveMenu = null;
 let moveMenuButton = null;
 
+/**
+ * Creates the hidden "Move to" menu from its template and appends it to the body.
+ *
+ * @returns {HTMLElement} The menu element.
+ */
 function createMoveMenu() {
   const menu = cloneTemplate("board-move-menu-template");
   document.body.appendChild(menu);
   return menu;
 }
 
+/**
+ * Closes the "Move to" menu and optionally restores focus to its trigger button.
+ *
+ * @param {boolean} [restoreFocus=false] - Whether to focus the trigger button again.
+ * @returns {void}
+ */
 function closeMoveMenu(restoreFocus = false) {
   moveMenu.hidden = true;
   if (moveMenuButton) {
@@ -17,6 +28,13 @@ function closeMoveMenu(restoreFocus = false) {
   moveMenuButton = null;
 }
 
+/**
+ * Moves a task via the menu, re-renders the board and focuses the moved card.
+ *
+ * @param {string} taskId - Id of the task.
+ * @param {string} columnId - Id of the target column.
+ * @returns {void}
+ */
 function moveTaskFromMenu(taskId, columnId) {
   if (!moveBoardTask(taskId, columnId)) return;
   closeMoveMenu();
@@ -25,6 +43,14 @@ function moveTaskFromMenu(taskId, columnId) {
   if (movedCard) movedCard.querySelector(".board-card-move-button").focus();
 }
 
+/**
+ * Creates one menu item that moves the card to the column at the given index.
+ *
+ * @param {HTMLElement} card - The task card.
+ * @param {number} targetIndex - Index of the target column in columnIds.
+ * @param {number} currentIndex - Index of the current column in columnIds.
+ * @returns {HTMLButtonElement} The menu item button.
+ */
 function createMoveOption(card, targetIndex, currentIndex) {
   const option = cloneTemplate("board-move-option-template");
   const arrow = option.querySelector("span");
@@ -34,6 +60,12 @@ function createMoveOption(card, targetIndex, currentIndex) {
   return option;
 }
 
+/**
+ * Fills the "Move to" menu with the previous and next column of a card.
+ *
+ * @param {HTMLElement} card - The task card the menu belongs to.
+ * @returns {void}
+ */
 function fillMoveMenu(card) {
   const currentIndex = columnIds.indexOf(card.closest(".board-main-column").dataset.column);
   moveMenu.querySelectorAll("button").forEach((option) => option.remove());
@@ -42,6 +74,12 @@ function fillMoveMenu(card) {
     .forEach((index) => moveMenu.appendChild(createMoveOption(card, index, currentIndex)));
 }
 
+/**
+ * Positions the menu next to its trigger button and keeps it inside the viewport.
+ *
+ * @param {HTMLElement} button - The trigger button.
+ * @returns {void}
+ */
 function positionMoveMenu(button) {
   const rect = button.getBoundingClientRect();
   const width = moveMenu.offsetWidth;
@@ -53,6 +91,12 @@ function positionMoveMenu(button) {
   moveMenu.style.top = `${top}px`;
 }
 
+/**
+ * Opens the "Move to" menu for a card.
+ *
+ * @param {HTMLElement} button - The move button of the card.
+ * @returns {void}
+ */
 function openMoveMenu(button) {
   closeMoveMenu();
   moveMenuButton = button;
@@ -63,6 +107,12 @@ function openMoveMenu(button) {
   moveMenu.querySelector("button").focus();
 }
 
+/**
+ * Opens or closes the menu when a move button is clicked (screens up to 360px).
+ *
+ * @param {MouseEvent} event - The click event.
+ * @returns {void}
+ */
 function handleMoveButtonClick(event) {
   const button = event.target.closest(".board-card-move-button");
   if (!button || !window.matchMedia("(max-width: 360px)").matches) return;
@@ -70,15 +120,33 @@ function handleMoveButtonClick(event) {
   else openMoveMenu(button);
 }
 
+/**
+ * Closes the menu when the user clicks outside of it.
+ *
+ * @param {MouseEvent} event - The click event.
+ * @returns {void}
+ */
 function handleMoveMenuOutsideClick(event) {
   const isInside = moveMenu.contains(event.target);
   if (!isInside && !event.target.closest(".board-card-move-button")) closeMoveMenu();
 }
 
+/**
+ * Closes the menu when something outside of it is scrolled.
+ *
+ * @param {Event} event - The scroll event.
+ * @returns {void}
+ */
 function handleMoveMenuScroll(event) {
   if (!moveMenu.contains(event.target)) closeMoveMenu();
 }
 
+/**
+ * Focuses a menu item depending on the pressed navigation key.
+ *
+ * @param {string} key - One of "ArrowDown", "ArrowUp", "Home" or "End".
+ * @returns {void}
+ */
 function focusMoveMenuOption(key) {
   const options = Array.from(moveMenu.querySelectorAll("button"));
   const index = options.indexOf(document.activeElement);
@@ -89,6 +157,12 @@ function focusMoveMenuOption(key) {
   options[nextIndex].focus();
 }
 
+/**
+ * Handles keyboard control while the menu is open.
+ *
+ * @param {KeyboardEvent} event - The keydown event.
+ * @returns {void}
+ */
 function handleMoveMenuKeydown(event) {
   if (moveMenu.hidden) return;
   if (event.key === "Escape" || event.key === "Tab") {
@@ -100,6 +174,11 @@ function handleMoveMenuKeydown(event) {
   }
 }
 
+/**
+ * Sets up the "Move to" menu used on small screens instead of drag and drop.
+ *
+ * @returns {void}
+ */
 function initBoardMoveMenu() {
   if (!boardMainContainer) return;
   moveMenu = createMoveMenu();
@@ -111,6 +190,13 @@ function initBoardMoveMenu() {
   window.addEventListener("resize", () => closeMoveMenu());
 }
 
+/**
+ * Starts dragging a card (disabled on screens up to 360px).
+ *
+ * @param {DragEvent} event - The dragstart event.
+ * @param {HTMLElement} card - The dragged card.
+ * @returns {void}
+ */
 function handleCardDragStart(event, card) {
   if (window.matchMedia("(max-width: 360px)").matches) {
     event.preventDefault();
@@ -121,6 +207,12 @@ function handleCardDragStart(event, card) {
   card.setAttribute("data-dragging", "true");
 }
 
+/**
+ * Cleans up drag styles after dragging ends.
+ *
+ * @param {HTMLElement} card - The dragged card.
+ * @returns {void}
+ */
 function handleCardDragEnd(card) {
   draggedCard = null;
   card.classList.remove("is-dragging");
@@ -128,11 +220,24 @@ function handleCardDragEnd(card) {
   getBoardColumns().forEach((column) => column.classList.remove("is-drop-target"));
 }
 
+/**
+ * Attaches the drag events to a task card.
+ *
+ * @param {HTMLElement} card - The task card.
+ * @returns {void}
+ */
 function bindCardDragEvents(card) {
   card.addEventListener("dragstart", (event) => handleCardDragStart(event, card));
   card.addEventListener("dragend", () => handleCardDragEnd(card));
 }
 
+/**
+ * Handles dropping a card into a column.
+ *
+ * @param {DragEvent} event - The drop event.
+ * @param {HTMLElement} column - The target column.
+ * @returns {void}
+ */
 function handleColumnDrop(event, column) {
   event.preventDefault();
   if (!draggedCard) return;
@@ -142,6 +247,12 @@ function handleColumnDrop(event, column) {
   if (moveBoardTask(taskId, column.dataset.column)) renderBoard();
 }
 
+/**
+ * Attaches the drag-over, drag-leave and drop events to a column.
+ *
+ * @param {HTMLElement} column - The column element.
+ * @returns {void}
+ */
 function bindColumnDropEvents(column) {
   column.ondragover = (event) => {
     if (!draggedCard) return;
