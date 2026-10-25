@@ -37,8 +37,8 @@ function showCurrentDayTime() {
  * @returns {void}
  */
 function showSummaryName() {
-    const mode = window.sessionStorage.getItem("join-session-mode");
-    const name = (window.sessionStorage.getItem("join-demo-name") || "").trim();
+    const mode = window.localStorage.getItem("join-session-mode");
+    const name = (window.localStorage.getItem("join-demo-name") || "").trim();
     const username = document.getElementById("username");
     const hasName = mode === "demo" && name !== "";
     username.textContent = hasName ? name + "!" : "";

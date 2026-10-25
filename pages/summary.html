@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../css/menu/style.css">
     <link rel="stylesheet" href="../css/summary.css">
     <script src="../js/Templates/init.js"></script>
-    <title>Join</title>
+    <title>Join - Summary</title>
 </head>
 
 <body>
@@ -26,7 +26,7 @@
                 <div class="task-boxes">
                     <div tabindex="0" role="button" id="to-do" class="grey-boxes-task flex-row">
                         <div class="task-boxes-img-wrapper">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="69" height="69" fill="none"
+                            <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" width="69" height="69" fill="none"
                                 class="task-icon-to-do" viewBox="0 0 69 69">
                                 <circle cx="34.5" cy="34.5" r="34.5" fill="#2a3647" />
                                 <mask id="mask0_508097_4020" width="33" height="33" x="18" y="18"
@@ -46,7 +46,7 @@
                     </div>
                     <div tabindex="0" role="button" id="done" class="grey-boxes-task flex-row">
                         <div class="task-boxes-img-wrapper">
-                            <svg class="task-icon-done" width="69" height="69" viewBox="0 0 69 69" fill="none"
+                            <svg aria-hidden="true" focusable="false"class="task-icon-done" width="69" height="69" viewBox="0 0 69 69" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="34.5" cy="34.5" r="34.5" fill="#2A3647" />
                                 <path d="M19.5283 34.5001L30.7571 45.5662L49.4717 23.4341" stroke="white"
@@ -63,11 +63,11 @@
                         <div class="urgent-and-seperator">
                             <div class="urgent flex-row">
                                 <div class="task-boxes-img-wrapper">
-                                    <img src="../assets/urgent.svg" alt="red arrow showing up">
+                                    <img src="../assets/urgent.svg" alt="arrow showing up">
                                 </div>
                                 <div class="task-name-and-amount">
-                                    <p class="amount-bold">0</p>
-                                    <p class="normal-text">Urgent</p>
+                                    <span class="amount-bold">0</span>
+                                    <span class="normal-text">Urgent</span>
                                 </div>
                             </div>
                             <div class="grey-separator"></div>
@@ -78,30 +78,30 @@
                         </div>
                     </div>
                     <div tabindex="0" role="button" id="tasks-in-board" class="grey-boxes-task task-name-and-amount">
-                        <p class="amount-bold">0</p>
-                        <p class="task-normal">Tasks in <br> Board</p>
+                        <span class="amount-bold">0</span>
+                        <span class="task-normal">Tasks in <br> Board</span>
                     </div>
                     <div tabindex="0" role="button" id="tasks-in-progress" class="grey-boxes-task task-name-and-amount">
-                        <p class="amount-bold">0</p>
-                        <p class="task-normal">Tasks in <br> Progress</p>
+                        <span class="amount-bold">0</span>
+                        <span class="task-normal">Tasks in <br> Progress</span>
                     </div>
                     <div tabindex="0" role="button" id="awaiting-feedback" class="grey-boxes-task task-name-and-amount">
-                        <p class="amount-bold">0</p>
-                        <p class="task-normal">Awaiting <br> Feedback</p>
+                        <span class="amount-bold">0</span>
+                        <span class="task-normal">Awaiting <br> Feedback</span>
                     </div>
                 </div>
 
                 <div id="welcome-message" class="welcome-message">
-                    <p class="daytime" id="daytime"></p>
+                    <h2 class="daytime" id="daytime"></h2>
                     <p class="name" id="username" hidden></p>
                 </div>
             </div>
         </div>
     </main>
-
-</body>
 <script src="../js/board/boardData.js"></script>
 <script src="../js/summary/summary.js"></script>
 <script src="../js/contactList.js"></script>
+</body>
+
 
 </html>

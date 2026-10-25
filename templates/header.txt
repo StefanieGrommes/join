@@ -1,9 +1,9 @@
-<nav>
+<nav class="top-bar">
         <p>Kanban Project Management Tool</p>
         <div class="horizontal-navbar-elements">
-            <a href="../pages/help.html"><img src="../assets/questions.svg" alt="questions" class="questions-image"></a>
-            <button class="profile-initials-btn">
-                <svg class="initials-ellipse" width="56" height="56" viewBox="0 0 56 56" fill="none"
+            <a href="../pages/help.html" aria-label="Link to the Help Site"><img src="../assets/questions.svg" alt="questions" class="questions-image"></a>
+            <button type="button" class="profile-initials-btn"  aria-label="Open profile menu" aria-haspopup="true" aria-expanded="false" aria-controls="profile-menu">
+                <svg class="initials-ellipse" aria-hidden="true" focusable="false" width="56" height="56" viewBox="0 0 56 56" fill="none"
                     xmlns="http://www.w3.org/2000/svg">
                     <circle cx="28" cy="28" r="26.5" stroke="#2A3647" stroke-width="3" />
                 </svg>
@@ -12,10 +12,10 @@
     </nav>
     <div class="nav-mobile">
         <div class="nav-mobile-logo-wrapper">
-            <img src="../assets/join-favicon.svg" alt="Join Logo">
+            <img src="../assets/join-favicon.svg" alt="Join Logo favicon">
         </div>
         <button class="profile-initials-btn">
-            <svg class="initials-ellipse" width="56" height="56" viewBox="0 0 56 56" fill="none"
+            <svg aria-label="ellipse for avatar image" class="initials-ellipse" width="56" height="56" viewBox="0 0 56 56" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
                 <circle cx="28" cy="28" r="26.5" stroke="#2A3647" stroke-width="3" />
             </svg>
@@ -23,31 +23,31 @@
 
     </div>
     <div id="profile-menu" class="profile-menu" role="group" aria-label="Profile navigation" hidden>
-        <a href="../pages/help.html">Help</a>
+        <a href="../pages/help.html" aria-label="Link to the Help Site">Help</a>
         <a href="../pages/legal-notice.html">Legal Notice</a>
         <a href="../pages/privacy-notice.html">Privacy Policy</a>
         <button id="logout-button" type="button">Log out</button>
     </div>
     <div class="aside-blue-box-bg">
-        <aside>
-            <div class="logo-and-nav-links">
+        <aside id="sidebar" aria-label="Sidebar">
+            <div class="logo-and-nav-links" aria-label="Main">
                 <div class="logo-wrapper"><img src="../assets/join-logo.svg" alt="Join Logo">
                 </div>
                 <ul class="nav-links">
                     <li class="nav-btn">
-                        <a href="../pages/summary.html" class="nav-element">
-                            <svg width="30" height="30" viewBox="0 0 30 30" fill="none"
+                        <a href="../pages/summary.html" class="nav-element" aria-label="Join, go to Summary">
+                            <svg aria-hidden="true" focusable="false" width="30" height="30" viewBox="0 0 30 30" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M25.2273 2.5H4.77273H4.5C3.39543 2.5 2.5 3.39573 2.5 4.5003C2.5 4.68009 2.5 4.80746 2.5 4.83997V25.2945V25.5C2.5 26.6046 3.39572 27.5 4.50029 27.5C4.64377 27.5 4.74401 27.5 4.77272 27.5H25.2273C25.256 27.5 25.3562 27.5 25.4997 27.5C26.6043 27.5 27.5 26.6041 27.5 25.4995C27.5 25.3927 27.5 25.3188 27.5 25.2945V4.83994C27.5 4.80744 27.5 4.68008 27.5 4.5003C27.5 3.39573 26.6043 2.5 25.4997 2.5C25.3562 2.5 25.256 2.5 25.2273 2.5ZM17.2727 25.2945H4.77273V16.2036H17.2727V25.2945ZM17.2727 13.9309H4.77273V4.83997L17.2727 4.83994V13.9309ZM25.2273 25.2945H19.5455V4.83997H25.2273V25.2945Z"
                                     fill="#CDCDCD" />
                             </svg>
-                            <span>Summary</span>
+                            <span aria-labelledby="sidebar-navigation">Summary</span>
                         </a>
                     </li>
                     <li class="nav-btn">
                         <a href="../pages/addTask.html" class="nav-element">
-                            <svg width="30" height="30" viewBox="0 0 30 30" fill="none"
+                            <svg aria-hidden="true" focusable="false" image"width="30" height="30" viewBox="0 0 30 30" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <mask id="mask0_69323_5227" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0"
                                     y="0" width="30" height="30">
@@ -63,8 +63,8 @@
                         </a>
                     </li>
                     <li class="nav-btn">
-                        <a href="../pages/board-layout.html" class="nav-element">
-                            <svg width="30" height="30" viewBox="0 0 30 30" fill="none"
+                        <a href="../pages/board-layout.html" class="nav-element" aria-label="Join, go to Board">
+                            <svg aria-hidden="true" focusable="false" width="30" height="30" viewBox="0 0 30 30" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M22.9546 4.77273L22.9546 25.2271C22.954 25.8296 22.7143 26.4074 22.2882 26.8334C21.8622 27.2595 21.2844 27.4992 20.6819 27.4998L16.1365 27.4998C15.5339 27.4992 14.9562 27.2595 14.5301 26.8334C14.104 26.4074 13.8644 25.8296 13.8638 25.2271L13.8638 4.77273C13.8644 4.17015 14.104 3.59243 14.5301 3.16635C14.9562 2.74026 15.5339 2.50062 16.1365 2.50002L20.6819 2.50002C21.2844 2.50062 21.8622 2.74026 22.2882 3.16635C22.7143 3.59243 22.954 4.17015 22.9546 4.77273ZM16.1365 25.2271L20.6819 25.2271L20.6819 4.77273L16.1365 4.77273L16.1365 25.2271ZM16.1365 4.77273L16.1365 25.2271C16.1359 25.8296 15.8962 26.4073 15.4701 26.8334C15.0441 27.2595 14.4663 27.4991 13.8638 27.4997L9.31835 27.4997C8.71578 27.4991 8.13806 27.2595 7.71197 26.8334C7.28589 26.4073 7.04625 25.8296 7.04565 25.227L7.04565 4.7727C7.04625 4.17013 7.28589 3.59241 7.71197 3.16632C8.13806 2.74024 8.71578 2.5006 9.31835 2.5L13.8638 2.5C14.4663 2.5006 15.0441 2.74024 15.4701 3.16632C15.8962 3.59241 16.1359 4.17015 16.1365 4.77273ZM9.31835 25.227L13.8638 25.2271L13.8638 4.77273L9.31835 4.7727L9.31835 25.227ZM9.31835 4.7727L9.31835 25.227C9.31775 25.8296 9.07811 26.4073 8.65203 26.8334C8.22594 27.2595 7.64822 27.4991 7.04565 27.4997L2.50024 27.4997C1.89767 27.4991 1.31995 27.2595 0.893863 26.8334C0.467779 26.4073 0.228141 25.8296 0.227539 25.227L0.227538 4.7727C0.22814 4.17013 0.467778 3.59241 0.893862 3.16632C1.31995 2.74024 1.89767 2.5006 2.50024 2.5L7.04565 2.5C7.64822 2.5006 8.22594 2.74024 8.65203 3.16632C9.07811 3.59241 9.31775 4.17013 9.31835 4.7727ZM2.50024 25.227L7.04565 25.227L7.04565 4.7727L2.50024 4.7727L2.50024 25.227Z"
@@ -77,8 +77,8 @@
                         </a>
                     </li>
                     <li class="nav-btn">
-                        <a href="../pages/contacts.html" class="nav-element">
-                            <svg width="30" height="30" viewBox="0 0 30 30" fill="none"
+                        <a href="../pages/contacts.html" class="nav-element" aria-label="Join, go to Contacts">
+                            <svg aria-hidden="true" focusable="false" width="30" height="30" viewBox="0 0 30 30" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <mask id="mask0_69323_5230" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0"
                                     y="0" width="30" height="30">
@@ -97,7 +97,7 @@
             </div>
             <div class="legal-and-policy">
                 <div class="nav-btn">
-                <a href="../pages/privacy-notice.html" class="li-btn"><span>Privacy Policy</span></a>
+                <a href="../pages/privacy-notice.html" class="li-btn"><span >Privacy Policy</span></a>
                 </div>
                 <div class="nav-btn">
                 <a href="../pages/legal-notice.html" class="li-btn"><span>Legal notice</span></a>
@@ -105,6 +105,6 @@
             </div>
         </aside>
     </div>
-    <div class="rotate-hint" role="alert">
+    <div class="rotate-hint" role="status">
   Please rotate your device to portrait mode.
 </div>
