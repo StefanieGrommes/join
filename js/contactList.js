@@ -20,32 +20,16 @@ const CONTACT_COLORS = [
 let allContacts = [];
 let editingContactId = null;
 
-/**
- * Picks a stable color for a contact based on its id.
- * @param {string} id - Contact id
- * @returns {string} Hex color
- */
 function getContactColor(id) {
   return CONTACT_COLORS[Number(id) % CONTACT_COLORS.length];
 }
 
-/**
- * Creates the initials from a contact's first and last name.
- * @param {string} firstName - First name, e.g. "Anton"
- * @param {string} lastName - Last name, e.g. "Mayer"
- * @returns {string} Initials in uppercase, e.g. "AM"
- */
 function getInitials(firstName, lastName) {
   let first = firstName.charAt(0);
   let last = lastName.charAt(0);
   return (first + last).toUpperCase();
 }
 
-/**
- * Builds the HTML for a single contact in the list.
- * @param {Object} contact - Contact with id, firstName, lastName and email
- * @returns {string} HTML string of the list item
- */
 function getContactTemplate(contact) {
   return `
     <li class="contact-item" data-id="${contact.id}" onclick="openContactDetail('${contact.id}', this)">
@@ -57,12 +41,6 @@ function getContactTemplate(contact) {
     </li>`;
 }
 
-/**
- * Builds the HTML for one letter group including all its contacts.
- * @param {string} letter - First letter of the group
- * @param {Array<Object>} groupContacts - Contacts belonging to this group
- * @returns {string} HTML string of the group
- */
 function getContactGroupTemplate(letter, groupContacts) {
   let items = "";
   for (let contact of groupContacts) {
@@ -75,20 +53,10 @@ function getContactGroupTemplate(letter, groupContacts) {
     </div>`;
 }
 
-/**
- * Returns a copy of the contacts sorted alphabetically by name.
- * @param {Array<Object>} contacts - Unsorted list of contacts
- * @returns {Array<Object>} New array sorted by name
- */
 function sortContactsByName(contacts) {
   return [...contacts].sort((a, b) => a.firstName.localeCompare(b.firstName));
 }
 
-/**
- * Groups contacts by the first letter of their name.
- * @param {Array<Object>} contacts - Sorted list of contacts
- * @returns {Object} Letter as key, array of matching contacts as value
- */
 function groupContactsByLetter(contacts) {
   let groups = {};
   for (let contact of contacts) {
@@ -99,11 +67,6 @@ function groupContactsByLetter(contacts) {
   return groups;
 }
 
-/**
- * Renders the grouped contact list into the DOM.
- * @param {Array<Object>} contacts - Contacts to render
- * @returns {void}
- */
 function renderContactList(contacts) {
   if (!contacts) return;
   allContacts = contacts;
@@ -117,13 +80,8 @@ function renderContactList(contacts) {
   wrapper.innerHTML = html;
 }
 
-/**
- * Builds the HTML for the detail view of a contact.
- * @param {Object} contact - Contact with id, firstName, lastName, email and phone
- * @returns {string} HTML string of the detail view
- */
 function getContactDetailTemplate(contact) {
-  return /* HTML */ ` <div class="contact-detail">
+  return ` <div class="contact-detail">
       <div
         class="contact-avatar-large"
         style="background-color: ${getContactColor(contact.id)}"
@@ -164,20 +122,10 @@ function getContactDetailTemplate(contact) {
     </div>`;
 }
 
-/**
- * Toggles the mobile edit/delete menu in the contact detail view.
- * @returns {void}
- */
 function toggleDetailMenu() {
   document.getElementById("detailMenu").classList.toggle("open");
 }
 
-/**
- * Shows the detail view of the contact with the given id.
- * @param {string} id - Id identifying the contact
- * @param {HTMLElement} element - The clicked list item
- * @returns {void}
- */
 function openContactDetail(id, element) {
   let contact = allContacts.find((c) => c.id === id);
   if (!contact) return;
@@ -186,32 +134,18 @@ function openContactDetail(id, element) {
   setActiveContact(element);
 }
 
-/**
- * Highlights the clicked contact and removes the previous highlight.
- * @param {HTMLElement} element - The clicked list item
- * @returns {void}
- */
 function setActiveContact(element) {
   let active = document.querySelector(".contact-item-selected");
   if (active) active.classList.remove("contact-item-selected");
   element.classList.add("contact-item-selected");
 }
 
-/**
- * Close the contact detail view and returns to the list.
- * @returns {void}
- */
 function closeContactDetail() {
   document.querySelector(".add-task-content").classList.remove("detail-open");
   let menu = document.getElementById("detailMenu");
   if (menu) menu.classList.remove("open");
 }
 
-/**
- * Close the detail menu when clicking outside of it.
- * @param {MouseEvent} event - The click event
- * @returns {void}
- */
 function closeMenuOnOutsideClick(event) {
   let menu = document.getElementById("detailMenu");
   if (!menu) return;
@@ -221,31 +155,17 @@ function closeMenuOnOutsideClick(event) {
 
 document.addEventListener("click", closeMenuOnOutsideClick);
 
-/**
- * Splits a full name into first and last name at the last space
- * @param {string} fullName - The entered full name
- * @returns {Object} Object with firstName and lastName
- */
 function splitName(fullName) {
   let parts = fullName.trim().split(" ");
   let lastName = parts.pop();
   return { firstName: parts.join(" "), lastName: lastName };
 }
 
-/**
- * Return the next free contact id as a string.
- * @returns {string} The next free contact id
- */
 function getNextContactId() {
   let numbers = allContacts.map((c) => Number(c.id));
   return String(Math.max(0, ...numbers) + 1);
 }
 
-/**
- * Builds a contact object from the form values.
- * @param {HTMLFormElement} form - The add contact form
- * @returns {Object} The new contact
- */
 function buildContactFromForm(form) {
   let name = splitName(form.querySelector('[name="name"]').value);
   return {
@@ -257,11 +177,6 @@ function buildContactFromForm(form) {
   };
 }
 
-/**
- * Creates a new contact, saves it to the database and shows it in the list.
- * @param {HTMLFormElement} form - The add contact form
- * @returns {Promise<void>}
- */
 async function addNewContact(form) {
   let contact = buildContactFromForm(form);
   let button = form.querySelector(".create-contact-btn");
@@ -277,10 +192,6 @@ async function addNewContact(form) {
   showSuccessToast("Contact successfully created");
 }
 
-/**
- * Loads all contacts from the database and renders the list.
- * @returns {Promise<void>}
- */
 async function loadContacts() {
   let response = await fetch(BASE_URL + "contacts.json");
   let data = await response.json();
@@ -288,11 +199,6 @@ async function loadContacts() {
   renderContactList(allContacts);
 }
 
-/**
- * Opens the contact dialog prefilled with an existing contact.
- * @param {string} id - The id of the contact to edit.
- * @returns {void}
- */
 function openEditDialog(id) {
   let contact = allContacts.find((c) => c.id === id);
   if (!contact) return;
@@ -308,11 +214,6 @@ function openEditDialog(id) {
   showDialog();
 }
 
-/**
- * Saves the changes of an edited contact to the database.
- * @param {HTMLFormElement} form - The contact form.
- * @returns {Promise<void>}
- */
 async function saveEditedContact(form) {
   let contact = buildContactFromForm(form);
   contact.id = editingContactId;
@@ -328,14 +229,9 @@ async function saveEditedContact(form) {
   showSuccessToast("Contact successfully edited");
 }
 
-/**
- * Shows the colored initials of a contact inside the dialog.
- * @param {Object} contact - The contact to show.
- * @returns {void}
- */
 function showDialogAvatar(contact) {
   let avatar = document.getElementById("dialogAvatar");
-  avatar.innerHTML = /* HTML */ `<div
+  avatar.innerHTML = `<div
     class="contact-avatar-large"
     style="background-color: ${getContactColor(contact.id)}"
   >
@@ -343,11 +239,6 @@ function showDialogAvatar(contact) {
   </div>`;
 }
 
-/**
- * Deletes the contact from the database, from all tasks and from the list
- * @param {string} id - The id of the contact to delete.
- * @returns {Promise<void>}
- */
 async function deleteContact(id) {
   await removeContactFromTasks(id);
   await deleteData("contacts/" + id);
@@ -357,11 +248,6 @@ async function deleteContact(id) {
   document.getElementById("contactDetail").innerHTML = "";
 }
 
-/**
- * Removes a deleted contact from the assigned list of all tasks.
- * @param {string} id - The id of the deleted contact.
- * @returns {Promise<void>}
- */
 async function removeContactFromTasks(id) {
   let response = await fetch(BASE_URL + "tasks.json");
   let tasks = await response.json();
@@ -373,11 +259,6 @@ async function removeContactFromTasks(id) {
   }
 }
 
-/**
- * Shows a message at the center of the screen and hides it after a short delay.
- * @param {string} message - The text to show.
- * @returns {void}
- */
 function showSuccessToast(message) {
   let toast = document.getElementById("successToast");
   if (!toast) return;

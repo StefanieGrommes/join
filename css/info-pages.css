@@ -150,7 +150,7 @@
   font-weight: 700;
 }
 
-.help-manual-item {   /*braucht man das???*/
+.help-manual-item {
   display: flex;
   flex-direction: column;
 }
@@ -159,7 +159,6 @@
   display: inline-block;
 }
 
-/*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
 
 @media (max-width: 1200px) {
    h1 {

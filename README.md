@@ -15,6 +15,10 @@ On larger screens, tasks can be moved using drag and drop.
 
 ## Sign-up and login (educational prototype)
 
+Shared page initialization lives in `js/Templates/init.js`. The desktop/mobile
+profile menu is kept separately in `js/Templates/profileMenu.js`, loaded before
+`init.js` on every page. Both use classic scripts and share global helpers.
+
 Sign-up validates the name, email, password, confirmation and accepted privacy
 policy using JavaScript, without native HTML validation. Successful registration
 stores an account under `users` and a linked contact under `contacts` in the shared

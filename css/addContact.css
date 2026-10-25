@@ -251,7 +251,6 @@ button {
   opacity: 1;
 }
 
-/*-------------------->MEDIA QUERIES-----------------------------------------------------------*/
 
 @media (max-width: 1180px) {
   .dialog-grid-area {
