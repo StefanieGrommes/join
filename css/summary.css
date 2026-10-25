@@ -94,6 +94,10 @@ h5 {
     outline: none;
 }
 
+.grey-boxes-task:hover span {
+    color: white;
+}
+
 .grey-boxes-task:hover p,
 .grey-boxes-task:focus-visible p {
     color: white;
