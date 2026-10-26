@@ -1,4 +1,8 @@
-const daytimeContainer = document.getElementById("daytime");
+const daytimeNodelist = document.querySelectorAll(".daytime");
+const daytimeArray = Array.from(daytimeNodelist);
+const usernamesNodeList = document.querySelectorAll(".username");
+const usernames = Array.from(usernamesNodeList);
+const mode = window.localStorage.getItem("join-session-mode");
 const taskBoxColumns = {
     "to-do": "todo",
     "done": "done",
@@ -15,21 +19,23 @@ window.addEventListener("load", summaryInit, true);
  */
 async function summaryInit() {
     await init();
-    showCurrentDayTime();
     showSummaryName();
+    startMobileIntro();
     showTaskCounts();
     showUpcomingDeadline();
     bindTaskBoxes();
 }
 
 /**
- * Writes the greeting for the current time of day into the welcome message.
- *
+ * Hides the mobile welcome overlay after 1.5 seconds (screens up to 768px).
  * @returns {void}
  */
-function showCurrentDayTime() {
-    daytimeContainer.textContent = getCurrentDaytime();
+function startMobileIntro() {
+    const intro = document.getElementById("welcome-message-mobile");
+    if (!intro || !window.matchMedia("(max-width: 768px)").matches) return;
+    window.setTimeout(() => intro.classList.add("hidden"), 1500);
 }
+
 
 /**
  * Shows the demo user name next to the greeting. Without a name the trailing comma is removed.
@@ -37,15 +43,17 @@ function showCurrentDayTime() {
  * @returns {void}
  */
 function showSummaryName() {
-    const mode = window.localStorage.getItem("join-session-mode");
     const name = (window.localStorage.getItem("join-demo-name") || "").trim();
-    const username = document.getElementById("username");
     const hasName = mode === "demo" && name !== "";
+    usernames.forEach((username) => {
     username.textContent = hasName ? name + "!" : "";
     username.hidden = !hasName;
-    daytimeContainer.textContent = hasName
-        ? getCurrentDaytime()
-        : getCurrentDaytime().replace(/,$/, "!");
+    })
+    daytimeArray.forEach((daytime) => {
+    daytime.textContent = hasName
+        ? getCurrentDaytime(daytime)
+        : getCurrentDaytime(daytime).replace(/,$/, "!")
+    })
 }
 
 /**
