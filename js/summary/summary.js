@@ -32,10 +32,9 @@ async function summaryInit() {
  */
 function startMobileIntro() {
     const intro = document.getElementById("welcome-message-mobile");
-    if (!intro || !window.matchMedia("(max-width: 768px)").matches) return;
+    if (!intro) return;
     window.setTimeout(() => intro.classList.add("hidden"), 1500);
 }
-
 
 /**
  * Shows the demo user name next to the greeting. Without a name the trailing comma is removed.

@@ -27,7 +27,6 @@ function getColumnLabel(columnId) {
   return columnLabels[columnId] || "Board";
 }
 
-
 /**
  * Returns the id of the column a task is shown in.
  *

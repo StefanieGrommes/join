@@ -69,19 +69,37 @@ function getEmailError(value) {
  * @returns {string[]} Messages in display order, empty if everything is valid.
  */
 function getSignupFeedbackMessages() {
+  return [
+    ...getSignupRequiredMessages(),
+    ...getSignupNameMessages(),
+    ...[signupSubmitMessage, signupEmailMessage].filter(Boolean),
+    ...getSignupPasswordMessages(),
+  ];
+}
+
+/**
+ * Returns the message for a touched name field that is too short.
+ * @returns {string[]} The message or an empty list.
+ */
+function getSignupNameMessages() {
+  const name = document.getElementById("signup-name");
+  const invalid = name.dataset.touched && name.value.trim() && !isValidSignupName(name.value);
+  return invalid ? ["Name needs at least 2 characters."] : [];
+}
+
+/**
+ * Returns the messages for missing password rules and a wrong confirmation.
+ * @returns {string[]} The messages or an empty list.
+ */
+function getSignupPasswordMessages() {
   const password = document.getElementById("signup-password");
   const confirmation = document.getElementById("signup-confirm-password");
   const missing = password.value.length > 0 ? getMissingPasswordRules(password.value) : [];
-  const mismatch = confirmation.value.length > 0 && confirmation.value !== password.value;
-  const messages = getSignupRequiredMessages();
-  const name = document.getElementById("signup-name");
-  if (name.dataset.touched && name.value.trim() && !isValidSignupName(name.value)) {
-    messages.push("Name needs at least 2 characters.");
-  }
-  if (signupSubmitMessage) messages.push(signupSubmitMessage);
-  if (signupEmailMessage) messages.push(signupEmailMessage);
+  const messages = [];
   if (missing.length) messages.push(`Password needs: ${missing.join(", ")}.`);
-  if (mismatch) messages.push("Passwords don't match. Please try again.");
+  if (confirmation.value.length > 0 && confirmation.value !== password.value) {
+    messages.push("Passwords don't match. Please try again.");
+  }
   return messages;
 }
 

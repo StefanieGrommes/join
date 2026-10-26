@@ -210,3 +210,23 @@ function renderTaskDetail(task) {
     subtasks: renderDetailSubtasks(task.subtasks),
   });
 }
+
+/**
+ * Returns label and color of a category.
+ * @param {string} category - "TechnicalTask" or "UserStory".
+ * @returns {{label: string, color: string}} Display values.
+ */
+function getCategoryInfo(category) {
+  return categoryInfo[category] || { label: category || "", color: "#2d8cff" };
+}
+
+/**
+ * Escapes text for safe use in HTML.
+ * @param {string} text - The raw text.
+ * @returns {string} The escaped text.
+ */
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = String(text ?? "");
+  return div.innerHTML;
+}

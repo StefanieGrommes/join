@@ -108,7 +108,6 @@ function initTaskDetailModal() {
   document.addEventListener("keydown", handleDetailEscape);
 }
 
-
 /**
  * Closes the detailed Task Dialog.
  *

@@ -141,6 +141,18 @@ function getDemoInitials(name) {
     .toUpperCase();
 }
 
+const initialsAttributes = {
+  x: "28",
+  y: "28",
+  "text-anchor": "middle",
+  "dominant-baseline": "central",
+  fill: "#FFFFFF",
+  "font-size": "20",
+  "font-weight": "700",
+  "font-family": "Inter, sans-serif",
+  class: "guest-profile-initial",
+};
+
 /**
  * Creates the SVG text element that shows the initials inside the profile circle.
  * @param {string} initials - The visible initials.
@@ -148,18 +160,7 @@ function getDemoInitials(name) {
  */
 function createInitialsElement(initials) {
   const element = document.createElementNS("http://www.w3.org/2000/svg", "text");
-  const attributes = {
-    x: "28",
-    y: "28",
-    "text-anchor": "middle",
-    "dominant-baseline": "central",
-    fill: "#FFFFFF",
-    "font-size": "20",
-    "font-weight": "700",
-    "font-family": "Inter, sans-serif",
-    class: "guest-profile-initial",
-  };
-  Object.entries(attributes).forEach(([name, value]) => element.setAttribute(name, value));
+  Object.entries(initialsAttributes).forEach(([name, value]) => element.setAttribute(name, value));
   element.textContent = initials;
   return element;
 }

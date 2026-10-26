@@ -314,13 +314,26 @@ function getSubtasks(previous = []) {
 }
 
 /**
- * Creates or updates a task in the localStorage cache and Firebase.
+ * Saves the task form: updates the session data and the database, then resets the form.
  * @returns {Promise<void>}
  */
 async function submitForm() {
   const all = getSessionData("session-tasks");
   const existing = editingTaskId ? all.find((t) => t.id === editingTaskId) : null;
-  const task = {
+  const task = buildTaskFromForm(existing);
+  saveSessionData("session-tasks", upsertTask(all, task));
+  await putData("tasks/" + task.id, task);
+  resetForm();
+  if (typeof onTaskSaved === "function") onTaskSaved();
+}
+
+/**
+ * Builds the task object from the form fields.
+ * @param {Object|null} existing - The task that is edited, or null for a new task.
+ * @returns {Object} The task.
+ */
+function buildTaskFromForm(existing) {
+  return {
     id: existing ? existing.id : String(Date.now()),
     title: taskTitleInput.value.trim(),
     state: existing ? existing.state : newTaskState,
@@ -331,13 +344,17 @@ async function submitForm() {
     category: taskCategory.value,
     subtasks: getSubtasks(existing ? existing.subtasks : []),
   };
-  saveSessionData(
-    "session-tasks",
-    existing ? all.map((t) => (t.id === task.id ? task : t)) : [...all, task],
-  );
-  await putData("tasks/" + task.id, task);
-  resetForm();
-  if (typeof onTaskSaved === "function") onTaskSaved();
+}
+
+/**
+ * Replaces the task with the same id or appends it if it is new.
+ * @param {Object[]} tasks - The current tasks.
+ * @param {Object} task - The saved task.
+ * @returns {Object[]} The updated list.
+ */
+function upsertTask(tasks, task) {
+  const isEdit = tasks.some((t) => t.id === task.id);
+  return isEdit ? tasks.map((t) => (t.id === task.id ? task : t)) : [...tasks, task];
 }
 
 list.style.display = "none";
