@@ -129,13 +129,16 @@
           </div>
         </form>
       </section>
-      <div id="taskToast" class="toast">
-        <span>Task added to board</span>
-        <img src="../assets/boardWhite.svg" alt="" />
-      </div>
+      <div id="task-added-overlay" class="task-added-overlay" role="status" aria-live="polite">
+  <div class="task-added-box">
+    <span>Task added to board</span>
+    <img src="../assets/board-icon.svg" alt="" />
+  </div>
+</div>
     </main>
   </body>
   <script src="../js/Templates/templates.js"></script>
+  <script src="../js/Templates/templateRender.js"></script>
   <script src="../js/addTask/addTaskTemplates.js"></script>
   <script src="../js/addTask/addTask.js"></script>
   <script src="../js/contactList.js"></script>

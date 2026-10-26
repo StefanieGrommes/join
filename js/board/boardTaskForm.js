@@ -99,15 +99,6 @@ function fillSubtaskList(subtasks) {
 }
 
 /**
- * Called by submitForm() after saving. Closes the overlay and redraws the board.
- * @returns {void}
- */
-function onTaskSaved() {
-  closeBoardTaskModal();
-  renderBoard();
-}
-
-/**
  * Connects the buttons and the backdrop of the overlay.
  * @returns {void}
  */

@@ -253,31 +253,36 @@ const errorMessage = document.getElementById("error-message");
 const dueDate = document.getElementById("taskDueDate");
 const errorMessageArray = [];
 
+form.addEventListener("submit", handleTaskFormSubmit);
+
+/**
+ * Collects the error messages of the required task fields.
+ * @returns {string[]} The messages, empty if all fields are valid.
+ */
+function getTaskFormErrors() {
+  const errors = [];
+  if (taskTitleInput.value.trim().length <= 2) {
+    errors.push("The title must be at least 3 characters!");
+  }
+  if (taskCategory.value === "none") errors.push("Please enter a task category!");
+  if (dueDate.value === "") errors.push("Please enter a due date!");
+  return errors;
+}
+
 /**
  * Checks if the required fields are valid and shows error message if not.
- * Prevents the form of submitting if the fields do not pass the test.
- * @returns {void}
+ * Prevents the form from submitting if the fields do not pass the test.
+ * @param {SubmitEvent} event - The submit event of the task form.
+ * @returns {Promise<void>}
  */
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    errorMessageArray.length = 0;
-    errorMessage.innerText = "";
-    if (taskTitleInput.value.trim().length <= 2) {
-      errorMessageArray.push("The title must be at least 3 characters!");
-    }
-    if (taskCategory.value === "none") {
-      errorMessageArray.push("Please enter a task category!");
-    }
-    if (dueDate.value === ""){
-        errorMessageArray.push("Please enter a due date!");
-    }
-    if (errorMessageArray.length > 0) {
-      event.preventDefault();
-      errorMessage.innerText = errorMessageArray.join (' , ');
-      return;
-    }
-    await submitForm();
-    })
+async function handleTaskFormSubmit(event) {
+  event.preventDefault();
+  errorMessageArray.length = 0;
+  errorMessageArray.push(...getTaskFormErrors());
+  errorMessage.innerText = errorMessageArray.join(" , ");
+  if (errorMessageArray.length > 0) return;
+  await submitForm();
+}
 
 /**
  * Returns the priority of the active priority button.
@@ -324,7 +329,21 @@ async function submitForm() {
   saveSessionData("session-tasks", upsertTask(all, task));
   await putData("tasks/" + task.id, task);
   resetForm();
+  if (!existing) showTaskAddedOverlay();
   if (typeof onTaskSaved === "function") onTaskSaved();
+}
+
+/**
+ * Shows the "Task added to board" overlay and hides it again after 1.5 seconds.
+ * @returns {void}
+ */
+function showTaskAddedOverlay() {
+  const overlay = document.getElementById("task-added-overlay");
+  if (!overlay) return;
+  overlay.classList.add("visible");
+  window.setTimeout(() => {
+    window.location.href = "./board-layout.html";
+  }, 1500);
 }
 
 /**
