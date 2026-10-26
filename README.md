@@ -27,9 +27,14 @@ the summary page after the success message.
 
 Login checks the stored email and password. Login, guest mode, display name and
 profile color use `localStorage`, so they survive closing the tab or browser.
-Logout removes only Join's login/profile keys and the tab's contact/task cache,
-not database records or unrelated browser data. Contact/task caches still use
-`sessionStorage`. The legacy session keys `join-session-mode` (`demo` for accounts)
+Contacts, tasks and the initialization flag also use `localStorage`, shared
+across tabs and retained after closing the browser. Login (including guest login)
+and successful registration clear the cache so it is loaded again from Firebase.
+Logout removes only Join's login/profile keys and contact/task cache,
+not database records or unrelated browser data. The cache is a local copy;
+Firebase remains the shared source of contacts and tasks. Existing
+`sessionStorage` caches are no longer read; on first use the app loads Firebase
+data into `localStorage`. The legacy session keys `join-session-mode` (`demo` for accounts)
 and `join-demo-name` are retained for compatibility with existing pages.
 
 This prototype does not use Firebase Authentication. Passwords are currently

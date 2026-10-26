@@ -95,7 +95,7 @@ function logoutJoinSession() {
     ["join-session-mode", "join-demo-name", "join-user-email", "join-profile-color"]
         .forEach((key) => window.localStorage.removeItem(key));
     ["session-initialized", "session-contacts", "session-tasks"]
-        .forEach((key) => window.sessionStorage.removeItem(key));
+        .forEach((key) => window.localStorage.removeItem(key));
     window.location.replace("../index.html");
 }
 
@@ -231,16 +231,16 @@ function withId(obj) {
 }
 
 /**
- * Loads contacts and tasks from the database into the session storage once per session.
+ * Loads contacts and tasks into localStorage until the next login or logout.
  * @returns {Promise<void>}
  */
 async function initSessionData() {
-  if (sessionStorage.getItem("session-initialized")) return;
+  if (window.localStorage.getItem("session-initialized")) return;
   const { userArray, taskArray } = await fetchTemplateData();
   if (!userArray) return;
-  sessionStorage.setItem("session-contacts", JSON.stringify(Object.values(userArray || {}).filter(Boolean)));
-  sessionStorage.setItem("session-tasks", JSON.stringify(withId(taskArray)));
-  sessionStorage.setItem("session-initialized", "true");
+  window.localStorage.setItem("session-contacts", JSON.stringify(Object.values(userArray || {}).filter(Boolean)));
+  window.localStorage.setItem("session-tasks", JSON.stringify(withId(taskArray)));
+  window.localStorage.setItem("session-initialized", "true");
 }
 
 /**
@@ -254,22 +254,22 @@ async function fetchTemplateData() {
 }
 
 /**
- * Reads a list from the session storage.
- * @param {string} key - The session storage key.
+ * Reads a cached list from localStorage.
+ * @param {string} key - The localStorage key.
  * @returns {Object[]} The stored list or an empty array.
  */
 function getSessionData(key) {
-  return JSON.parse(sessionStorage.getItem(key) || "[]");
+  return JSON.parse(window.localStorage.getItem(key) || "[]");
 }
 
 /**
- * Writes a list to the session storage.
- * @param {string} key - The session storage key.
+ * Writes a cached list to localStorage.
+ * @param {string} key - The localStorage key.
  * @param {Object[]} items - The list to store.
  * @returns {void}
  */
 function saveSessionData(key, items) {
-  sessionStorage.setItem(key, JSON.stringify(items));
+  window.localStorage.setItem(key, JSON.stringify(items));
 }
 
 /**

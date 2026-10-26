@@ -52,7 +52,7 @@ const columnToState = {
 };
 
 /**
- * Returns all tasks from the session storage.
+ * Returns all tasks from the localStorage cache.
  * @returns {Object[]} The tasks.
  */
 function getTasks() {
@@ -60,7 +60,7 @@ function getTasks() {
 }
 
 /**
- * Saves the task list to the session storage.
+ * Saves the task list to the localStorage cache.
  * @param {Object[]} items - The tasks.
  * @returns {void}
  */
@@ -78,7 +78,7 @@ function getTaskById(taskId) {
 }
 
 /**
- * Replaces a task in the session storage and writes it to the firebase.
+ * Replaces a task in the localStorage cache and writes it to Firebase.
  * @param {Object} task - The changed task.
  * @returns {void}
  */

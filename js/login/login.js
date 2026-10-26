@@ -24,9 +24,9 @@ function loginAsGuest() {
   window.localStorage.removeItem("join-user-email");
   window.localStorage.removeItem("join-profile-color");
   window.localStorage.setItem("join-session-mode", "guest");
-  window.sessionStorage.removeItem("session-initialized");
-  window.sessionStorage.removeItem("session-contacts");
-  window.sessionStorage.removeItem("session-tasks");
+  window.localStorage.removeItem("session-initialized");
+  window.localStorage.removeItem("session-contacts");
+  window.localStorage.removeItem("session-tasks");
   document.getElementById("guest-login-button").disabled = true;
   window.location.href = "./pages/summary.html";
 }

@@ -40,9 +40,7 @@ function renderAssignedAvatars() {
   container.innerHTML = "";
   selectedOptions.forEach((option) => {
     const avatar = option.querySelector(".contact-avatar");
-    const initials = avatar.textContent;
-    const avatarColor = avatar.style.backgroundColor;
-    container.insertAdjacentHTML("beforeend", getAvatarTemplate(initials, avatarColor));
+    container.insertAdjacentHTML("beforeend", getAvatarTemplate(avatar.textContent, avatar.style.backgroundColor));
   });
 }
 
@@ -316,7 +314,7 @@ function getSubtasks(previous = []) {
 }
 
 /**
- * Creates or updates a task in the session storage and the firebase.
+ * Creates or updates a task in the localStorage cache and Firebase.
  * @returns {Promise<void>}
  */
 async function submitForm() {
@@ -375,5 +373,3 @@ function resetAssignedContacts() {
   list.innerHTML = "";
   document.getElementById("assigned-avatars").innerHTML = "";
 }
-
-

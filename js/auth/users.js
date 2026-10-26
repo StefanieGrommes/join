@@ -134,7 +134,7 @@ async function findJoinLoginUser(email, password) {
  */
 function saveJoinUserSession(user) {
   ["session-initialized", "session-contacts", "session-tasks"]
-    .forEach((key) => window.sessionStorage.removeItem(key));
+    .forEach((key) => window.localStorage.removeItem(key));
   window.localStorage.setItem("join-demo-name", user.name);
   window.localStorage.setItem("join-user-email", user.email);
   window.localStorage.setItem("join-profile-color", createRandomProfileColor());
