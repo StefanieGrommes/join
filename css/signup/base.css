@@ -190,7 +190,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 40px;
 }
 
 .field {
@@ -314,10 +314,9 @@ body {
 .signup-password-feedback .is-invalid,
 .signup-password-error {
   color: rgb(198, 40, 40);
-}
-
-.signup-password-error:not(:empty) {
-  margin-top: 8px;
+  position: absolute;
+  top: 100%;
+  left: 0;
 }
 
 .field input[aria-invalid="true"] {
