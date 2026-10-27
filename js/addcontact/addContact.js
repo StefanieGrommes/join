@@ -206,7 +206,9 @@ function initAddContactForm() {
   const submitButton = form.querySelector(".create-contact-btn");
   const refresh = () => updateSubmitButtonState(fields, submitButton);
   fields.forEach((field) => bindContactFieldEvents(field, refresh));
-  form.addEventListener("submit", (event) => handleContactSubmit(event, form, fields, refresh));
+  form.addEventListener("submit", (event) =>
+    handleContactSubmit(event, form, fields, refresh),
+  );
   document.querySelector("dialog").addEventListener("click", closeDialogOnBackdropClick);
   refresh();
 }
