@@ -17,6 +17,12 @@ dialog:modal {
   width: min(85vw, 1212px);
 }
 
+#dialogAvatar .contact-avatar-large {
+  width: 120px;
+  height: 120px;
+  font-size: 47px;
+}
+
 button {
   box-sizing: border-box;
 }
@@ -245,6 +251,7 @@ button {
     opacity 200ms ease-in-out,
     transform 200ms ease-in-out;
   z-index: 1000;
+  color: rgb(255, 129, 144);
 }
 
 .toast-wrapper.show {

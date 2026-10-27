@@ -39,6 +39,15 @@ function closeDialog() {
 }
 
 /**
+ * Closes the dialog when the backdrop around it is clicked.
+ * @param {MouseEvent} event - The click event.
+ * @returns {void}
+ */
+function closeDialogOnBackdropClick(event) {
+  if (event.target === event.currentTarget) closeDialog();
+}
+
+/**
  * Finds the toast element belonging to a field (data-toast-id) or the default mail toast.
  * @param {HTMLInputElement|null} input - The affected field.
  * @returns {HTMLElement|null} The toast element or null.
@@ -60,7 +69,7 @@ function hideToast(toast) {
 }
 
 /**
- * Shows an error message in the matching toast area for 4 seconds.
+ * Shows an error message in the matching toast area.
  * @param {string} message - The message to display.
  * @param {HTMLInputElement|null} [input=null] - The affected field.
  * @returns {void}
@@ -68,10 +77,8 @@ function hideToast(toast) {
 function showToastMessage(message, input = null) {
   const toast = getToastElement(input);
   if (!toast) return;
-  if (toast.dataset.timeoutId) clearTimeout(Number(toast.dataset.timeoutId));
   toast.textContent = message;
   toast.classList.add("show");
-  toast.dataset.timeoutId = String(setTimeout(() => hideToast(toast), 4000));
 }
 
 /**
@@ -143,7 +150,8 @@ function validateContactField(input) {
   const rule = getContactFieldRule(input);
   const isValid = rule ? rule.check(input.value.trim()) : true;
   setFieldInvalidState(input, !isValid);
-  if (!isValid) showToastMessage(rule.message, input);
+  if (isValid) hideToast(getToastElement(input));
+  else showToastMessage(rule.message, input);
   return isValid;
 }
 
@@ -203,6 +211,7 @@ function initAddContactForm() {
   form.addEventListener("submit", (event) =>
     handleContactSubmit(event, form, fields, updateSubmitButtonState),
   );
+  document.querySelector("dialog").addEventListener("click", closeDialogOnBackdropClick);
   updateSubmitButtonState();
 }
 
