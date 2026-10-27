@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../css/fonts.css">
     <link rel="stylesheet" href="../css/menu/style.css">
     <link rel="stylesheet" href="../css/summary.css">
+    <script src="../js/Templates/profileMenu.js"></script>
     <script src="../js/Templates/init.js"></script>
     <title>Join - Summary</title>
 </head>
@@ -15,6 +16,14 @@
 <body>
 
     <main class="summary">
+
+      <div class="summary-mobile-intro" aria-hidden="true">
+        <div id="welcome-message-mobile" class="welcome-message-mobile">
+                    <h2 class="daytime"></h2>
+                    <p class="name username" hidden></p>
+                </div>
+        </div>
+
         <div class="task-boxes-and-summary-header">
             <header class="summary-header">
                 <h1>Join 360</h1>
@@ -92,8 +101,8 @@
                 </div>
 
                 <div id="welcome-message" class="welcome-message">
-                    <h2 class="daytime" id="daytime"></h2>
-                    <p class="name" id="username" hidden></p>
+                    <h2 class="daytime"></h2>
+                    <p class="name username" hidden></p>
                 </div>
             </div>
         </div>
@@ -101,6 +110,7 @@
 <script src="../js/board/boardData.js"></script>
 <script src="../js/summary/summary.js"></script>
 <script src="../js/contactList.js"></script>
+<script src="../js/Templates/templates.js"></script>
 </body>
 
 

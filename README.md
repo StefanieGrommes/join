@@ -8,12 +8,17 @@ manage their tasks and projects in an intuitive, visual interface.
 
 In Join you can create a board, fill it with tasks and assign it to your collegues.
 
-On screens up to 360px wide, use the arrow button in a task card to open the
-"Move to" menu and move the task to the previous or next board column. The
-column assignment is saved locally and remains after reloading the page.
-On larger screens, tasks can be moved using drag and drop.
+Tasks can be moved using native drag and drop at all supported viewport widths,
+including 320px. On screens up to 360px wide, the arrow button in a task card
+also opens the "Move to" menu to move the task to the previous or next board
+column, including on devices without native drag-and-drop support.
+The column assignment is saved locally and in Firebase.
 
 ## Sign-up and login (educational prototype)
+
+Shared page initialization lives in `js/Templates/init.js`. The desktop/mobile
+profile menu is kept separately in `js/Templates/profileMenu.js`, loaded before
+`init.js` on every page. Both use classic scripts and share global helpers.
 
 Sign-up validates the name, email, password, confirmation and accepted privacy
 policy using JavaScript, without native HTML validation. Successful registration
@@ -23,9 +28,14 @@ the summary page after the success message.
 
 Login checks the stored email and password. Login, guest mode, display name and
 profile color use `localStorage`, so they survive closing the tab or browser.
-Logout removes only Join's login/profile keys and the tab's contact/task cache,
-not database records or unrelated browser data. Contact/task caches still use
-`sessionStorage`. The legacy session keys `join-session-mode` (`demo` for accounts)
+Contacts, tasks and the initialization flag also use `localStorage`, shared
+across tabs and retained after closing the browser. Login (including guest login)
+and successful registration clear the cache so it is loaded again from Firebase.
+Logout removes only Join's login/profile keys and contact/task cache,
+not database records or unrelated browser data. The cache is a local copy;
+Firebase remains the shared source of contacts and tasks. Existing
+`sessionStorage` caches are no longer read; on first use the app loads Firebase
+data into `localStorage`. The legacy session keys `join-session-mode` (`demo` for accounts)
 and `join-demo-name` are retained for compatibility with existing pages.
 
 This prototype does not use Firebase Authentication. Passwords are currently

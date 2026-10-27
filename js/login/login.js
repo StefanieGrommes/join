@@ -1,9 +1,25 @@
 /**
- * Ends the intro: hides the logo animation and shows the login page.
+ * Calculates where the intro logo has to move to land on the header logo.
+ * @returns {void}
+ */
+function setIntroTarget() {
+  const intro = document.querySelector(".app-intro");
+  const from = document.querySelector(".join-preview").getBoundingClientRect();
+  const to = document.querySelector(".header-icon").getBoundingClientRect();
+  intro.style.setProperty("--intro-x", `${to.left - from.left}px`);
+  intro.style.setProperty("--intro-y", `${to.top - from.top}px`);
+  intro.style.setProperty("--intro-scale", to.width / from.width);
+}
+
+/**
+ * Ends the intro: the logo moves to the header and the login page fades in.
  * @returns {void}
  */
 function finishLoginIntro() {
-  document.querySelector(".app-intro").classList.add("hidden");
+  const intro = document.querySelector(".app-intro");
+  if (intro.classList.contains("hidden")) return;
+  setIntroTarget();
+  intro.classList.add("hidden");
   document.querySelector(".login-page").classList.add("ready");
 }
 
@@ -24,9 +40,9 @@ function loginAsGuest() {
   window.localStorage.removeItem("join-user-email");
   window.localStorage.removeItem("join-profile-color");
   window.localStorage.setItem("join-session-mode", "guest");
-  window.sessionStorage.removeItem("session-initialized");
-  window.sessionStorage.removeItem("session-contacts");
-  window.sessionStorage.removeItem("session-tasks");
+  window.localStorage.removeItem("session-initialized");
+  window.localStorage.removeItem("session-contacts");
+  window.localStorage.removeItem("session-tasks");
   document.getElementById("guest-login-button").disabled = true;
   window.location.href = "./pages/summary.html";
 }

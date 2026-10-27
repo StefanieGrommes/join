@@ -191,17 +191,13 @@ function initBoardMoveMenu() {
 }
 
 /**
- * Starts dragging a card (disabled on screens up to 360px).
+ * Starts dragging a card regardless of viewport width.
  *
  * @param {DragEvent} event - The dragstart event.
  * @param {HTMLElement} card - The dragged card.
  * @returns {void}
  */
 function handleCardDragStart(event, card) {
-  if (window.matchMedia("(max-width: 360px)").matches) {
-    event.preventDefault();
-    return;
-  }
   draggedCard = card;
   card.classList.add("is-dragging");
   card.setAttribute("data-dragging", "true");

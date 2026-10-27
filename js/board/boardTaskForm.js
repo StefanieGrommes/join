@@ -58,27 +58,44 @@ function fillAssignedContacts(assigned) {
 function openAddTaskEditModal(task) {
   closeBoardTaskModal();
   editingTaskId = task.id;
+  setEditModalTexts();
+  fillTaskFields(task);
+  fillAssignedContacts(task.assignedTo || []);
+  fillSubtaskList(task.subtasks || []);
+  openBoardTaskModal();
+}
+
+/**
+ * Sets the title and the save button label for edit mode.
+ * @returns {void}
+ */
+function setEditModalTexts() {
   boardTaskTitle.textContent = "Edit Task";
   boardTaskSaveLabel.firstChild.textContent = "Save changes ";
+}
+
+/**
+ * Fills the form fields and the priority with the task data.
+ * @param {Object} task - The task to edit.
+ * @returns {void}
+ */
+function fillTaskFields(task) {
   taskTitleInput.value = task.title || "";
   document.getElementById("task-description").value = task.description || "";
   dueDate.value = task.dueDate || "";
   taskCategory.value = task.category || "";
   changePriority(document.querySelector(`.priority-${task.priority || "medium"}`));
-  fillAssignedContacts(task.assignedTo || []);
-  (task.subtasks || []).forEach((subtask) => {
-    subTaskList.insertAdjacentHTML("beforeend", getSubtaskItemTemplate(subtask.label));
-  });
-  openBoardTaskModal();
 }
 
 /**
- * Called by submitForm() after saving. Closes the overlay and redraws the board.
+ * Adds the subtasks of the task to the subtask list.
+ * @param {Object[]} subtasks - The subtasks of the task.
  * @returns {void}
  */
-function onTaskSaved() {
-  closeBoardTaskModal();
-  renderBoard();
+function fillSubtaskList(subtasks) {
+  subtasks.forEach((subtask) => {
+    subTaskList.insertAdjacentHTML("beforeend", getSubtaskItemTemplate(subtask.label));
+  });
 }
 
 /**

@@ -1,25 +1,28 @@
-/** @type {string} Current email error message; only updated on blur. */
+const feedbackPassword = document.getElementById("signup-feedback-password");
+const feedbackConfirm = document.getElementById("signup-feedback-password-confirm");
+const feedbackName = document.getElementById("signup-feedback-name");
+const feedbackEmail = document.getElementById("signup-feedback-email");
 let signupEmailMessage = "";
-
-/** @type {string} Error message of the last failed submit, e.g. email already registered. */
 let signupSubmitMessage = "";
 
 /**
- * Checks that the name has at least 2 characters.
+ * Checks that the name has at least 2 characters and no digits.
  * @param {string} value - Entered name.
  * @returns {boolean} True if the name is valid.
  */
 function isValidSignupName(value) {
-  return value.trim().length >= 2;
+  const name = value.trim();
+  return name.length >= 2 && !/\d/.test(name);
 }
 
 /**
- * Checks that the email has the format "text@text.ending".
+ * Checks that the email has the format "text@domain.ending" with a domain of at least
+ * 2 characters and an ending of at least 2 letters.
  * @param {string} value - Entered email.
  * @returns {boolean} True if the email is valid.
  */
 function isValidSignupEmail(value) {
-  return /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(value.trim());
+  return /^[^\s@]+@[^\s@.\d]{2,}(?:\.[^\s@.\d]+)*\.\p{L}{2,}$/u.test(value.trim());
 }
 
 /**
@@ -45,6 +48,23 @@ function getMissingPasswordRules(value) {
 }
 
 /**
+ * Returns an error message for the domain part of an email.
+ * @param {string} domain - Text after the @ sign.
+ * @returns {string} Error message, empty if the domain is valid.
+ */
+function getEmailDomainError(domain) {
+  if (!domain) return "Email is missing a domain after the @ sign.";
+  if (!domain.includes(".")) return "Email domain is missing a dot, e.g. example.com.";
+  if (domain.startsWith(".")) return "Email domain must not start with a dot.";
+  if (domain.endsWith(".")) return "Email domain must not end with a dot.";
+  if (domain.includes("..")) return "Email domain must not contain two dots in a row.";
+  if (domain.split(".")[0].length < 2) return "Email domain needs at least 2 characters before the dot.";
+  if (/\d/.test(domain)) return "Email domain must not contain numbers.";
+  if (!/\.\p{L}{2,}$/u.test(domain)) return "Email ending must have at least 2 letters, e.g. .com.";
+  return "";
+}
+
+/**
  * Returns an error message for the given email or an empty string if it is valid.
  * @param {string} value - Entered email address.
  * @returns {string} Error message, empty if the email is valid.
@@ -57,32 +77,22 @@ function getEmailError(value) {
   if (email.split("@").length > 2) return "Email must contain only one @ sign.";
   const [local, domain] = email.split("@");
   if (!local) return "Email is missing text before the @ sign.";
-  if (!domain) return "Email is missing a domain after the @ sign.";
-  if (!domain.includes(".")) return "Email domain is missing a dot, e.g. example.com.";
-  if (domain.startsWith(".")) return "Email domain must not start with a dot.";
-  if (!/\.[^.]+$/.test(domain)) return "Email is missing an ending after the dot, e.g. .com.";
+  const domainError = getEmailDomainError(domain);
+  if (domainError) return domainError;
   return isValidSignupEmail(email) ? "" : "Please enter a valid email address.";
 }
 
 /**
- * Collects all currently active feedback messages for the signup form.
- * @returns {string[]} Messages in display order, empty if everything is valid.
+ * Returns the validation messages for the name (digits, too short).
+ * @returns {string[]} The messages or an empty list.
  */
-function getSignupFeedbackMessages() {
-  const password = document.getElementById("signup-password");
-  const confirmation = document.getElementById("signup-confirm-password");
-  const missing = password.value.length > 0 ? getMissingPasswordRules(password.value) : [];
-  const mismatch = confirmation.value.length > 0 && confirmation.value !== password.value;
-  const messages = getSignupRequiredMessages();
+function getSignupNameMessages() {
   const name = document.getElementById("signup-name");
-  if (name.dataset.touched && name.value.trim() && !isValidSignupName(name.value)) {
-    messages.push("Name needs at least 2 characters.");
-  }
-  if (signupSubmitMessage) messages.push(signupSubmitMessage);
-  if (signupEmailMessage) messages.push(signupEmailMessage);
-  if (missing.length) messages.push(`Password needs: ${missing.join(", ")}.`);
-  if (mismatch) messages.push("Passwords don't match. Please try again.");
-  return messages;
+  const value = name.value.trim();
+  if (!value) return [];
+  if (/\d/.test(value)) return ["Name must not contain numbers."];
+  if (name.dataset.touched && value.length < 2) return ["Name needs at least 2 characters."];
+  return [];
 }
 
 /**
@@ -104,38 +114,67 @@ function updateSignupAriaState() {
 }
 
 /**
- * Renders all feedback messages into the feedback area above the privacy checkbox.
+ * Updates the stored email error message (no rendering).
+ * @returns {void}
+ */
+function updateEmailMessage() {
+  const email = document.getElementById("signup-email");
+  signupEmailMessage = email.dataset.touched ? getEmailError(email.value) : "";
+}
+
+/**
+ * Returns the error message for the name field.
+ * @returns {string} Error message, empty if valid.
+ */
+function getNameError() {
+  const input = document.getElementById("signup-name");
+  if (input.dataset.touched && !input.value.trim()) return "Name is required.";
+  return getSignupNameMessages()[0] || "";
+}
+
+/**
+ * Returns the error message for the email field (required, format or submit error).
+ * @returns {string} Error message, empty if valid.
+ */
+function getEmailFieldError() {
+  const input = document.getElementById("signup-email");
+  if (input.dataset.touched && !input.value.trim()) return "Email is required.";
+  return signupEmailMessage || signupSubmitMessage;
+}
+
+/**
+ * Checks if the password field is empty and returns an error if so.
+ * @returns {string} Error message
+ */
+function getPasswordError() {
+  const input = document.getElementById("signup-password");
+  if (input.dataset.touched && !input.value) return "Password is required.";
+  const missing = input.value ? getMissingPasswordRules(input.value) : [];
+  return missing.length ? `Password needs: ${missing.join(", ")}.` : "";
+}
+
+/**
+ * Checks if the password confirmation field is empty and if the field matches the password. returns an error if so.
+ * @returns {string} Error message
+ */
+function getConfirmError() {
+  const input = document.getElementById("signup-confirm-password");
+  const password = document.getElementById("signup-password");
+  if (input.dataset.touched && !input.value) return "Confirm Password is required.";
+  if (input.value && input.value !== password.value) return "Passwords don't match. Please try again.";
+  return "";
+}
+
+/**
+ * Renders the feedback text
  * @returns {void}
  */
 function renderSignupFeedback() {
-  const box = document.getElementById("signup-feedback");
-  const lines = getSignupFeedbackMessages().map((text) => {
-    const line = document.createElement("p");
-    line.textContent = text;
-    return line;
-  });
-  box.replaceChildren(...lines);
+  feedbackName.textContent = getNameError();
+  feedbackEmail.textContent = getEmailFieldError();
+  feedbackPassword.textContent = getPasswordError();
+  feedbackConfirm.textContent = getConfirmError();
   updateSignupAriaState();
-}
-
-/**
- * Validates the email field and re-renders the feedback area (called on blur).
- * @returns {void}
- */
-function validateSignupEmailOnBlur() {
-  const email = document.getElementById("signup-email");
-  signupEmailMessage = email.dataset.touched ? getEmailError(email.value) : "";
-  renderSignupFeedback();
-}
-
-/**
- * Lists required fields left empty after interaction.
- * @returns {string[]} Required-field feedback.
- */
-function getSignupRequiredMessages() {
-  return Array.from(document.querySelectorAll("#signup-form .field input"))
-    .filter((field) => field.dataset.touched && !field.value.trim())
-    .map((field) => `${field.getAttribute("aria-label")} is required.`);
 }
 
 /**
@@ -193,6 +232,7 @@ function areSignupFieldsValid(form) {
  * @returns {void}
  */
 function updateSignupButtonState(form, policyCheckbox, signupButton) {
+  updateEmailMessage();
   renderSignupFeedback();
   signupButton.disabled = !(areSignupFieldsValid(form) && policyCheckbox.checked);
 }
@@ -206,12 +246,10 @@ function updateSignupButtonState(form, policyCheckbox, signupButton) {
 function bindSignupInput(input, update) {
   input.addEventListener("input", () => {
     signupSubmitMessage = "";
-    validateSignupEmailOnBlur();
     update();
   });
   input.addEventListener("blur", () => {
     input.dataset.touched = "true";
-    validateSignupEmailOnBlur();
     update();
   });
 }
@@ -225,6 +263,7 @@ function setupPrivacyCheckboxGate() {
   const signupButton = document.querySelector("#signup-submit-button");
   const form = document.querySelector("#signup-form");
   if (!policyCheckbox || !signupButton || !form) return;
+  /** Updates the enabled state of the signup button. @returns {void} */
   const update = () => updateSignupButtonState(form, policyCheckbox, signupButton);
   form.querySelectorAll("input").forEach((input) => bindSignupInput(input, update));
   policyCheckbox.addEventListener("change", update);

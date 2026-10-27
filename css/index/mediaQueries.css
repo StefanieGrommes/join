@@ -1,5 +1,5 @@
 @media (max-width: 768px) {
-  .app-intro {
+  .app-intro::before {
     background: rgb(42, 54, 71);
   }
 
@@ -63,6 +63,12 @@
     align-items: center;
     justify-content: center;
     gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-feedback {
+    min-height: 42px;
   }
 }
 

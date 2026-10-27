@@ -129,7 +129,6 @@ function getVisibleTasks() {
  * Renders a task card into its column.
  *
  * @param {Object} task - The task to render.
- * @param {Object<string, string>} boardState - Mapping { taskId: columnId }.
  * @returns {void}
  */
 function appendTaskCard(task) {

@@ -4,26 +4,6 @@ const categoryInfo = {
 };
 
 /**
- * Returns label and color of a category.
- * @param {string} category - "TechnicalTask" or "UserStory".
- * @returns {{label: string, color: string}} Display values.
- */
-function getCategoryInfo(category) {
-  return categoryInfo[category] || { label: category || "", color: "#2d8cff" };
-}
-
-/**
- * Escapes text for safe use in HTML.
- * @param {string} text - The raw text.
- * @returns {string} The escaped text.
- */
-function escapeHtml(text) {
-  const div = document.createElement("div");
-  div.textContent = String(text ?? "");
-  return div.innerHTML;
-}
-
-/**
  * Returns the HTML of one sidebar navigation button.
  * @param {{id: string, label: string, icon: string}} item - Navigation entry.
  * @param {string} activePage - Id of the currently active page.
@@ -239,4 +219,51 @@ function getTaskDetailTemplate(task, view) {
       </div>
     </article>
   `;
+}
+
+/**
+ * Builds the HTML for the detail view of a contact.
+ * @param {Object} contact - Contact with id, firstName, lastName, email and phone
+ * @returns {string} HTML string of the detail view
+ */
+function getContactDetailTemplate(contact) {
+  return ` <div class="contact-detail">
+      <div
+        class="contact-avatar-large"
+        style="background-color: ${getContactColor(contact.id)}"
+      >
+        ${getInitials(contact.firstName, contact.lastName)}
+      </div>
+      <div class="contact-detail-head">
+        <p class="contact-detail-name">${contact.firstName} ${contact.lastName}</p>
+        <div class="contact-detail-actions">
+          <button class="detail-action-btn" onclick="openEditDialog('${contact.id}')">
+            <img class="icon-edit" src="../assets/edit.svg" alt="" /> Edit
+          </button>
+          <button class="detail-action-btn" onclick="deleteContact('${contact.id}')">
+            <img class="icon-delete" src="../assets/delete.svg" alt="" /> Delete
+          </button>
+        </div>
+      </div>
+    </div>
+    <p class="section-label">Contact Information</p>
+    <div class="contact-detail-field">
+      <p class="detail-label">Email</p>
+      <a href="mailto:${contact.email}" class="contact-email">${contact.email}</a>
+    </div>
+    <div class="contact-detail-field">
+      <p class="detail-label">Phone</p>
+      <p>${contact.phone}</p>
+    </div>
+    <button class="detail-menu-btn" onclick="toggleDetailMenu()">
+      <img src="../assets/more-vert.svg" alt="More options" />
+    </button>
+    <div class="detail-menu" id="detailMenu">
+      <button class="detail-action-btn" onclick="openEditDialog('${contact.id}')">
+        <img class="icon-edit" src="../assets/edit.svg" alt="" />Edit
+      </button>
+      <button class="detail-action-btn" onclick="deleteContact('${contact.id}')">
+        <img class="icon-delete" src="../assets/delete.svg" alt="" />Delete
+      </button>
+    </div>`;
 }

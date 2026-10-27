@@ -99,7 +99,7 @@ function getBoardContactInitials(contact) {
 }
 
 /**
- * Finds a contact by its id in the session storage.
+ * Finds a contact by its id in the localStorage cache.
  * @param {{id: string}|string} ref - Assigned entry ({id}) or plain id.
  * @returns {Object|null} The found contact or null.
  */
@@ -110,7 +110,7 @@ function getContactById(ref) {
 
 /**
  * Renders a round avatar with initials in the contact color.
- * @param {Object|null} contact - Contact from the session storage.
+ * @param {Object|null} contact - Contact from the localStorage cache.
  * @returns {string} HTML string of the avatar, empty if there is no contact.
  */
 function renderAvatar(contact) {
@@ -209,4 +209,24 @@ function renderTaskDetail(task) {
     assigned: renderDetailAssignees(task.assignedTo),
     subtasks: renderDetailSubtasks(task.subtasks),
   });
+}
+
+/**
+ * Returns label and color of a category.
+ * @param {string} category - "TechnicalTask" or "UserStory".
+ * @returns {{label: string, color: string}} Display values.
+ */
+function getCategoryInfo(category) {
+  return categoryInfo[category] || { label: category || "", color: "#2d8cff" };
+}
+
+/**
+ * Escapes text for safe use in HTML.
+ * @param {string} text - The raw text.
+ * @returns {string} The escaped text.
+ */
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = String(text ?? "");
+  return div.innerHTML;
 }

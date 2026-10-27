@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="../css/fonts.css">
   <link rel="stylesheet" href="../css/menu/style.css">
   <link rel="stylesheet" href="../css/signup/style.css" />
+  <script src="../js/Templates/profileMenu.js"></script>
   <script src="../js/Templates/init.js"></script>
 </head>
 
@@ -30,27 +31,32 @@
             <div class="fields-container">
               <div class="field input-with-icon">
                 <input id="signup-name" type="text" placeholder="Name" name="name" autocomplete="name"
-                  aria-label="Name" aria-describedby="signup-feedback" />
+                  aria-label="Name" aria-describedby="signup-feedback-name"  />
                 <img src="../img/icons/person(1).png" alt="Person icon" class="input-icon" />
+                 <div id="signup-feedback-name" class="signup-password-error" aria-live="polite"></div>
               </div>
 
               <div class="field input-with-icon">
                 <input id="signup-email" type="email" placeholder="Email" name="email"
-                  autocomplete="email" aria-label="Email" aria-describedby="signup-feedback" />
+                  autocomplete="email" aria-label="Email" aria-describedby="signup-feedback-email" />
                 <img src="../img/icons/mail.png" alt="Mail icon" class="input-icon" />
+                <div id="signup-feedback-email" class="signup-password-error" aria-live="polite"></div>
               </div>
 
               <div class="field input-with-icon">
                 <input id="signup-password" type="password" placeholder="Password" name="password"
-                  autocomplete="new-password" aria-label="Password" aria-describedby="signup-feedback" />
+                  autocomplete="new-password" aria-label="Password" aria-describedby="signup-feedback-password"/>
                 <img src="../img/icons/lock.png" alt="Lock icon" class="input-icon" />
+                 <div id="signup-feedback-password" class="signup-password-error" aria-live="polite"></div>
               </div>
+
               <div class="field input-with-icon">
                 <input id="signup-confirm-password" type="password" placeholder="Confirm Password"
-                  name="confirmPassword" autocomplete="new-password" aria-label="Confirm Password" aria-describedby="signup-feedback" />
+                  name="confirmPassword" autocomplete="new-password" aria-label="Confirm Password" aria-describedby="signup-feedback-password-confirm" />
+                  <div id="signup-feedback-password-confirm" class="signup-password-error" aria-live="polite"></div>
                 <img src="../img/icons/lock.png" alt="Lock icon" class="input-icon" />
               </div>
-              <div id="signup-feedback" class="signup-password-error" aria-live="polite"></div>
+
               <div class="checkbox-line">
                 <input id="privacy-policy-checkbox" type="checkbox" />
                 <span><label for="privacy-policy-checkbox">I accept the</label> <a href="../pages/privacy-notice.html">Privacy policy</a></span>

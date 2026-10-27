@@ -40,9 +40,7 @@ function renderAssignedAvatars() {
   container.innerHTML = "";
   selectedOptions.forEach((option) => {
     const avatar = option.querySelector(".contact-avatar");
-    const initials = avatar.textContent;
-    const avatarColor = avatar.style.backgroundColor;
-    container.insertAdjacentHTML("beforeend", getAvatarTemplate(initials, avatarColor));
+    container.insertAdjacentHTML("beforeend", getAvatarTemplate(avatar.textContent, avatar.style.backgroundColor));
   });
 }
 
@@ -255,31 +253,36 @@ const errorMessage = document.getElementById("error-message");
 const dueDate = document.getElementById("taskDueDate");
 const errorMessageArray = [];
 
+form.addEventListener("submit", handleTaskFormSubmit);
+
+/**
+ * Collects the error messages of the required task fields.
+ * @returns {string[]} The messages, empty if all fields are valid.
+ */
+function getTaskFormErrors() {
+  const errors = [];
+  if (taskTitleInput.value.trim().length <= 2) {
+    errors.push("The title must be at least 3 characters!");
+  }
+  if (taskCategory.value === "none") errors.push("Please enter a task category!");
+  if (dueDate.value === "") errors.push("Please enter a due date!");
+  return errors;
+}
+
 /**
  * Checks if the required fields are valid and shows error message if not.
- * Prevents the form of submitting if the fields do not pass the test.
- * @returns {void}
+ * Prevents the form from submitting if the fields do not pass the test.
+ * @param {SubmitEvent} event - The submit event of the task form.
+ * @returns {Promise<void>}
  */
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    errorMessageArray.length = 0;
-    errorMessage.innerText = "";
-    if (taskTitleInput.value.trim().length <= 2) {
-      errorMessageArray.push("The title must be at least 3 characters!");
-    }
-    if (taskCategory.value === "none") {
-      errorMessageArray.push("Please enter a task category!");
-    }
-    if (dueDate.value === ""){
-        errorMessageArray.push("Please enter a due date!");
-    }
-    if (errorMessageArray.length > 0) {
-      event.preventDefault();
-      errorMessage.innerText = errorMessageArray.join (' , ');
-      return;
-    }
-    await submitForm();
-    })
+async function handleTaskFormSubmit(event) {
+  event.preventDefault();
+  errorMessageArray.length = 0;
+  errorMessageArray.push(...getTaskFormErrors());
+  errorMessage.innerText = errorMessageArray.join(" , ");
+  if (errorMessageArray.length > 0) return;
+  await submitForm();
+}
 
 /**
  * Returns the priority of the active priority button.
@@ -316,13 +319,40 @@ function getSubtasks(previous = []) {
 }
 
 /**
- * Creates or updates a task in the session storage and the firebase.
+ * Saves the task form: updates the session data and the database, then resets the form.
  * @returns {Promise<void>}
  */
 async function submitForm() {
   const all = getSessionData("session-tasks");
   const existing = editingTaskId ? all.find((t) => t.id === editingTaskId) : null;
-  const task = {
+  const task = buildTaskFromForm(existing);
+  saveSessionData("session-tasks", upsertTask(all, task));
+  await putData("tasks/" + task.id, task);
+  resetForm();
+  if (!existing) showTaskAddedOverlay();
+  if (typeof onTaskSaved === "function") onTaskSaved();
+}
+
+/**
+ * Shows the "Task added to board" overlay and hides it again after 1.5 seconds.
+ * @returns {void}
+ */
+function showTaskAddedOverlay() {
+  const overlay = document.getElementById("task-added-overlay");
+  if (!overlay) return;
+  overlay.classList.add("visible");
+  window.setTimeout(() => {
+    window.location.href = "./board-layout.html";
+  }, 1500);
+}
+
+/**
+ * Builds the task object from the form fields.
+ * @param {Object|null} existing - The task that is edited, or null for a new task.
+ * @returns {Object} The task.
+ */
+function buildTaskFromForm(existing) {
+  return {
     id: existing ? existing.id : String(Date.now()),
     title: taskTitleInput.value.trim(),
     state: existing ? existing.state : newTaskState,
@@ -333,13 +363,17 @@ async function submitForm() {
     category: taskCategory.value,
     subtasks: getSubtasks(existing ? existing.subtasks : []),
   };
-  saveSessionData(
-    "session-tasks",
-    existing ? all.map((t) => (t.id === task.id ? task : t)) : [...all, task],
-  );
-  await putData("tasks/" + task.id, task);
-  resetForm();
-  if (typeof onTaskSaved === "function") onTaskSaved();
+}
+
+/**
+ * Replaces the task with the same id or appends it if it is new.
+ * @param {Object[]} tasks - The current tasks.
+ * @param {Object} task - The saved task.
+ * @returns {Object[]} The updated list.
+ */
+function upsertTask(tasks, task) {
+  const isEdit = tasks.some((t) => t.id === task.id);
+  return isEdit ? tasks.map((t) => (t.id === task.id ? task : t)) : [...tasks, task];
 }
 
 list.style.display = "none";
@@ -375,5 +409,3 @@ function resetAssignedContacts() {
   list.innerHTML = "";
   document.getElementById("assigned-avatars").innerHTML = "";
 }
-
-

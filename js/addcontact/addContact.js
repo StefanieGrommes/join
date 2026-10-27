@@ -204,15 +204,22 @@ function initAddContactForm() {
   form.noValidate = true;
   const fields = Array.from(form.querySelectorAll("input"));
   const submitButton = form.querySelector(".create-contact-btn");
-  const updateSubmitButtonState = () => {
-    if (submitButton) submitButton.disabled = !fields.every((field) => isFieldValid(field));
-  };
-  fields.forEach((field) => bindContactFieldEvents(field, updateSubmitButtonState));
-  form.addEventListener("submit", (event) =>
-    handleContactSubmit(event, form, fields, updateSubmitButtonState),
-  );
+  const refresh = () => updateSubmitButtonState(fields, submitButton);
+  fields.forEach((field) => bindContactFieldEvents(field, refresh));
+  form.addEventListener("submit", (event) => handleContactSubmit(event, form, fields, refresh));
   document.querySelector("dialog").addEventListener("click", closeDialogOnBackdropClick);
-  updateSubmitButtonState();
+  refresh();
+}
+
+/**
+ * Enables the submit button only if all fields are valid.
+ * @param {HTMLInputElement[]} fields - The input fields of the form.
+ * @param {HTMLButtonElement|null} submitButton - The submit button.
+ * @returns {void}
+ */
+function updateSubmitButtonState(fields, submitButton) {
+  if (!submitButton) return;
+  submitButton.disabled = !fields.every((field) => isFieldValid(field));
 }
 
 initAddContactForm();

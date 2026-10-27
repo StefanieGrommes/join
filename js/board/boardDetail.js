@@ -2,9 +2,9 @@ const taskDetailModal = document.getElementById("board-task-detail-modal");
 const taskDetailRoot = document.getElementById("board-task-detail-root");
 
 /**
- * Deletes the taks.
+ * Deletes the task.
  *
- * @param {number} taskID - The task to be deleted.
+ * @param {string} taskId - Id of the task to be deleted.
  * @returns {void}
  */
 function deleteTask(taskId) {
@@ -108,7 +108,6 @@ function initTaskDetailModal() {
   document.addEventListener("keydown", handleDetailEscape);
 }
 
-
 /**
  * Closes the detailed Task Dialog.
  *
@@ -124,6 +123,7 @@ function closeDetailModal() {
 /**
  * Opens the detailed Task Dialog.
  *
+ * @param {Object} task - The task to show.
  * @returns {void}
  */
 function openDetailModal(task) {

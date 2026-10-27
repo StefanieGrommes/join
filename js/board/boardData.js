@@ -27,12 +27,10 @@ function getColumnLabel(columnId) {
   return columnLabels[columnId] || "Board";
 }
 
-
 /**
  * Returns the id of the column a task is shown in.
  *
  * @param {Object} task - The task.
- * @param {Object<string, string>} boardState - Mapping { taskId: columnId }.
  * @returns {string} A valid column id, "todo" if the task has no valid mapping.
  */
 function getTaskColumnId(task) {
@@ -53,7 +51,7 @@ const columnToState = {
 };
 
 /**
- * Returns all tasks from the session storage.
+ * Returns all tasks from the localStorage cache.
  * @returns {Object[]} The tasks.
  */
 function getTasks() {
@@ -61,7 +59,7 @@ function getTasks() {
 }
 
 /**
- * Saves the task list to the session storage.
+ * Saves the task list to the localStorage cache.
  * @param {Object[]} items - The tasks.
  * @returns {void}
  */
@@ -79,7 +77,7 @@ function getTaskById(taskId) {
 }
 
 /**
- * Replaces a task in the session storage and writes it to the firebase.
+ * Replaces a task in the localStorage cache and writes it to Firebase.
  * @param {Object} task - The changed task.
  * @returns {void}
  */
