@@ -1,6 +1,61 @@
+.subtask-list-buttons button {
+  background: transparent;
+  border: unset;
+}
+
+.subtask-list-buttons img {
+  width: 24px;
+  height: 24px;
+}
+
+.subtask-list-buttons {
+  visibility: hidden;
+}
+
+.subtask-list-item:hover .subtask-list-buttons {
+  visibility: visible;
+}
+
+.subtask-list-item {
+  font-size: 1rem;
+  border-radius: 10px;
+  border: none;
+  padding: 6.5px 16px;
+  height: 32px;
+  position: relative;
+}
+
+.subtask-list-item:not(.editing):hover {
+  background-color: var( --navbar-color);
+}
+
+.subtask-list-item button {
+  display: flex;
+  align-items: center;
+  border: unset;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.subtask-list-item .subtask-text {
+  display: inline-block;
+  max-width: calc(100% - 100px);
+  vertical-align: bottom;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subtask-list {
+  list-style-position: inside;
+  height: 160px;
+  overflow-y: auto;
+}
+
 .form-footer {
   display: flex;
   flex-direction: column;
+  position: relative;
   margin-top: 124px;
   gap: 12px;
 }
@@ -49,7 +104,6 @@
 
 .btn-create {
   border: unset;
-  width: 183px;
   height: 56px;
   font-size: 1.25rem;
   font-weight: 700;
@@ -92,6 +146,7 @@
 .icon-check {
   width: 24px;
   height: 24px;
+  flex-shrink: 0;
   transform: translateY(1px);
   background-color: currentColor;
   -webkit-mask: url('../../assets/checkWhite.svg') no-repeat center / contain;
@@ -131,4 +186,9 @@
 .error-message {
   font-size: 1.25rem;
   color: rgb(198, 40, 40);
+}
+
+.error-wrapper {
+  position: absolute;
+  bottom: 120px;
 }

@@ -125,12 +125,14 @@ function renderAvatar(contact) {
  */
 function renderAssignedContacts(assignedIds) {
   if (!Array.isArray(assignedIds) || !assignedIds.length) return '';
-  const avatars = assignedIds
+  const contacts = assignedIds
     .map((contactId) => getContactById(contactId))
-    .filter(Boolean)
+    .filter(Boolean);
+  const avatars = contacts
+    .slice(0, 4)
     .map((contact) => renderAvatar(contact))
     .join('');
-  return getAssignedContactsTemplate(avatars);
+  return getAssignedContactsTemplate(avatars, contacts.length);
 }
 
 /**

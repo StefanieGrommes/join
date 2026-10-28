@@ -24,7 +24,7 @@
                 <input id="task-title" type="text" placeholder="Enter a title" />
               </div>
               <div class="form-field">
-                <label for="taskDescription">Description</label>
+                <label for="task-description">Description</label>
                 <textarea id="task-description" placeholder="Enter a Description"></textarea>
               </div>
 
@@ -74,7 +74,7 @@
               <div class="form-field">
                 <p class="field-label">Assigned to</p>
                 <div class="dropdown-container" id="assigned-to-dropdown">
-                   <input type="text" class="toggle-task" placeholder="Select contacts to assign" onclick="toggleContactList()">
+                   <input id="assigned-input" name="assigned-to" type="text" class="toggle-task" placeholder="Select contacts to assign" onclick="toggleContactList()">
                 <button type="button" class="assigned-dropdown-btn" onclick="toggleContactList()"><img src="../assets/arrowdropdown.svg" alt="Dropdown arrow"></button>
                 </div>
                <ul id="assigned-to-list" class="contact-list"></ul>

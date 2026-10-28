@@ -150,6 +150,7 @@ function appendTaskCard(task) {
  * @returns {void}
  */
 function renderBoard() {
+  closeAssignedContactsPopover();
   resetBoardColumns();
   const visibleTasks = getVisibleTasks();
   if (hasActiveSearch() && visibleTasks.length === 0) {
