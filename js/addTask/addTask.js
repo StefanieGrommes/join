@@ -14,6 +14,17 @@ async function initAddTask() {
 }
 
 /**
+ * Closes the dropdown list when clicking on backdrop.
+ * @returns {<void>}
+ */
+document.addEventListener("click", (event) => {
+  const dropdown = document.getElementById("assigned-to-dropdown");
+  if (!dropdown.classList.contains("open")) return;
+  if (event.target.closest("#assigned-to-dropdown, #assigned-to-list")) return;
+  toggleContactList();
+});
+
+/**
  * Opens or closes the assigned-to dropdown. On close the selected avatars are rendered.
  * @returns {void}
  */
@@ -72,11 +83,11 @@ function toggleContactSelection(option) {
   const checkboxImg = option.querySelector("img[data-checked]");
   if (checkboxImg.dataset.checked === "true") {
     option.classList.remove("selected");
-    checkboxImg.src = "../assets/checkbox.svg";
+    checkboxImg.src ="../assets/checkbox.svg";
     checkboxImg.dataset.checked = "false";
     return;
   }
-  checkboxImg.src = "../assets/checkbox-checked.svg";
+  checkboxImg.src = "../assets/checkbox-checked-white.svg";
   checkboxImg.dataset.checked = "true";
   option.classList.add("selected");
 }
