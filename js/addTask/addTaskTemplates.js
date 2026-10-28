@@ -15,13 +15,13 @@ function getAvatarTemplate(initials, avatarColor) {
  */
 function getContactOptionTemplate(contact) {
   return `
-    <li class="contact-option" data-contact-id="${contact.id}">
+    <li class="contact-option" data-contact-id="${escapeHtml(contact.id)}">
       <div class="name-and-initials">
-        <span class="contact-avatar" style="background-color: ${getContactColor(contact.id)}">${getUserInitials(contact)}</span>
-        <span class="contact-name">${getFullUserName(contact)}</span>
+        <span class="contact-avatar" style="background-color: ${escapeHtml(getContactColor(contact.id))}">${escapeHtml(getUserInitials(contact))}</span>
+        <span class="contact-name">${escapeHtml(getFullUserName(contact))}</span>
       </div>
       <button class="checked-btn" type="button">
-        <img src="../assets/checkbox.svg" alt="checkbox" data-checked="false"/>
+        <img src="../assets/checkbox.svg" alt="" data-checked="false"/>
       </button>
     </li>`;
 }

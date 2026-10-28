@@ -88,11 +88,20 @@ function getBoardAvatarTemplate(color, initials) {
 
 /**
  * Returns the HTML container for the avatars of the assigned contacts.
- * @param {string} avatars - Prepared HTML of all avatars.
+ * @param {string} avatars - Prepared HTML of the visible contact avatars.
+ * @param {number} assignedCount - Total number of assigned contacts.
  * @returns {string} HTML string of the container.
  */
-function getAssignedContactsTemplate(avatars) {
-  return `<div class="board-assigned-contacts">${avatars}</div>`;
+function getAssignedContactsTemplate(avatars, assignedCount) {
+  const canShowList = assignedCount >= 4;
+  const triggerAttributes = canShowList
+    ? ` tabindex="0" role="button" aria-expanded="false" aria-label="Show ${assignedCount} assigned contacts"`
+    : "";
+  const triggerClass = canShowList ? " has-assignee-list" : "";
+  const overflowCount = assignedCount > 4
+    ? `<span class="board-contact-overflow" aria-hidden="true">+${assignedCount - 4}</span>`
+    : "";
+  return `<div class="board-assigned-contacts${triggerClass}"${triggerAttributes}>${avatars}${overflowCount}</div>`;
 }
 
 /**

@@ -25,6 +25,46 @@
     align-items: center;
   }
 
+  .board-assigned-contacts.has-assignee-list {
+    cursor: pointer;
+  }
+
+  .board-assigned-contact-list {
+    position: fixed;
+    z-index: 1200;
+    display: block;
+    width: min(320px, calc(100vw - 16px));
+    max-height: min(320px, calc(100dvh - 16px));
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 8px;
+    border-radius: 10px;
+    background: rgb(255, 255, 255);
+    box-shadow: var(--box-shadow-default);
+    scrollbar-width: thin;
+    scrollbar-color: rgb(168, 175, 184) transparent;
+  }
+
+  .board-assigned-contact-list[hidden] {
+    display: none;
+  }
+
+  .board-assigned-contact-list .contact-option {
+    cursor: default;
+  }
+
+  .board-assigned-contact-list .name-and-initials {
+    min-width: 0;
+  }
+
+  .board-assigned-contact-list .contact-name {
+    overflow-wrap: anywhere;
+  }
+
+  .board-assigned-contact-list .checked-btn {
+    cursor: default;
+  }
+
   .board-contact-avatar {
     width: 32px;
     height: 32px;
@@ -42,6 +82,24 @@
 
   .board-contact-avatar + .board-contact-avatar {
     margin-left: -8px;
+  }
+
+  .board-contact-overflow {
+    width: 32px;
+    height: 32px;
+    margin-left: -8px;
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(229, 231, 235);
+    color: rgb(55, 65, 81);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .board-card:active {
