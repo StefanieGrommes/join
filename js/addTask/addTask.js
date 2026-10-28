@@ -25,20 +25,37 @@ document.addEventListener("click", (event) => {
 });
 
 /**
- * Opens or closes the assigned-to dropdown. On close the selected avatars are rendered.
+ * Opens or closes the assigned-to dropdown.
  * @returns {void}
  */
 function toggleContactList() {
   const dropdown = document.getElementById("assigned-to-dropdown");
-  if (dropdown.classList.contains("open")) {
-    dropdown.classList.remove("open");
-    list.style.display = "none";
-    renderAssignedAvatars();
-    return;
-  }
+  if (dropdown.classList.contains("open")) closeContactList(dropdown);
+  else openContactList(dropdown);
+}
+
+/**
+ * Closes the dropdown, shows the avatars again and renders the selected ones.
+ * @param {HTMLElement} dropdown - The assigned-to dropdown container.
+ * @returns {void}
+ */
+function closeContactList(dropdown) {
+  dropdown.classList.remove("open");
+  list.style.display = "none";
+  document.getElementById("assigned-avatars").style.display = "flex";
+  renderAssignedAvatars();
+}
+
+/**
+ * Opens the dropdown, renders the contact options once and hides the avatars.
+ * @param {HTMLElement} dropdown - The assigned-to dropdown container.
+ * @returns {void}
+ */
+function openContactList(dropdown) {
   if (!list.children.length) renderContactOptions(getSessionData("session-contacts"));
   dropdown.classList.add("open");
   list.style.display = "block";
+  document.getElementById("assigned-avatars").style.display = "none";
 }
 
 /**
