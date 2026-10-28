@@ -1,3 +1,7 @@
+html {
+  scrollbar-gutter: stable;
+}
+
 .add-task-content {
   height: 100%;
   width: 100%;
@@ -6,7 +10,6 @@
   padding-bottom: 110px;
   display: flex;
   flex-direction: column;
-
 }
 
 .add-task-content h1 {
@@ -48,6 +51,7 @@
 }
 
 .form-field {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -61,8 +65,7 @@
 
 .form-field input,
 .form-field textarea,
-.toggle-task
- {
+.toggle-task {
   border: 1px solid rgba(209, 209, 209, 1);
   background-color: rgba(255, 255, 255, 1);
   border-radius: 10px;
@@ -85,7 +88,6 @@
 #subtaskInput {
   padding-right: 96px;
 }
-
 
 .form-field textarea {
   min-height: 120px;
@@ -112,6 +114,7 @@
 .field-error {
   color: rgba(230, 0, 38, 1);
   font-size: 16px;
+  min-height: 20px;
 }
 
 .required-star {
@@ -130,12 +133,12 @@
 
 input[type="date"]::-webkit-inner-spin-button,
 input[type="date"]::-webkit-calendar-picker-indicator {
-    opacity: 0;
-    -webkit-appearance: none;
-    position: absolute;
-    top: 50%;
-    right: 14px;
-    transform: translateY(-50%);
+  opacity: 0;
+  -webkit-appearance: none;
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
 }
 
 .dropdown-container {
@@ -162,7 +165,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .dropdown-container button:hover {
-   background-color: var(--hover-bg-color-grey);
+  background-color: var(--hover-bg-color-grey);
 }
 
 .dropdown-container.open button {
@@ -200,8 +203,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.4);
   cursor: pointer;
   border: 1px solid rgb(209, 209, 209);
-  transition: box-shadow 100ms,
-              background-color 100ms;
+  transition:
+    box-shadow 100ms,
+    background-color 100ms;
 }
 
 .priority-btn:hover {
@@ -274,10 +278,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .name-and-initials {
- display: flex;
- align-items:center;
- gap: 16px;
-
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .contact-option:hover {
@@ -299,8 +302,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   gap: 10px;
   max-width: 100%;
   max-height: 48px;
+  min-height: 48px;
   overflow-y: auto;
   overflow-x: hidden;
+}
+#assigned-to-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: white;
+  max-height: 280px;
+  overflow-y: auto;
 }
 
 .checked-btn {

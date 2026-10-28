@@ -216,3 +216,12 @@ function syncCardContent(task) {
   if (bar) bar.style.width = `${progress.width}%`;
   if (label) label.textContent = progress.label;
 }
+
+/**
+ * Closes the overlay and redraws the board after a task was saved.
+ * @returns {void}
+ */
+function onTaskSaved() {
+  closeBoardTaskModal();
+  renderBoard();
+}

@@ -105,6 +105,17 @@ function toggleAssignedContactsPopover(trigger) {
 }
 
 /**
+ * Closes the overlay, redraws the board and reopens the detail view after an edit.
+ * @returns {void}
+ */
+function onTaskSaved() {
+  const savedTaskId = editingTaskId;
+  closeBoardTaskModal();
+  renderBoard();
+  if (savedTaskId) openDetailModal(getTaskById(savedTaskId));
+}
+
+/**
  * Builds the existing Add Task contact list using only the task's assigned contacts.
  * @param {Object[]} contacts - Contacts assigned to the task.
  * @returns {HTMLUListElement} The scrollable contact list.
