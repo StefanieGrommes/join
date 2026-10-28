@@ -258,7 +258,7 @@ subtaskInput.addEventListener("keydown", (event) => {
 
 /**
  * Handles clicks inside the subtask list. A click on the delete button removes the
- * subtask, any other click on an item that is not being edited starts the edit mode.
+ * subtask, any other click on an item that is not being edited starts the edifot mode.
  * @param {MouseEvent} event - The click event.
  * @returns {void}
  */
