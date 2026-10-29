@@ -237,7 +237,7 @@ async function addNewContact(form) {
 async function loadContacts() {
   let response = await fetch(BASE_URL + "contacts.json");
   let data = await response.json();
-  allContacts = Object.values(data || {}).filter(Boolean);
+ allContacts = Object.values(data || {}).filter((c) => c && c.firstName);
   renderContactList(allContacts);
 }
 
