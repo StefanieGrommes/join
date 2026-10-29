@@ -127,11 +127,7 @@ function updateSessionHeader() {
     if (mode !== "guest" && (mode !== "demo" || !name)) return;
     const initials = mode === "guest" ? "G" : getDemoInitials(name);
     const label = mode === "guest" ? "Guest profile" : `${name} (profile)`;
-    let color = window.localStorage.getItem("join-profile-color");
-    if (!color) {
-        color = createRandomProfileColor();
-        window.localStorage.setItem("join-profile-color", color);
-    }
+    const color = getSessionProfileColor();
     document.querySelectorAll(profileButtonSelector)
         .forEach((button) => showProfileInitials(button, initials, label, color));
 }
@@ -356,3 +352,18 @@ function redirectWithoutSession() {
 redirectWithoutSession();
 window.addEventListener("pageshow", redirectWithoutSession);
 window.addEventListener("storage", redirectWithoutSession);
+
+/**
+ * Returns the profile color: the color of the own contact, or a stored random one.
+ * @returns {string} A hex color code.
+ */
+function getSessionProfileColor() {
+  const id = window.localStorage.getItem("join-contact-id");
+  if (id && typeof getContactColor === "function") return getContactColor(id);
+  let color = window.localStorage.getItem("join-profile-color");
+  if (!color) {
+    color = createRandomProfileColor();
+    window.localStorage.setItem("join-profile-color", color);
+  }
+  return color;
+}

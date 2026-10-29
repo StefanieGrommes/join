@@ -1,20 +1,7 @@
 const CONTACT_COLORS = [
-  "#FF7A00",
-  "#1FD7C1",
-  "#462F8A",
-  "#6E52FF",
-  "#9327FF",
-  "#FFC701",
-  "#FF745E",
-  "#FFA35E",
-  "#FC71FF",
-  "#FFBB2B",
-  "#FF4646",
-  "#00BEE8",
-  "#C3FF2B",
-  "#FF5EB3",
-  "#0038FF",
-  "#FFE62B",
+  "#FF7A00","#1FD7C1","#462F8A","#6E52FF","#9327FF","#FFC701",
+  "#FF745E","#FFA35E","#FC71FF","#FFBB2B","#FF4646","#00BEE8",
+  "#C3FF2B","#FF5EB3","#0038FF","#FFE62B"
 ];
 
 let allContacts = [];
@@ -44,10 +31,8 @@ function getContactColor(id) {
  * @returns {string} Initials in uppercase, e.g. "AM"
  */
 function getInitials(firstName, lastName) {
-  let first = firstName.charAt(0);
-  let last = lastName.charAt(0);
-  return (first + last).toUpperCase();
-}
+    return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+  }
 
 /**
  * Builds the HTML for one letter group including all its contacts.
@@ -226,7 +211,8 @@ async function addNewContact(form) {
 async function loadContacts() {
   let response = await fetch(BASE_URL + "contacts.json");
   let data = await response.json();
- allContacts = Object.values(data || {}).filter((c) => c && c.firstName);
+  allContacts = Object.values(data || {}).filter((c) => c && c.firstName);
+  await ensureOwnContact();
   renderContactList(allContacts);
 }
 
@@ -251,54 +237,48 @@ function openEditDialog(id) {
 }
 
 /**
- * Checks whether the contact belongs to the logged-in account.
- * @param {string} id - The contact id.
- * @returns {boolean} True for the own contact.
+ * Builds the contact object from the form and keeps the id of the edited contact.
+ * @param {HTMLFormElement} form - The contact form.
+ * @returns {Object} The edited contact.
  */
-function isOwnContact(id) {
-  return id === window.localStorage.getItem("join-contact-id");
+function buildEditedContact(form) {
+  const contact = buildContactFromForm(form);
+  contact.id = editingContactId;
+  return contact;
 }
 
 /**
- * Finds the database key under which a contact is stored (key and id can differ).
- * @param {string} id - The contact id.
- * @returns {Promise<string>} The key, falls back to the id.
- */
-async function findContactKey(id) {
-  const response = await fetch(BASE_URL + "contacts.json");
-  const list = (await response.json()) || {};
-  return Object.keys(list).find((key) => list[key] && list[key].id === id) ?? id;
-}
-
-/**
- * Finds the user key of the logged-in account and checks for an email conflict.
- * @param {Object} contact - The edited own contact.
- * @returns {Promise<{key: string|null, conflict: boolean}>} The user key and conflict state.
- */
-async function findOwnUserKey(contact) {
-  const response = await fetch(BASE_URL + "users.json");
-  const users = (await response.json()) || {};
-  const email = contact.email.trim().toLowerCase();
-  const keys = Object.keys(users).filter((key) => users[key]);
-  const conflict = keys.some((key) =>
-    users[key].contactId !== contact.id && String(users[key].email).toLowerCase() === email);
-  const key = keys.find((k) => users[k].contactId === contact.id) ?? null;
-  return { key, conflict };
-}
-
-/**
- * Writes name and email of the edited own contact to the account and the session.
- * @param {Object} contact - The edited own contact.
- * @param {string} userKey - Database key of the account.
+ * Writes the edited contact to the database and, for the own contact, to the account.
+ * @param {Object} contact - The edited contact.
+ * @param {{key: string|null}|null} own - The own account info, or null for other contacts.
  * @returns {Promise<void>}
  */
-async function updateOwnAccount(contact, userKey) {
-  const name = `${contact.firstName} ${contact.lastName}`.trim();
-  await putData(`users/${userKey}/name`, name);
-  await putData(`users/${userKey}/email`, contact.email);
-  window.localStorage.setItem("join-demo-name", name);
-  window.localStorage.setItem("join-user-email", contact.email);
-  refreshSessionHeader();
+async function persistEditedContact(contact, own) {
+  await putData("contacts/" + (await findContactKey(contact.id)), contact);
+  if (own && own.key !== null) await updateOwnAccount(contact, own.key);
+}
+
+/**
+ * Replaces the contact in the list and updates the local cache.
+ * @param {Object} contact - The edited contact.
+ * @returns {void}
+ */
+function updateContactInList(contact) {
+  const index = allContacts.findIndex((c) => c.id === contact.id);
+  allContacts[index] = contact;
+  syncContactsCache();
+}
+
+/**
+ * Redraws the list, opens the detail view and shows the success message.
+ * @param {Object} contact - The edited contact.
+ * @returns {void}
+ */
+function showEditedContact(contact) {
+  renderContactList(allContacts);
+  openContactDetail(contact.id, document.querySelector(`[data-id="${contact.id}"]`));
+  closeDialog();
+  showSuccessToast("Contact successfully edited");
 }
 
 /**
@@ -307,31 +287,15 @@ async function updateOwnAccount(contact, userKey) {
  * @returns {Promise<void>}
  */
 async function saveEditedContact(form) {
-  let contact = buildContactFromForm(form);
-  contact.id = editingContactId;
-  let button = form.querySelector(".create-contact-btn");
-  let own = isOwnContact(contact.id) ? await findOwnUserKey(contact) : null;
+  const contact = buildEditedContact(form);
+  const button = form.querySelector(".create-contact-btn");
+  const own = isOwnContact(contact.id) ? await findOwnUserKey(contact) : null;
   if (own && own.conflict) return showToastMessage("This email is already used by another account.");
   button.disabled = true;
-  await putData("contacts/" + (await findContactKey(contact.id)), contact);
-  if (own && own.key !== null) await updateOwnAccount(contact, own.key);
+  await persistEditedContact(contact, own);
   button.disabled = false;
-  let index = allContacts.findIndex((c) => c.id === contact.id);
-  allContacts[index] = contact;
-  saveSessionData("session-contacts", allContacts);
-  renderContactList(allContacts);
-  openContactDetail(contact.id, document.querySelector(`[data-id="${contact.id}"]`));
-  closeDialog();
-  showSuccessToast("Contact successfully edited");
-}
-/**
- * Returns the name to display for a contact, with " (me)" for the own contact.
- * @param {Object} contact - Contact with id, firstName and lastName.
- * @returns {string} The display name.
- */
-function getContactDisplayName(contact) {
-  const name = `${contact.firstName} ${contact.lastName}`;
-  return isOwnContact(contact.id) ? `${name} (me)` : name;
+  updateContactInList(contact);
+  showEditedContact(contact);
 }
 
 /**
@@ -350,7 +314,6 @@ function renderDialogAvatar(contact) {
  * @returns {void}
  */
 function removeContactFromTaskCache(id) {
-  let assigned = tasks[key]?.assignedTo;
   const tasks = getSessionData("session-tasks").map((task) => ({
     ...task,
     assignedTo: (task.assignedTo || []).filter((entry) => entry.id !== id),
@@ -384,7 +347,7 @@ async function removeContactFromTasks(id) {
   let response = await fetch(BASE_URL + "tasks.json");
   let tasks = await response.json();
   for (let key in tasks) {
-    let assigned = tasks[key].assignedTo;
+    let assigned = tasks[key]?.assignedTo;
     if (!assigned) continue;
     let left = assigned.filter((entry) => entry.id !== id);
     if (left.length !== assigned.length) await putData(`tasks/${key}/assignedTo`, left);
