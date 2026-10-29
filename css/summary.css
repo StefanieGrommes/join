@@ -1,9 +1,12 @@
 .summary {
     display: flex;
-    height: 100%;
+    flex: 1;
+    justify-self: center;
+    align-items: center;
+    height: auto;
+    width: 100%;
     min-height: 0;
     margin-inline: 0;
-    padding: 110px 96px 12px 96px;
     box-sizing: border-box;
 }
 
@@ -11,7 +14,7 @@
     flex-grow: 0;
     max-width: 1025px;
     margin-inline: auto;
-    width: 100%;
+    width: fit-content;
 }
 
 .summary-header {
@@ -215,14 +218,10 @@ h5 {
     color: var(--accent-color);
 }
 
- .boxes-and-welcome-message {
-       margin-bottom: 127px;
-    }
-
-
-
 @media (max-width: 1300px) {
-
+    .summary {
+        padding: 20px;
+    }
     .summary-header {
         padding: 0 0 4px 0;
     }
@@ -260,17 +259,7 @@ h5 {
     }
 }
 
-@media (max-width: 940px) {
-    .summary {
-        padding: 110px min(48px, 8vw) 0 min(48px, 8vw);
-    }
-
-}
-
 @media (max-width: 768px) {
-    .summary {
-        padding: 16px 16px calc(var(--header-height) + 16px);
-    }
 
     .welcome-message {
         display: none;

@@ -141,6 +141,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   transform: translateY(-50%);
 }
 
+@supports (-moz-appearance: none) {
+  .input-with-icon img {
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+    background-color: white;
+  }
+}
+
 .dropdown-container {
   display: flex;
   position: relative;
@@ -321,7 +330,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 #assigned-to-list {
   position: absolute;
-  top: 100%;
+  top: 60%;
   left: 0;
   right: 0;
   z-index: 10;

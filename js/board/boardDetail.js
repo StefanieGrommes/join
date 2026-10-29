@@ -83,25 +83,39 @@ function handleCardClick(event) {
 }
 
 /**
- * Toggles the assigned-contact list for a task card.
- * @param {HTMLElement} trigger - The avatar row that opens the list.
- * @returns {void}
+ * Returns the assigned contacts of the task card that contains the trigger.
+ * @param {HTMLElement} trigger - The avatar row inside the task card.
+ * @returns {Object[]} The assigned contacts, or an empty array if the card or task is missing.
  */
-function toggleAssignedContactsPopover(trigger) {
-  if (assignedContactsTrigger === trigger) {
-    closeAssignedContactsPopover();
-    return;
-  }
-  closeAssignedContactsPopover();
+function getCardAssignedContacts(trigger) {
   const card = trigger.closest(".board-card--task");
-  if (!card) return;
+  if (!card) return [];
   const task = getTaskById(card.dataset.cardId);
-  const contacts = (task?.assignedTo || []).map(getContactById).filter(Boolean);
-  if (contacts.length < 4) return;
-  assignedContactsPopover = createAssignedContactsPopover(contacts);
-  assignedContactsTrigger = trigger;
-  document.body.appendChild(assignedContactsPopover);
-  positionAssignedContactsPopover(trigger);
+  return (task?.assignedTo || []).map(getContactById).filter(Boolean);
+}
+
+/**
+ * Returns the assigned contacts of the task card that contains the trigger.
+ * @param {HTMLElement} trigger - The avatar row inside the task card.
+ * @returns {Object[]} The assigned contacts, or an empty array if the card or task is missing.
+ */
+function getCardAssignedContacts(trigger) {
+  const card = trigger.closest(".board-card--task");
+  if (!card) return [];
+  const task = getTaskById(card.dataset.cardId);
+  return (task?.assignedTo || []).map(getContactById).filter(Boolean);
+}
+
+/**
+ * Returns the assigned contacts of the task card that contains the trigger.
+ * @param {HTMLElement} trigger - The avatar row inside the task card.
+ * @returns {Object[]} The assigned contacts, or an empty array if the card or task is missing.
+ */
+function getCardAssignedContacts(trigger) {
+  const card = trigger.closest(".board-card--task");
+  if (!card) return [];
+  const task = getTaskById(card.dataset.cardId);
+  return (task?.assignedTo || []).map(getContactById).filter(Boolean);
 }
 
 /**

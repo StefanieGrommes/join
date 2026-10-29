@@ -40,6 +40,7 @@ function loginAsGuest() {
   window.localStorage.removeItem("join-user-email");
   window.localStorage.removeItem("join-profile-color");
   window.localStorage.setItem("join-session-mode", "guest");
+  window.localStorage.removeItem("join-contact-id");
   window.localStorage.removeItem("session-initialized");
   window.localStorage.removeItem("session-contacts");
   window.localStorage.removeItem("session-tasks");

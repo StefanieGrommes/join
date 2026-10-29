@@ -139,4 +139,5 @@ function saveJoinUserSession(user) {
   window.localStorage.setItem("join-user-email", user.email);
   window.localStorage.setItem("join-profile-color", createRandomProfileColor());
   window.localStorage.setItem("join-session-mode", "demo");
+  window.localStorage.setItem("join-contact-id", user.contactId);
 }

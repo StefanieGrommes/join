@@ -92,11 +92,20 @@ async function fetchFooterHeader() {
  * @returns {void}
  */
 function logoutJoinSession() {
-    ["join-session-mode", "join-demo-name", "join-user-email", "join-profile-color"]
+    ["join-session-mode", "join-demo-name", "join-contact-id" , "join-user-email", "join-profile-color"]
         .forEach((key) => window.localStorage.removeItem(key));
     ["session-initialized", "session-contacts", "session-tasks"]
         .forEach((key) => window.localStorage.removeItem(key));
     window.location.replace("../index.html");
+}
+
+/**
+ * Redraws the initials in the profile circles after the session name changed.
+ * @returns {void}
+ */
+function refreshSessionHeader() {
+  document.querySelectorAll(".guest-profile-initial").forEach((el) => el.remove());
+  updateSessionHeader();
 }
 
 /**

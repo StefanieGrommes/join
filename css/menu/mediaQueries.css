@@ -134,6 +134,6 @@
 
 @media (max-width: 428px) {
   .mobile-nav-btns {
-    padding: 0;
+    padding: 8px;
   }
 }
