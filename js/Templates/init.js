@@ -201,10 +201,12 @@ function initNavbarButtonsBackground() {
 }
 
 /**
- * Inserts the mobile navigation footer on the privacy and legal notice pages.
+ * Inserts the reduced mobile navigation on the privacy and legal notice pages
+ * for visitors without a session.
  * @returns {Promise<void>}
  */
 async function renderMobilePolicyNavFooter() {
+  if (hasJoinSession()) return;
   const container = document.getElementById("nav-footer-mobile");
   const currentPage = window.location.pathname.split("/").pop();
   if (!container || !["privacy-notice.html", "legal-notice.html"].includes(currentPage))

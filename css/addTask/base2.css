@@ -55,6 +55,7 @@
 .form-footer {
   display: flex;
   flex-direction: column;
+  position: relative;
   margin-top: 124px;
   gap: 12px;
 }
@@ -103,7 +104,6 @@
 
 .btn-create {
   border: unset;
-  width: 183px;
   height: 56px;
   font-size: 1.25rem;
   font-weight: 700;
@@ -146,6 +146,7 @@
 .icon-check {
   width: 24px;
   height: 24px;
+  flex-shrink: 0;
   transform: translateY(1px);
   background-color: currentColor;
   -webkit-mask: url('../../assets/checkWhite.svg') no-repeat center / contain;
@@ -185,4 +186,9 @@
 .error-message {
   font-size: 1.25rem;
   color: rgb(198, 40, 40);
+}
+
+.error-wrapper {
+  position: absolute;
+  bottom: 120px;
 }

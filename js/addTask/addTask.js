@@ -25,17 +25,32 @@ document.addEventListener("click", (event) => {
 });
 
 /**
- * Opens or closes the assigned-to dropdown. On close the selected avatars are rendered.
+ * Opens or closes the assigned-to dropdown.
  * @returns {void}
  */
 function toggleContactList() {
   const dropdown = document.getElementById("assigned-to-dropdown");
-  if (dropdown.classList.contains("open")) {
-    dropdown.classList.remove("open");
-    list.style.display = "none";
-    renderAssignedAvatars();
-    return;
-  }
+  if (dropdown.classList.contains("open")) closeContactList(dropdown);
+  else openContactList(dropdown);
+}
+
+/**
+ * Closes the dropdown and renders the selected avatars.
+ * @param {HTMLElement} dropdown - The assigned-to dropdown container.
+ * @returns {void}
+ */
+function closeContactList(dropdown) {
+  dropdown.classList.remove("open");
+  list.style.display = "none";
+  renderAssignedAvatars();
+}
+
+/**
+ * Opens the dropdown and renders the contact options once.
+ * @param {HTMLElement} dropdown - The assigned-to dropdown container.
+ * @returns {void}
+ */
+function openContactList(dropdown) {
   if (!list.children.length) renderContactOptions(getSessionData("session-contacts"));
   dropdown.classList.add("open");
   list.style.display = "block";
@@ -243,7 +258,7 @@ subtaskInput.addEventListener("keydown", (event) => {
 
 /**
  * Handles clicks inside the subtask list. A click on the delete button removes the
- * subtask, any other click on an item that is not being edited starts the edit mode.
+ * subtask, any other click on an item that is not being edited starts the edifot mode.
  * @param {MouseEvent} event - The click event.
  * @returns {void}
  */

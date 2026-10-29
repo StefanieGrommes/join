@@ -118,3 +118,12 @@ function initBoardTaskForm() {
     if (event.target === boardTaskModal) closeBoardTaskModal();
   });
 }
+
+/**
+ * Closes the overlay and redraws the board after a task was saved.
+ * @returns {void}
+ */
+function onTaskSaved() {
+  closeBoardTaskModal();
+  renderBoard();
+}
