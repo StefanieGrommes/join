@@ -180,6 +180,10 @@
   display: flex;
 }
 
+body:has(.board-detail-modal.is-open) {
+  overflow: hidden;
+}
+
 .board-detail-modal-dialog {
   display: flex;
   border-radius: 18px;
@@ -199,7 +203,9 @@
   padding: 48px 40px 40px 48px;
   width: 100%;
   max-width: 525px;
+  max-height: calc(100dvh - 32px);
   overflow-y: auto;
+  overscroll-behavior-y: contain;
 }
 
 .board-detail-modal-body .board-detail-card::-webkit-scrollbar {

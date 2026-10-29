@@ -236,6 +236,19 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   position: relative;
 }
 
+.assigned-contact-picker {
+  position: relative;
+}
+
+.assigned-contact-picker > .contact-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  z-index: 5;
+}
+
 .contact-list {
   display: none;
   max-height: 400px;

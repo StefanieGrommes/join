@@ -179,7 +179,7 @@ function runBoardSearch() {
  * @returns {void}
  */
 function handleSearchInput(event) {
-  runBoardSearch();
+  if (event.target.value.trim() === "") runBoardSearch();
 }
 
 /**

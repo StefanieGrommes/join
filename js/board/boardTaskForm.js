@@ -2,6 +2,11 @@ const boardTaskModal = document.getElementById("board-add-task-modal");
 const boardTaskTitle = document.getElementById("board-task-dialog-title");
 const boardTaskSaveLabel = document.querySelector("#board-add-task-modal .btn-create");
 
+function onTaskSaved() {
+  closeBoardTaskModal();
+  renderBoard();
+}
+
 /**
  * Shows the add-task overlay.
  * @returns {void}

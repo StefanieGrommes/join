@@ -73,11 +73,13 @@
               </div>
               <div class="form-field">
                 <p class="field-label">Assigned to</p>
+                <div class="assigned-contact-picker">
                 <div class="dropdown-container" id="assigned-to-dropdown">
                    <input type="text" class="toggle-task" placeholder="Select contacts to assign" onclick="toggleContactList()">
                 <button type="button" class="assigned-dropdown-btn" onclick="toggleContactList()"><img src="../assets/arrowdropdown.svg" alt="Dropdown arrow"></button>
                 </div>
                <ul id="assigned-to-list" class="contact-list"></ul>
+                </div>
                <div id="assigned-avatars" class="assigned-avatars"></div>
               </div>
               <div class="form-field">
