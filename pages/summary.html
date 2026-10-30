@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="../css/fonts.css">
     <link rel="stylesheet" href="../css/menu/style.css">
     <link rel="stylesheet" href="../css/summary.css">
+    <script>
+  try {
+    if (sessionStorage.getItem("join-show-intro")) {
+      document.documentElement.classList.add("show-intro");
+      sessionStorage.removeItem("join-show-intro");
+    }
+  } catch (e) {}
+</script>
     <script src="../js/Templates/profileMenu.js"></script>
     <script src="../js/Templates/init.js"></script>
     <title>Join - Summary</title>

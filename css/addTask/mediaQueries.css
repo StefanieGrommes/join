@@ -193,6 +193,11 @@
   }
 
   #subtaskInput {
+    padding-right: 12px;
+    text-overflow: ellipsis;
+  }
+
+  #subtaskInput:not(:placeholder-shown) {
     padding-right: 72px;
   }
 

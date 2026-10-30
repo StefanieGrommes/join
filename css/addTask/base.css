@@ -339,6 +339,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .checked-btn {
+  padding-left: 4px;
   background-color: transparent;
   border-style: unset;
   cursor: pointer;

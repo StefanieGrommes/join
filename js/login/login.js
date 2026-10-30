@@ -45,6 +45,7 @@ function loginAsGuest() {
   window.localStorage.removeItem("session-contacts");
   window.localStorage.removeItem("session-tasks");
   document.getElementById("guest-login-button").disabled = true;
+  sessionStorage.setItem("join-show-intro", "1");
   window.location.href = "./pages/summary.html";
 }
 
@@ -79,6 +80,7 @@ function clearLoginError() {
  */
 function startUserSession(user) {
   saveJoinUserSession(user);
+  sessionStorage.setItem("join-show-intro", "1");
   window.location.href = "./pages/summary.html";
 }
 
