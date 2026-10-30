@@ -143,6 +143,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 @supports (-moz-appearance: none) {
   .input-with-icon img {
+    box-sizing: border-box;
     width: 32px;
     height: 32px;
     padding: 4px;
@@ -391,18 +392,4 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .subtask-actions img {
   position: static;
   transform: none;
-}
-
-.subtask-actions button {
-  display: flex;
-  align-items: center;
-  border: unset;
-  background-color: transparent;
-  cursor: pointer;
-}
-
-.action-divider {
-  width: 1px;
-  height: 24px;
-  background-color: rgb(168, 168, 168);
 }

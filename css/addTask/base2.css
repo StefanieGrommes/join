@@ -1,3 +1,17 @@
+.subtask-actions button {
+  display: flex;
+  align-items: center;
+  border: unset;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.action-divider {
+  width: 1px;
+  height: 24px;
+  background-color: rgb(168, 168, 168);
+}
+
 .subtask-list-buttons button {
   background: transparent;
   border: unset;
