@@ -299,8 +299,6 @@ aside .nav-element span {
 main {
   display: flex;
   justify-content: center;
-  height: auto;
-  align-self: stretch;
   grid-area: main;
   min-width: 0;
   max-width: calc(1440px - var(--sidebar-width));

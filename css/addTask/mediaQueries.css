@@ -6,6 +6,19 @@
 }
 
 @media (max-width: 1050px) {
+  .board-task-dialog {
+    height: 90dvh;
+  }
+
+  .form-column-left,
+  .form-column-right {
+    gap: 12px;
+  }
+
+  .subtask-list {
+    height: 120px;
+  }
+
   .form-columns {
     flex-direction: column;
   }
@@ -164,6 +177,11 @@
 
   .form-footer {
     margin: 12px 0 10px;
+    margin-top: 60px;
+  }
+
+  .error-message {
+    font-size: 1rem;
   }
 }
 
