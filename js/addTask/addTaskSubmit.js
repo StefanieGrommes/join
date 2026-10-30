@@ -26,7 +26,7 @@ function getTaskFormErrors() {
   if (taskTitleInput.value.trim().length <= 2) {
     errors.push("The title must be at least 3 characters!");
   }
-  if (taskCategory.value === "none") errors.push("Please enter a task category!");
+  if (!taskCategory.value || taskCategory.value === "none") errors.push("Please enter a task category!");
   if (dueDate.value === "") errors.push("Please enter a due date!");
   return errors;
 }
