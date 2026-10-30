@@ -1,4 +1,3 @@
-
 /**
  * Checks whether the contact belongs to the logged-in account.
  * @param {string} id - The contact id.
@@ -7,7 +6,6 @@
 function isOwnContact(id) {
   return id === window.localStorage.getItem("join-contact-id");
 }
-
 
 /**
  * Finds the database key under which a contact is stored (key and id can differ).
