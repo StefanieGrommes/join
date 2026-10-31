@@ -223,6 +223,18 @@
     right: 20px;
   }
 
+  .form-columns {
+    scrollbar-width: none;
+  }
+
+  .form-columns::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dropdown-container {
+    height: 60px;
+  }
+
   #subtaskInput {
     padding-right: 12px;
     text-overflow: ellipsis;
