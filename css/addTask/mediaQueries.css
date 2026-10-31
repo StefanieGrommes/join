@@ -6,6 +6,11 @@
 }
 
 @media (max-width: 1050px) {
+  .add-task-content h1 {
+    margin: 48px 0 48px;
+    font-size: 3rem;
+  }
+
   .board-task-dialog {
     height: 90dvh;
   }
@@ -43,7 +48,6 @@
 
   .form-footer {
     margin: 12px 0 12px;
-
   }
   .required-hint {
     font-size: 1rem;
@@ -115,15 +119,15 @@
   }
 }
 
-@media(max-width: 525px) {
- .priority-options {
+@media (max-width: 525px) {
+  .priority-options {
     gap: 4px;
   }
 }
 
 @media (max-width: 440px) {
   main {
-    padding: 20px 16px 0 16px;
+    padding: 0px 16px 0 16px;
   }
 
   .form-columns {
@@ -210,12 +214,12 @@
     white-space: normal;
   }
 
-.form-field .toggle-task {
+  .form-field .toggle-task {
     padding: 10px 44px 10px 12px;
     text-overflow: ellipsis;
   }
 
-  .toggle-task button{
+  .toggle-task button {
     right: 20px;
   }
 
@@ -228,7 +232,8 @@
     padding-right: 72px;
   }
 
-  .subtask-actions, .subtask-list-buttons {
+  .subtask-actions,
+  .subtask-list-buttons {
     right: 12px;
   }
 

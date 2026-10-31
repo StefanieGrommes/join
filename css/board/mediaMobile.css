@@ -52,7 +52,7 @@
     .board-header-title {
       grid-area: title;
       flex: 1 1 auto;
-      font-size: 2.9375rem;
+      font-size: 3rem;
     }
 
     .board-header-actions {
@@ -217,10 +217,6 @@
 
     .board-main-container {
       width: 100%;
-    }
-
-    .board-header-container {
-      margin-top: 10px;
     }
 
     .board-add-task-button {
