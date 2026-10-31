@@ -297,4 +297,35 @@
     font-weight: 700;
     -webkit-text-stroke: 0.3px rgba(58, 79, 103, 0.8);
   }
+
+.board-column-title button,
+.board-main-column-add-button {
+  position: relative;
+  font-size: 0;
+  -webkit-text-stroke: 0;
+}
+
+.board-column-title button::before,
+.board-column-title button::after,
+.board-main-column-add-button::before,
+.board-main-column-add-button::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: currentColor;
+}
+
+.board-column-title button::before,
+.board-main-column-add-button::before {
+  width: 10px;
+  height: 2px;
+}
+
+.board-column-title button::after,
+.board-main-column-add-button::after {
+  width: 2px;
+  height: 10px;
+}
 }

@@ -176,6 +176,10 @@ h5 {
   pointer-events: none;
 }
 
+.boxes-and-welcome-message {
+    margin-bottom: 127px;
+}
+
 #to-do { grid-area: to-do; }
 #done { grid-area: done; }
 #urgent-and-calendar { grid-area: urgent; }
@@ -215,14 +219,7 @@ h5 {
     color: var(--accent-color);
 }
 
- .boxes-and-welcome-message {
-       margin-bottom: 127px;
-    }
-
-
-
 @media (max-width: 1300px) {
-
     .summary-header {
         padding: 0 0 4px 0;
     }
@@ -264,13 +261,9 @@ h5 {
     .summary {
         padding: 110px min(48px, 8vw) 0 min(48px, 8vw);
     }
-
 }
 
 @media (max-width: 768px) {
-    .summary {
-        padding: 16px 16px calc(var(--header-height) + 16px);
-    }
 
     .welcome-message {
         display: none;
@@ -279,7 +272,7 @@ h5 {
     .welcome-message-mobile {
         position: fixed;
         inset: 0;
-        display: flex;
+        display: none;
         flex-direction: column;
         align-items: center;
         justify-content: center;
@@ -288,6 +281,10 @@ h5 {
         background: white;
         z-index: 1000;
         transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    .show-intro .welcome-message-mobile {
+        display: flex;
     }
 
     .welcome-message-mobile.hidden {
@@ -338,6 +335,10 @@ h5 {
 
     .grey-separator {
         height: 80px;
+    }
+
+    .grey-boxes-task {
+        padding: 8px;
     }
 
     .task-boxes-img-wrapper {

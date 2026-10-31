@@ -6,6 +6,19 @@
 }
 
 @media (max-width: 1050px) {
+  .board-task-dialog {
+    height: 90dvh;
+  }
+
+  .form-column-left,
+  .form-column-right {
+    gap: 12px;
+  }
+
+  .subtask-list {
+    height: 120px;
+  }
+
   .form-columns {
     flex-direction: column;
   }
@@ -165,6 +178,20 @@
   .form-footer {
     margin: 12px 0 10px;
   }
+
+  .error-wrapper,
+  .error-message {
+    font-size: 1rem;
+  }
+
+  @supports (-moz-appearance: none) {
+    .input-with-icon img {
+      box-sizing: border-box;
+      width: 32px;
+      height: 32px;
+      padding: 8px;
+    }
+  }
 }
 
 @media (max-width: 380px) {
@@ -193,6 +220,11 @@
   }
 
   #subtaskInput {
+    padding-right: 12px;
+    text-overflow: ellipsis;
+  }
+
+  #subtaskInput:not(:placeholder-shown) {
     padding-right: 72px;
   }
 

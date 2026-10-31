@@ -249,14 +249,12 @@ function getContactDetailTemplate(contact) {
         ${getInitials(contact.firstName, contact.lastName)}
       </div>
       <div class="contact-detail-head">
-        <p class="contact-detail-name">${contact.firstName} ${contact.lastName}</p>
+        <p class="contact-detail-name">${getContactDisplayName(contact)}</p>
         <div class="contact-detail-actions">
           <button class="detail-action-btn" onclick="openEditDialog('${contact.id}')">
             <img class="icon-edit" src="../assets/edit.svg" alt="" /> Edit
           </button>
-          <button class="detail-action-btn" onclick="deleteContact('${contact.id}')">
-            <img class="icon-delete" src="../assets/delete.svg" alt="" /> Delete
-          </button>
+         ${getContactDeleteButtonTemplate(contact)}
         </div>
       </div>
     </div>
@@ -276,8 +274,67 @@ function getContactDetailTemplate(contact) {
       <button class="detail-action-btn" onclick="openEditDialog('${contact.id}')">
         <img class="icon-edit" src="../assets/edit.svg" alt="" />Edit
       </button>
-      <button class="detail-action-btn" onclick="deleteContact('${contact.id}')">
-        <img class="icon-delete" src="../assets/delete.svg" alt="" />Delete
-      </button>
+      ${getContactDeleteButtonTemplate(contact)}
     </div>`;
 }
+
+/**
+ * Returns the delete button of the contact detail view, empty for the own contact.
+ * @param {Object} contact - Contact with id.
+ * @returns {string} HTML string of the button or an empty string.
+ */
+function getContactDeleteButtonTemplate(contact) {
+  if (isOwnContact(contact.id)) return "";
+  return `
+    <button class="detail-action-btn" onclick="deleteContact('${contact.id}')">
+      <img class="icon-delete" src="../assets/delete.svg" alt="" /> Delete
+    </button>`;
+}
+
+/**
+ * Builds the HTML for a single contact in the list.
+ * @param {Object} contact - Contact with id, firstName, lastName and email
+ * @returns {string} HTML string of the list item
+ */
+function getContactTemplate(contact) {
+  return `
+    <li class="contact-item" data-id="${contact.id}" onclick="openContactDetail('${contact.id}', this)">
+      <div class="contact-avatar" style="background-color: ${getContactColor(contact.id)}">${getInitials(contact.firstName, contact.lastName)}</div>
+      <div class="contact-info">
+        <p class="contact-name">${getContactDisplayName(contact)}</p>
+        <p class="contact-email">${contact.email}</p>
+      </div>
+    </li>`;
+}
+
+/**
+ * Builds an image if logged in as guest.
+ * @returns {string} HTML string of the image item
+ */
+function displayGuestImage() {
+  return `<img src="../assets/contact-guest-img.svg" alt="Guest Image" />`;
+}
+
+/**
+ * Builds a large image of the Avatar.
+ * @param {Object} contact - Contact with id, firstName, lastName and email
+ * @returns {string} HTML string of the large image including Initials and individuals color.
+ */
+function displayDialogAvatar(contact) {
+  return `<div class="contact-avatar-large" style="background-color: ${getContactColor(contact.id)}">${getInitials(contact.firstName, contact.lastName)}
+          </div>`;
+}
+
+/**
+ * Builds an alphabetic list for each letter and fills it with the contacts sorted by their last name.
+ * @param {string} letter - first letter of lastName
+ * @returns {string} HTML string of one letter
+ */
+function displayContactGroupTemplate(letter, items) {
+return `<div class="contact-group">
+           <p class="group-letter">${letter}</p>
+          <ul class="contact-list">${items}</ul>
+        </div>`;
+}
+
+

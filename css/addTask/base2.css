@@ -1,3 +1,17 @@
+.subtask-actions button {
+  display: flex;
+  align-items: center;
+  border: unset;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.action-divider {
+  width: 1px;
+  height: 24px;
+  background-color: rgb(168, 168, 168);
+}
+
 .subtask-list-buttons button {
   background: transparent;
   border: unset;
@@ -48,7 +62,8 @@
 
 .subtask-list {
   list-style-position: inside;
-  height: 160px;
+  height: 120px;
+  max-height: none;
   overflow-y: auto;
 }
 
@@ -186,9 +201,16 @@
 .error-message {
   font-size: 1.25rem;
   color: rgb(198, 40, 40);
+  margin: 0;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 .error-wrapper {
-  position: absolute;
-  bottom: 120px;
+  display: flex;
+  align-items: flex-start;
+  font-size: 1.25rem;
+  line-height: 1.25;
+  height: 2lh;
+  overflow: auto;
 }

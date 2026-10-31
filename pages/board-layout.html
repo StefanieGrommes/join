@@ -226,6 +226,12 @@
       <div id="board-task-detail-root" class="board-detail-modal-body"></div>
     </div>
   </div>
+  <div id="task-added-overlay" class="task-added-overlay" role="status" aria-live="polite">
+  <div class="task-added-box">
+    <span>Task added to board</span>
+    <img src="../assets/board-icon.svg" alt="" />
+  </div>
+</div>
   <template id="board-column-header-template">
     <div class="board-main-column-header">
       <h2 class="board-main-column-title"></h2>
@@ -253,7 +259,9 @@
   <script src="../js/Templates/templates.js"></script>
   <script src="../js/addTask/addTaskTemplates.js"></script>
   <script src="../js/addTask/addTask.js"></script>
-  <script src="../js/contactList.js"></script>
+  <script src="../js/addTask/addTaskSubmit.js"></script>
+  <script src="../js/contacts/contactList.js"></script>
+  <script src="../js/contacts/contactOwn.js"></script>
   <script src="../js/board/boardData.js"></script>
   <script src="../js/board/boardTaskForm.js"></script>
   <script src="../js/board/boardRender.js"></script>

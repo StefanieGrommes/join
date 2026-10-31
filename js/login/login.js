@@ -40,10 +40,12 @@ function loginAsGuest() {
   window.localStorage.removeItem("join-user-email");
   window.localStorage.removeItem("join-profile-color");
   window.localStorage.setItem("join-session-mode", "guest");
+  window.localStorage.removeItem("join-contact-id");
   window.localStorage.removeItem("session-initialized");
   window.localStorage.removeItem("session-contacts");
   window.localStorage.removeItem("session-tasks");
   document.getElementById("guest-login-button").disabled = true;
+  sessionStorage.setItem("join-show-intro", "1");
   window.location.href = "./pages/summary.html";
 }
 
@@ -78,6 +80,7 @@ function clearLoginError() {
  */
 function startUserSession(user) {
   saveJoinUserSession(user);
+  sessionStorage.setItem("join-show-intro", "1");
   window.location.href = "./pages/summary.html";
 }
 

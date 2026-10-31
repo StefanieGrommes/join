@@ -18,9 +18,9 @@ window.addEventListener("load", summaryInit, true);
  * @returns {void}
  */
 async function summaryInit() {
+    startMobileIntro();
     await init();
     showSummaryName();
-    startMobileIntro();
     showTaskCounts();
     showUpcomingDeadline();
     bindTaskBoxes();
@@ -32,7 +32,7 @@ async function summaryInit() {
  */
 function startMobileIntro() {
     const intro = document.getElementById("welcome-message-mobile");
-    if (!intro) return;
+    if (!intro || !document.documentElement.classList.contains("show-intro")) return;
     window.setTimeout(() => intro.classList.add("hidden"), 1500);
 }
 
