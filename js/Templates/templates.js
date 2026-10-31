@@ -107,7 +107,7 @@ function getAssignedContactsTemplate(avatars, assignedCount) {
 /**
  * Returns the HTML of the small task card of a board column.
  * @param {Object} task - Task with id, title, description, category and categoryColor.
- * @param {{assigned: string, priorityIcon: (string|undefined), progressWidth: number, progressLabel: string}} view - Prepared display values.
+ * @param {{assigned: string, priorityIcon: (string|undefined), progressWidth: number, progressLabel: string}} view - Prepared display values; the progress bar is hidden at 0%.
  * @returns {string} HTML string of the card.
  */
 function getTaskCardTemplate(task, view) {
@@ -126,12 +126,12 @@ function getTaskCardTemplate(task, view) {
       <h3 class="board-card-title">${escapeHtml(task.title)}</h3>
       <p class="board-card-description">${escapeHtml(task.description)}</p>
 
-      <div class="board-card-progress">
+      ${progressWidth > 0 ? `<div class="board-card-progress">
         <div class="board-progress-bar">
           <span style="width:${progressWidth}%"></span>
         </div>
         <span class="board-progress-label">${progressLabel}</span>
-      </div>
+      </div>` : ''}
 
       <div class="board-card-footer">
         ${assigned}
@@ -216,12 +216,17 @@ function getTaskDetailTemplate(task, view) {
         </div>
 
         <div class="board-detail-actions">
-          <button type="button" class="board-detail-button board-detail-button--ghost" data-action="delete-task" aria-label="Delete task">
-            <span class="board-detail-button-icon" aria-hidden="true">🗑</span>
+          <div class="profile-menu board-delete-confirm" id="board-delete-confirm" role="alertdialog" aria-label="Delete task" hidden>
+            <p>Delete this task?</p>
+            <button type="button" data-action="confirm-delete">Delete</button>
+            <button type="button" data-action="cancel-delete">Cancel</button>
+          </div>
+          <button type="button" class="board-detail-button board-detail-button--ghost" data-action="delete-task" aria-label="Delete task" aria-haspopup="dialog" aria-expanded="false" aria-controls="board-delete-confirm">
+            <img class="board-detail-button-icon" src="../assets/delete-subtask.png" alt="" aria-hidden="true">
             <span class="board-detail-button-text">Delete</span>
           </button>
           <button type="button" class="board-detail-button board-detail-button--primary" data-action="edit-task" aria-label="Edit task">
-            <span class="board-detail-button-icon" aria-hidden="true">✎</span>
+            <img class="board-detail-button-icon" src="../assets/edit-subtask.png" alt="" aria-hidden="true">
             <span class="board-detail-button-text">Edit</span>
           </button>
         </div>

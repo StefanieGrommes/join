@@ -1,4 +1,37 @@
-@media (max-width: 768px) {
+@media (min-width: 1001px) and (max-width: 1040px) {
+  :root {
+    --sidebar-width: 170px;
+  }
+
+  .logo-wrapper img {
+    width: 80px;
+  }
+
+  .nav-element {
+    gap: 8px;
+    padding: 10px 8px;
+    font-size: 14px;
+  }
+
+  .nav-element svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  aside .nav-element span {
+    width: 70px;
+  }
+
+  .legal-and-policy a {
+    font-size: 14px;
+  }
+
+  .legal-and-policy a span {
+    width: 95px;
+  }
+}
+
+@media (max-width: 1000px) {
   nav {
     display: none;
     padding: 0;

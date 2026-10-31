@@ -13,6 +13,22 @@
   transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
 }
 
+.board-card {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.board-card-touch-ghost {
+  position: fixed;
+  z-index: 2000;
+  margin: 0;
+  pointer-events: none;
+  opacity: 0.9;
+  transform: rotate(-2deg) scale(1.02);
+  box-shadow: 0 12px 24px rgba(17, 24, 39, 0.25);
+}
+
 .board-main-column.is-drop-target {
   background: rgba(0, 0, 0, 0.08);
   border-radius: 18px;

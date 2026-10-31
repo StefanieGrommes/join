@@ -14,14 +14,14 @@ function applyMobileTopNavStyles(topNav, isMobile) {
 
 /**
  * Switches between the board mobile navigation and the generic header
- * depending on the viewport width (mobile: 768px or less).
+ * depending on the viewport width (mobile: 1000px or less).
  *
  * @returns {void}
  */
 function syncBoardMobileNavigation() {
   const topNav = document.querySelector(".board-mobile-top-nav");
   const genericHeader = document.querySelector(".nav-mobile");
-  const isMobile = window.innerWidth <= 768;
+  const isMobile = window.innerWidth <= 1000;
   if (topNav) applyMobileTopNavStyles(topNav, isMobile);
   if (genericHeader) genericHeader.style.display = isMobile ? "none" : "";
 }

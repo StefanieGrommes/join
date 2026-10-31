@@ -108,14 +108,14 @@ function openMoveMenu(button) {
 }
 
 /**
- * Opens or closes the menu when a move button is clicked (screens up to 360px).
+ * Opens or closes the menu when a move button is clicked (screens up to 1000px).
  *
  * @param {MouseEvent} event - The click event.
  * @returns {void}
  */
 function handleMoveButtonClick(event) {
   const button = event.target.closest(".board-card-move-button");
-  if (!button || !window.matchMedia("(max-width: 360px)").matches) return;
+  if (!button || !window.matchMedia("(max-width: 1000px)").matches) return;
   if (moveMenuButton === button) closeMoveMenu(true);
   else openMoveMenu(button);
 }
@@ -217,7 +217,7 @@ function handleCardDragEnd(card) {
 }
 
 /**
- * Attaches the drag events to a task card.
+ * Attaches the mouse drag events and the touch drag events to a task card.
  *
  * @param {HTMLElement} card - The task card.
  * @returns {void}
@@ -225,6 +225,7 @@ function handleCardDragEnd(card) {
 function bindCardDragEvents(card) {
   card.addEventListener("dragstart", (event) => handleCardDragStart(event, card));
   card.addEventListener("dragend", () => handleCardDragEnd(card));
+  bindCardTouchEvents(card);
 }
 
 /**
