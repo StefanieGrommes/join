@@ -2,7 +2,7 @@
 const contactFieldRules = [
   { key: "name", check: isValidName, message: "Please enter first and last name" },
   { key: "email", check: isValidEmail, message: "Please enter a valid email address." },
-  { key: "phone", check: (v) => v === "" || isValidPhoneNr(v), message: "Please enter a valid phone number." },
+  { key: "phone", check: (v) => v === "" || isValidPhoneNr(v), message: "Phone number must contain at least 9 digits (only digits, spaces, + ( ) - allowed)." },
 ];
 
 /**

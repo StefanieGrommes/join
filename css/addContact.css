@@ -251,11 +251,15 @@ button {
     opacity 200ms ease-in-out,
     transform 200ms ease-in-out;
   z-index: 1000;
-  color: rgb(255, 129, 144);
+  color: rgb(198, 40, 40);
 }
 
 .toast-wrapper.show {
   opacity: 1;
+}
+
+#toast-wrapper-phone {
+  height: 60px;
 }
 
 
