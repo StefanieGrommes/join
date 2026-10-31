@@ -242,7 +242,7 @@ button {
 }
 
 .toast-wrapper {
-  min-height: 32px;
+  height: 40px;
   font-size: 16px;
   color: var(--main-color);
   opacity: 0;
@@ -257,11 +257,6 @@ button {
 .toast-wrapper.show {
   opacity: 1;
 }
-
-#toast-wrapper-phone {
-  height: 60px;
-}
-
 
 @media (max-width: 1180px) {
   .dialog-grid-area {
@@ -309,7 +304,11 @@ button {
     fill: white;
   }
 }
-
+@media (max-width:660px ) {
+  .toast-wrapper {
+    height: 60px;
+  }
+}
 @media (max-width: 428px) {
   .dialog-aside {
     align-items: flex-start;
