@@ -18,9 +18,12 @@
   --box-shadow-default: 0 0 4px 0px rgba(0, 0, 0, 0.4);
   --default-font: "Inter", sans-serif;
   --second-font: "Open Sans", sans-serif;
+  --drop-target-rgb: 41, 171, 226;
 }
 
-*, ::before, ::after {
+*,
+::before,
+::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;

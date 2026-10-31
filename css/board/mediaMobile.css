@@ -22,7 +22,6 @@
     }
 
     main {
-      padding-top: 72px;
       padding-bottom: 92px;
       min-height: auto;
       padding-left: 8px;
@@ -43,8 +42,8 @@
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       grid-template-areas:
-      "title add"
-      "search search";
+        "title add"
+        "search search";
       align-items: center;
       gap: 48px;
       margin-bottom: 12px;
@@ -201,10 +200,6 @@
     .board-card-header {
       justify-content: space-between;
       gap: 8px;
-    }
-
-    .board-card-move-button {
-      display: inline-flex;
     }
 
     .board-header-inner {

@@ -10,13 +10,16 @@
   opacity: 0.75;
   transform: rotate(-2deg) scale(1.02);
   box-shadow: 0 12px 24px rgba(17, 24, 39, 0.2);
-  transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    opacity 120ms ease;
 }
 
 .board-main-column.is-drop-target {
-  background: rgba(0, 0, 0, 0.08);
+  background: rgba(var(--drop-target-rgb), 0.08);
   border-radius: 18px;
-  outline: 2px dashed #6fa8ff;
+  outline: 2px dashed rgb(var(--drop-target-rgb));
   outline-offset: -4px;
 }
 
@@ -342,7 +345,10 @@ body:has(.board-detail-modal.is-open) {
   opacity: 0.75;
   transform: rotate(-2deg) scale(1.02);
   box-shadow: 0 12px 24px rgba(17, 24, 39, 0.2);
-  transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+  transition:
+    transform 120ms ease,
+    box-shadow 120ms ease,
+    opacity 120ms ease;
 }
 
 .board-main-column.is-drop-target {

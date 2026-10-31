@@ -201,6 +201,10 @@
     width: 100%;
   }
 
+  .board-card:active {
+    cursor: grabbing;
+  }
+
   .board-card-header {
     display: flex;
     align-items: center;
@@ -221,6 +225,15 @@
     justify-content: center;
     flex-shrink: 0;
     cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    .board-card-move-button {
+      display: inline-flex;
+    }
+    .board-card-header {
+      justify-content: space-between;
+    }
   }
 
   .board-move-menu {

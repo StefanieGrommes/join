@@ -115,7 +115,7 @@ function openMoveMenu(button) {
  */
 function handleMoveButtonClick(event) {
   const button = event.target.closest(".board-card-move-button");
-  if (!button || !window.matchMedia("(max-width: 360px)").matches) return;
+  if (!button || !window.matchMedia("(max-width: 768px)").matches) return;
   if (moveMenuButton === button) closeMoveMenu(true);
   else openMoveMenu(button);
 }

@@ -2,7 +2,11 @@
 const contactFieldRules = [
   { key: "name", check: isValidName, message: "Please enter first and last name" },
   { key: "email", check: isValidEmail, message: "Please enter a valid email address." },
-  { key: "phone", check: isValidPhoneNr, message: "Please enter a valid phone number." },
+  {
+    key: "phone",
+    check: isValidPhoneNr,
+    message: "Please enter at least 9 digits (+, spaces, () and - allowed).",
+  },
 ];
 
 /**
@@ -12,6 +16,21 @@ const contactFieldRules = [
 function showDialog() {
   const dialog = document.querySelector("dialog");
   if (dialog) dialog.showModal();
+  resetContactFormValidation();
+  dialog.showModal();
+}
+
+/**
+ * Clears the validation state of all fields in the contact form.
+ * @returns {void}
+ */
+function resetContactFormValidation() {
+  const form = document.querySelector(".add-contact-form");
+  if (!form) return;
+  form.querySelectorAll("input").forEach((field) => {
+    setFieldInvalidState(field, false);
+    hideToast(getToastElement(field));
+  });
 }
 
 /**
