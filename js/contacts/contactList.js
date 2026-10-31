@@ -1,24 +1,19 @@
 const CONTACT_COLORS = [
-  "#FF7A00",
-  "#1FD7C1",
-  "#462F8A",
-  "#6E52FF",
-  "#9327FF",
-  "#FFC701",
-  "#FF745E",
-  "#FFA35E",
-  "#FC71FF",
-  "#FFBB2B",
-  "#FF4646",
-  "#00BEE8",
-  "#C3FF2B",
-  "#FF5EB3",
-  "#0038FF",
-  "#FFE62B",
+  "#FF7A00","#1FD7C1","#462F8A","#6E52FF","#9327FF","#FFC701",
+  "#FF745E","#FFA35E","#FC71FF","#FFBB2B","#FF4646","#00BEE8",
+  "#C3FF2B","#FF5EB3","#0038FF","#FFE62B"
 ];
 
 let allContacts = [];
 let editingContactId = null;
+
+/**
+ * Syncs the edited data in local Storage.
+ * @param {string} allContacts - every contact that has been created.
+ */
+function syncContactsCache() {
+  saveSessionData("session-contacts", allContacts);
+}
 
 /**
  * Picks a stable color for a contact based on its id.
@@ -36,26 +31,8 @@ function getContactColor(id) {
  * @returns {string} Initials in uppercase, e.g. "AM"
  */
 function getInitials(firstName, lastName) {
-  let first = firstName.charAt(0);
-  let last = lastName.charAt(0);
-  return (first + last).toUpperCase();
-}
-
-/**
- * Builds the HTML for a single contact in the list.
- * @param {Object} contact - Contact with id, firstName, lastName and email
- * @returns {string} HTML string of the list item
- */
-function getContactTemplate(contact) {
-  return `
-    <li class="contact-item" data-id="${contact.id}" onclick="openContactDetail('${contact.id}', this)">
-      <div class="contact-avatar" style="background-color: ${getContactColor(contact.id)}">${getInitials(contact.firstName, contact.lastName)}</div>
-      <div class="contact-info">
-        <p class="contact-name">${contact.firstName} ${contact.lastName}</p>
-        <p class="contact-email">${contact.email}</p>
-      </div>
-    </li>`;
-}
+    return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+  }
 
 /**
  * Builds the HTML for one letter group including all its contacts.
@@ -68,11 +45,7 @@ function getContactGroupTemplate(letter, groupContacts) {
   for (let contact of groupContacts) {
     items += getContactTemplate(contact);
   }
-  return `
-    <div class="contact-group">
-      <p class="group-letter">${letter}</p>
-      <ul class="contact-list">${items}</ul>
-    </div>`;
+  return displayContactGroupTemplate(letter, items);
 }
 
 /**
@@ -222,6 +195,7 @@ async function addNewContact(form) {
   await putData("contacts/" + contact.id, contact);
   button.disabled = false;
   allContacts.push(contact);
+  syncContactsCache();
   renderContactList(allContacts);
   let element = document.querySelector(`[data-id="${contact.id}"]`);
   openContactDetail(contact.id, element);
@@ -237,7 +211,8 @@ async function addNewContact(form) {
 async function loadContacts() {
   let response = await fetch(BASE_URL + "contacts.json");
   let data = await response.json();
- allContacts = Object.values(data || {}).filter((c) => c && c.firstName);
+  allContacts = Object.values(data || {}).filter((c) => c && c.firstName);
+  await ensureOwnContact();
   renderContactList(allContacts);
 }
 
@@ -257,8 +232,53 @@ function openEditDialog(id) {
   document.getElementById("dialogHeadline").textContent = "Edit contact";
   document.getElementById("dialogSubline").style.display = "none";
   document.getElementById("submitBtnText").textContent = "Save";
-  showDialogAvatar(contact);
+  renderDialogAvatar(contact);
   showDialog();
+}
+
+/**
+ * Builds the contact object from the form and keeps the id of the edited contact.
+ * @param {HTMLFormElement} form - The contact form.
+ * @returns {Object} The edited contact.
+ */
+function buildEditedContact(form) {
+  const contact = buildContactFromForm(form);
+  contact.id = editingContactId;
+  return contact;
+}
+
+/**
+ * Writes the edited contact to the database and, for the own contact, to the account.
+ * @param {Object} contact - The edited contact.
+ * @param {{key: string|null}|null} own - The own account info, or null for other contacts.
+ * @returns {Promise<void>}
+ */
+async function persistEditedContact(contact, own) {
+  await putData("contacts/" + (await findContactKey(contact.id)), contact);
+  if (own && own.key !== null) await updateOwnAccount(contact, own.key);
+}
+
+/**
+ * Replaces the contact in the list and updates the local cache.
+ * @param {Object} contact - The edited contact.
+ * @returns {void}
+ */
+function updateContactInList(contact) {
+  const index = allContacts.findIndex((c) => c.id === contact.id);
+  allContacts[index] = contact;
+  syncContactsCache();
+}
+
+/**
+ * Redraws the list, opens the detail view and shows the success message.
+ * @param {Object} contact - The edited contact.
+ * @returns {void}
+ */
+function showEditedContact(contact) {
+  renderContactList(allContacts);
+  openContactDetail(contact.id, document.querySelector(`[data-id="${contact.id}"]`));
+  closeDialog();
+  showSuccessToast("Contact successfully edited");
 }
 
 /**
@@ -267,18 +287,15 @@ function openEditDialog(id) {
  * @returns {Promise<void>}
  */
 async function saveEditedContact(form) {
-  let contact = buildContactFromForm(form);
-  contact.id = editingContactId;
-  let button = form.querySelector(".create-contact-btn");
+  const contact = buildEditedContact(form);
+  const button = form.querySelector(".create-contact-btn");
+  const own = isOwnContact(contact.id) ? await findOwnUserKey(contact) : null;
+  if (own && own.conflict) return showToastMessage("This email is already used by another account.");
   button.disabled = true;
-  await putData("contacts/" + contact.id, contact);
+  await persistEditedContact(contact, own);
   button.disabled = false;
-  let index = allContacts.findIndex((c) => c.id === contact.id);
-  allContacts[index] = contact;
-  renderContactList(allContacts);
-  openContactDetail(contact.id, document.querySelector(`[data-id="${contact.id}"]`));
-  closeDialog();
-  showSuccessToast("Contact successfully edited");
+  updateContactInList(contact);
+  showEditedContact(contact);
 }
 
 /**
@@ -286,14 +303,22 @@ async function saveEditedContact(form) {
  * @param {Object} contact - The contact to show.
  * @returns {void}
  */
-function showDialogAvatar(contact) {
+function renderDialogAvatar(contact) {
   let avatar = document.getElementById("dialogAvatar");
-  avatar.innerHTML = `<div
-    class="contact-avatar-large"
-    style="background-color: ${getContactColor(contact.id)}"
-  >
-    ${getInitials(contact.firstName, contact.lastName)}
-  </div>`;
+  avatar.innerHTML = displayDialogAvatar(contact);
+}
+
+/**
+ * Removes a deleted contact from the assigned list of all tasks in the local cache.
+ * @param {string} id - The id of the deleted contact.
+ * @returns {void}
+ */
+function removeContactFromTaskCache(id) {
+  const tasks = getSessionData("session-tasks").map((task) => ({
+    ...task,
+    assignedTo: (task.assignedTo || []).filter((entry) => entry.id !== id),
+  }));
+  saveSessionData("session-tasks", tasks);
 }
 
 /**
@@ -302,9 +327,12 @@ function showDialogAvatar(contact) {
  * @returns {Promise<void>}
  */
 async function deleteContact(id) {
+  if (isOwnContact(id)) return;
   await removeContactFromTasks(id);
-  await deleteData("contacts/" + id);
+  removeContactFromTaskCache(id);
+  await deleteData("contacts/" + (await findContactKey(id)));
   allContacts = allContacts.filter((contact) => contact.id !== id);
+  syncContactsCache();
   renderContactList(allContacts);
   closeContactDetail();
   document.getElementById("contactDetail").innerHTML = "";
@@ -319,7 +347,7 @@ async function removeContactFromTasks(id) {
   let response = await fetch(BASE_URL + "tasks.json");
   let tasks = await response.json();
   for (let key in tasks) {
-    let assigned = tasks[key].assignedTo;
+    let assigned = tasks[key]?.assignedTo;
     if (!assigned) continue;
     let left = assigned.filter((entry) => entry.id !== id);
     if (left.length !== assigned.length) await putData(`tasks/${key}/assignedTo`, left);

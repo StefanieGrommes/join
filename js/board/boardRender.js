@@ -208,13 +208,28 @@ function getTaskProgress(task) {
 function syncCardContent(task) {
   const card = boardMainContainer.querySelector(`.board-card--task[data-card-id="${task.id}"]`);
   if (!card) return;
-  const progress = getTaskProgress(task);
-  const bar = card.querySelector(".board-progress-bar span");
-  const label = card.querySelector(".board-progress-label");
   card.querySelector(".board-card-title").textContent = task.title;
   card.querySelector(".board-card-description").textContent = task.description;
-  if (bar) bar.style.width = `${progress.width}%`;
-  if (label) label.textContent = progress.label;
+  syncCardProgress(card, getTaskProgress(task));
+}
+
+/**
+ * Shows, updates or hides the progress bar of a card (hidden at 0%).
+ *
+ * @param {HTMLElement} card - The task card.
+ * @param {{width: number, label: string}} progress - The current progress.
+ * @returns {void}
+ */
+function syncCardProgress(card, progress) {
+  let block = card.querySelector(".board-card-progress");
+  if (progress.width <= 0) return block && block.remove();
+  if (!block) {
+    card.querySelector(".board-card-footer").insertAdjacentHTML("beforebegin",
+      `<div class="board-card-progress"><div class="board-progress-bar"><span></span></div><span class="board-progress-label"></span></div>`);
+    block = card.querySelector(".board-card-progress");
+  }
+  block.querySelector(".board-progress-bar span").style.width = `${progress.width}%`;
+  block.querySelector(".board-progress-label").textContent = progress.label;
 }
 
 /**

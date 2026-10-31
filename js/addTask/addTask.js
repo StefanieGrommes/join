@@ -2,20 +2,10 @@ const list = document.getElementById("assigned-to-list");
 const priorityBtns = document.getElementsByClassName("priority-btn");
 const subtaskInput = document.getElementById("subtaskInput");
 const subTaskList = document.querySelector(".subtask-list");
-let editingTaskId = null;
-let newTaskState = "todo";
-
-/**
- * Loads the session data (contacts and tasks) for the add-task page.
- * @returns {Promise<void>}
- */
-async function initAddTask() {
-  await initSessionData();
-}
 
 /**
  * Closes the dropdown list when clicking on backdrop.
- * @returns {<void>}
+ * @returns {<void}
  */
 document.addEventListener("click", (event) => {
   const dropdown = document.getElementById("assigned-to-dropdown");
@@ -82,11 +72,12 @@ function getFullUserName(contact) {
 /**
  * Returns the initials of a contact in upper case.
  * @param {{firstName: string, lastName: string}} contact - The contact.
- * @returns {string} Two initials, or an empty string if a name is missing.
+ * @returns {string} Up to two initials, or an empty string if both names are missing.
  */
 function getUserInitials(contact) {
-  if (!contact.firstName || !contact.lastName) return "";
-  return (contact.firstName.charAt(0) + contact.lastName.charAt(0)).toUpperCase();
+  const first = (contact.firstName || "").trim();
+  const last = (contact.lastName || "").trim();
+  return (first.charAt(0) + last.charAt(0)).toUpperCase();
 }
 
 /**
@@ -98,7 +89,7 @@ function toggleContactSelection(option) {
   const checkboxImg = option.querySelector("img[data-checked]");
   if (checkboxImg.dataset.checked === "true") {
     option.classList.remove("selected");
-    checkboxImg.src ="../assets/checkbox.svg";
+    checkboxImg.src = "../assets/checkbox.svg";
     checkboxImg.dataset.checked = "false";
     return;
   }
@@ -131,6 +122,14 @@ function changePriority(thisBtn) {
   }
   thisBtn.classList.add("priority-active");
   thisBtn.querySelector("svg").classList.add("priority-active-svg");
+}
+
+/**
+ * Sets the priority back to "medium".
+ * @returns {void}
+ */
+function resetPriority() {
+  changePriority(document.querySelector(".priority-medium"));
 }
 
 /**
@@ -237,7 +236,6 @@ list.addEventListener("click", (event) => {
 
 /**
  * Registers a click handler on every priority button that activates the clicked button.
- * Each handler takes no event parameter and returns nothing.
  * @returns {void}
  */
 for (let i = 0; i < priorityBtns.length; i++) {
@@ -258,7 +256,7 @@ subtaskInput.addEventListener("keydown", (event) => {
 
 /**
  * Handles clicks inside the subtask list. A click on the delete button removes the
- * subtask, any other click on an item that is not being edited starts the edifot mode.
+ * subtask, any other click on an item that is not being edited starts the edit mode.
  * @param {MouseEvent} event - The click event.
  * @returns {void}
  */
@@ -272,166 +270,5 @@ subTaskList.addEventListener("click", (event) => {
   startEditSubtask(item);
 });
 
-const form = document.getElementById("add-task-form");
-const taskTitleInput = document.getElementById("task-title");
-const taskCategory = document.getElementById("task-category");
-const errorMessage = document.getElementById("error-message");
-const dueDate = document.getElementById("taskDueDate");
-const errorMessageArray = [];
-
-form.addEventListener("submit", handleTaskFormSubmit);
-
-/**
- * Collects the error messages of the required task fields.
- * @returns {string[]} The messages, empty if all fields are valid.
- */
-function getTaskFormErrors() {
-  const errors = [];
-  if (taskTitleInput.value.trim().length <= 2) {
-    errors.push("The title must be at least 3 characters!");
-  }
-  if (taskCategory.value === "none") errors.push("Please enter a task category!");
-  if (dueDate.value === "") errors.push("Please enter a due date!");
-  return errors;
-}
-
-/**
- * Checks if the required fields are valid and shows error message if not.
- * Prevents the form from submitting if the fields do not pass the test.
- * @param {SubmitEvent} event - The submit event of the task form.
- * @returns {Promise<void>}
- */
-async function handleTaskFormSubmit(event) {
-  event.preventDefault();
-  errorMessageArray.length = 0;
-  errorMessageArray.push(...getTaskFormErrors());
-  errorMessage.innerText = errorMessageArray.join(" , ");
-  if (errorMessageArray.length > 0) return;
-  await submitForm();
-}
-
-/**
- * Returns the priority of the active priority button.
- * @returns {string} "urgent", "medium" or "low".
- */
-function getSelectedPriority() {
-  const btn = document.querySelector(".priority-btn.priority-active");
-  return btn.classList.contains("priority-urgent") ? "urgent"
-    : btn.classList.contains("priority-low") ? "low" : "medium";
-}
-
-/**
- * Returns the selected contacts in the assigned-to dropdown.
- * @returns {{id: string}[]} The selected contacts as id objects.
- */
-function getAssignedContactIds() {
-  return Array.from(document.querySelectorAll(".contact-option.selected")).map(
-    (option) => ({ id: option.dataset.contactId }),
-  );
-}
-
-/**
- * Reads the subtasks and keeps the done state of unchanged labels.
- * @param {{label: string, done: boolean}[]} [previous=[]] - Subtasks of the edited task.
- * @returns {{label: string, done: boolean}[]} The subtasks.
- */
-function getSubtasks(previous = []) {
-  saveSubtask();
-  return Array.from(subTaskList.querySelectorAll(".subtask-text")).map((el) => {
-    const label = el.textContent.trim();
-    const old = previous.find((subtask) => subtask.label === label);
-    return { label, done: old ? Boolean(old.done) : false };
-  });
-}
-
-/**
- * Saves the task form: updates the session data and the database, then resets the form.
- * @returns {Promise<void>}
- */
-async function submitForm() {
-  const all = getSessionData("session-tasks");
-  const existing = editingTaskId ? all.find((t) => t.id === editingTaskId) : null;
-  const task = buildTaskFromForm(existing);
-  saveSessionData("session-tasks", upsertTask(all, task));
-  await putData("tasks/" + task.id, task);
-  resetForm();
-  if (!existing) showTaskAddedOverlay();
-  if (typeof onTaskSaved === "function") onTaskSaved();
-}
-
-/**
- * Shows the "Task added to board" overlay and hides it again after 1.5 seconds.
- * @returns {void}
- */
-function showTaskAddedOverlay() {
-  const overlay = document.getElementById("task-added-overlay");
-  if (!overlay) return;
-  overlay.classList.add("visible");
-  window.setTimeout(() => {
-    window.location.href = "./board-layout.html";
-  }, 1500);
-}
-
-/**
- * Builds the task object from the form fields.
- * @param {Object|null} existing - The task that is edited, or null for a new task.
- * @returns {Object} The task.
- */
-function buildTaskFromForm(existing) {
-  return {
-    id: existing ? existing.id : String(Date.now()),
-    title: taskTitleInput.value.trim(),
-    state: existing ? existing.state : newTaskState,
-    description: document.getElementById("task-description").value.trim(),
-    dueDate: dueDate.value,
-    priority: getSelectedPriority(),
-    assignedTo: getAssignedContactIds(),
-    category: taskCategory.value,
-    subtasks: getSubtasks(existing ? existing.subtasks : []),
-  };
-}
-
-/**
- * Replaces the task with the same id or appends it if it is new.
- * @param {Object[]} tasks - The current tasks.
- * @param {Object} task - The saved task.
- * @returns {Object[]} The updated list.
- */
-function upsertTask(tasks, task) {
-  const isEdit = tasks.some((t) => t.id === task.id);
-  return isEdit ? tasks.map((t) => (t.id === task.id ? task : t)) : [...tasks, task];
-}
-
 list.style.display = "none";
 document.getElementById("assigned-to-dropdown").classList.remove("open");
-
-/**
- * Resets the whole add-task form including priority, contacts and subtasks.
- * @returns {void}
- */
-function resetForm() {
-  form.reset();
-  errorMessageArray.length = 0;
-  errorMessage.innerText = "";
-  subTaskList.innerHTML = "";
-  showSubtaskActions();
-  resetPriority();
-  resetAssignedContacts();
-}
-
-/**
- * Sets the priority back to "medium".
- * @returns {void}
- */
-function resetPriority() {
-  changePriority(document.querySelector(".priority-medium"));
-}
-
-/**
- * Deselects all contacts and clears the avatars.
- * @returns {void}
- */
-function resetAssignedContacts() {
-  list.innerHTML = "";
-  document.getElementById("assigned-avatars").innerHTML = "";
-}

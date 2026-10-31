@@ -61,7 +61,7 @@ function createMoveOption(card, targetIndex, currentIndex) {
 }
 
 /**
- * Fills the "Move to" menu with the previous and next column of a card.
+ * Fills the "Move to" menu with all columns except the current one.
  *
  * @param {HTMLElement} card - The task card the menu belongs to.
  * @returns {void}
@@ -69,8 +69,9 @@ function createMoveOption(card, targetIndex, currentIndex) {
 function fillMoveMenu(card) {
   const currentIndex = columnIds.indexOf(card.closest(".board-main-column").dataset.column);
   moveMenu.querySelectorAll("button").forEach((option) => option.remove());
-  [currentIndex - 1, currentIndex + 1]
-    .filter((index) => index >= 0 && index < columnIds.length)
+  columnIds
+    .map((_, index) => index)
+    .filter((index) => index !== currentIndex)
     .forEach((index) => moveMenu.appendChild(createMoveOption(card, index, currentIndex)));
 }
 
@@ -108,14 +109,14 @@ function openMoveMenu(button) {
 }
 
 /**
- * Opens or closes the menu when a move button is clicked (screens up to 360px).
+ * Opens or closes the menu when a move button is clicked (screens up to 1000px).
  *
  * @param {MouseEvent} event - The click event.
  * @returns {void}
  */
 function handleMoveButtonClick(event) {
   const button = event.target.closest(".board-card-move-button");
-  if (!button || !window.matchMedia("(max-width: 768px)").matches) return;
+  if (!button || !window.matchMedia("(max-width: 1000px)").matches) return;
   if (moveMenuButton === button) closeMoveMenu(true);
   else openMoveMenu(button);
 }
@@ -217,7 +218,7 @@ function handleCardDragEnd(card) {
 }
 
 /**
- * Attaches the drag events to a task card.
+ * Attaches the mouse drag events and the touch drag events to a task card.
  *
  * @param {HTMLElement} card - The task card.
  * @returns {void}
@@ -225,6 +226,7 @@ function handleCardDragEnd(card) {
 function bindCardDragEvents(card) {
   card.addEventListener("dragstart", (event) => handleCardDragStart(event, card));
   card.addEventListener("dragend", () => handleCardDragEnd(card));
+  bindCardTouchEvents(card);
 }
 
 /**

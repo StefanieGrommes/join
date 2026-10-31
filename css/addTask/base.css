@@ -141,6 +141,16 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   transform: translateY(-50%);
 }
 
+@supports (-moz-appearance: none) {
+  .input-with-icon img {
+    box-sizing: border-box;
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+    background-color: white;
+  }
+}
+
 .dropdown-container {
   display: flex;
   position: relative;
@@ -321,7 +331,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 #assigned-to-list {
   position: absolute;
-  top: 100%;
   left: 0;
   right: 0;
   z-index: 10;
@@ -331,6 +340,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .checked-btn {
+  padding-left: 4px;
   background-color: transparent;
   border-style: unset;
   cursor: pointer;
@@ -382,18 +392,4 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .subtask-actions img {
   position: static;
   transform: none;
-}
-
-.subtask-actions button {
-  display: flex;
-  align-items: center;
-  border: unset;
-  background-color: transparent;
-  cursor: pointer;
-}
-
-.action-divider {
-  width: 1px;
-  height: 24px;
-  background-color: rgb(168, 168, 168);
 }

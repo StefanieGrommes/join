@@ -16,7 +16,23 @@ function deleteTask(taskId) {
 }
 
 /**
- * Handles the delete and edit buttons of the detail dialog.
+ * Shows or hides the small delete confirmation popup of the detail dialog.
+ *
+ * @param {boolean} show - Whether the popup should be visible.
+ * @returns {void}
+ */
+function toggleDeleteConfirm(show) {
+  const confirmBox = taskDetailRoot.querySelector(".board-delete-confirm");
+  const deleteButton = taskDetailRoot.querySelector('[data-action="delete-task"]');
+  if (!confirmBox) return;
+  confirmBox.hidden = !show;
+  deleteButton.setAttribute("aria-expanded", String(show));
+  if (show) confirmBox.querySelector('[data-action="cancel-delete"]').focus();
+  else deleteButton.focus();
+}
+
+/**
+ * Handles the delete, confirm, cancel and edit buttons of the detail dialog.
  *
  * @param {MouseEvent} event - The click event.
  * @returns {void}
@@ -26,7 +42,10 @@ function handleDetailAction(event) {
   const task = getTaskById(taskDetailRoot.dataset.taskId);
   if (!action || !task) return;
   if (action.dataset.action === "delete-task") {
-    if (!window.confirm("Delete this task?")) return;
+    toggleDeleteConfirm(taskDetailRoot.querySelector(".board-delete-confirm").hidden);
+  } else if (action.dataset.action === "cancel-delete") {
+    toggleDeleteConfirm(false);
+  } else if (action.dataset.action === "confirm-delete") {
     deleteTask(task.id);
     closeDetailModal();
   } else if (action.dataset.action === "edit-task") {
@@ -83,25 +102,39 @@ function handleCardClick(event) {
 }
 
 /**
- * Toggles the assigned-contact list for a task card.
- * @param {HTMLElement} trigger - The avatar row that opens the list.
- * @returns {void}
+ * Returns the assigned contacts of the task card that contains the trigger.
+ * @param {HTMLElement} trigger - The avatar row inside the task card.
+ * @returns {Object[]} The assigned contacts, or an empty array if the card or task is missing.
  */
-function toggleAssignedContactsPopover(trigger) {
-  if (assignedContactsTrigger === trigger) {
-    closeAssignedContactsPopover();
-    return;
-  }
-  closeAssignedContactsPopover();
+function getCardAssignedContacts(trigger) {
   const card = trigger.closest(".board-card--task");
-  if (!card) return;
+  if (!card) return [];
   const task = getTaskById(card.dataset.cardId);
-  const contacts = (task?.assignedTo || []).map(getContactById).filter(Boolean);
-  if (contacts.length < 4) return;
-  assignedContactsPopover = createAssignedContactsPopover(contacts);
-  assignedContactsTrigger = trigger;
-  document.body.appendChild(assignedContactsPopover);
-  positionAssignedContactsPopover(trigger);
+  return (task?.assignedTo || []).map(getContactById).filter(Boolean);
+}
+
+/**
+ * Returns the assigned contacts of the task card that contains the trigger.
+ * @param {HTMLElement} trigger - The avatar row inside the task card.
+ * @returns {Object[]} The assigned contacts, or an empty array if the card or task is missing.
+ */
+function getCardAssignedContacts(trigger) {
+  const card = trigger.closest(".board-card--task");
+  if (!card) return [];
+  const task = getTaskById(card.dataset.cardId);
+  return (task?.assignedTo || []).map(getContactById).filter(Boolean);
+}
+
+/**
+ * Returns the assigned contacts of the task card that contains the trigger.
+ * @param {HTMLElement} trigger - The avatar row inside the task card.
+ * @returns {Object[]} The assigned contacts, or an empty array if the card or task is missing.
+ */
+function getCardAssignedContacts(trigger) {
+  const card = trigger.closest(".board-card--task");
+  if (!card) return [];
+  const task = getTaskById(card.dataset.cardId);
+  return (task?.assignedTo || []).map(getContactById).filter(Boolean);
 }
 
 /**
@@ -213,7 +246,10 @@ function handleAssignedContactsKeydown(event) {
  */
 function handleDetailEscape(event) {
   const isOpen = taskDetailModal.classList.contains("is-open");
-  if (event.key === "Escape" && isOpen) closeDetailModal();
+  if (event.key !== "Escape" || !isOpen) return;
+  const confirmBox = taskDetailRoot.querySelector(".board-delete-confirm");
+  if (confirmBox && !confirmBox.hidden) toggleDeleteConfirm(false);
+  else closeDetailModal();
 }
 
 /**

@@ -84,7 +84,25 @@
   flex-shrink: 0;
 }
 
+.board-detail-modal-body .board-delete-confirm {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  width: auto;
+  white-space: nowrap;
+  border-radius: 20px 20px 0 20px;
+}
+
+.board-delete-confirm p {
+  margin: 0;
+  padding: 8px 12px;
+  color: var(--navbar-color);
+  font-size: 16px;
+  font-weight: 700;
+}
+
 .board-detail-modal-body .board-detail-actions {
+  position: relative;
   display: flex;
   justify-content: flex-end;
   gap: 12px;
@@ -112,8 +130,9 @@
 }
 
 .board-detail-modal-body .board-detail-button-icon {
-  font-size: 1rem;
-  line-height: 1;
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
 }
 
 .board-detail-modal-body .board-detail-button-text {

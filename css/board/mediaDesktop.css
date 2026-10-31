@@ -1,5 +1,5 @@
 :root {
-  @media (max-width: 1280px) and (min-width: 769px) {
+  @media (max-width: 1280px) and (min-width: 1001px) {
     .sidebar {
       width: 204px;
       padding: 24px 0 22px;
@@ -45,7 +45,7 @@
     }
   }
 
-  @media (max-width: 1040px) and (min-width: 769px) {
+  @media (max-width: 1040px) and (min-width: 1001px) {
     .sidebar {
       width: 172px;
     }
@@ -93,7 +93,7 @@
     }
   }
 
-  @media (max-width: 860px) and (min-width: 769px) {
+  @media (max-width: 860px) and (min-width: 1001px) {
     .sidebar {
       width: 156px;
     }

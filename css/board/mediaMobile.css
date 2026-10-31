@@ -1,5 +1,5 @@
 :root {
-  @media (max-width: 768px) {
+  @media (max-width: 1000px) {
     .page-layout {
       flex-direction: column;
       padding-right: 0px;
@@ -142,6 +142,7 @@
 
     .board-main-column-content {
       flex-direction: row;
+      gap: 3px;
       width: 100%;
       overflow-x: auto;
       overflow-y: hidden;
@@ -196,12 +197,18 @@
     }
   }
 
-  @media (max-width: 360px) {
+  @media (max-width: 1000px) {
     .board-card-header {
       justify-content: space-between;
       gap: 8px;
     }
 
+    .board-card-move-button {
+      display: inline-flex;
+    }
+  }
+
+  @media (max-width: 360px) {
     .board-header-inner {
       width: 100%;
       gap: 12px;

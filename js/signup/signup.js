@@ -290,6 +290,7 @@ function validateSignupForm() {
  * @returns {void}
  */
 function redirectAfterSignup() {
+  sessionStorage.setItem("join-show-intro", "1");
   window.location.href = "./summary.html";
 }
 

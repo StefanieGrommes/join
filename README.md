@@ -9,7 +9,8 @@ manage their tasks and projects in an intuitive, visual interface.
 In Join you can create a board, fill it with tasks and assign it to your collegues.
 
 Tasks can be moved using native drag and drop at all supported viewport widths,
-including 320px. On screens up to 360px wide, the arrow button in a task card
+including 320px. On touch devices, press and hold a task card briefly and then
+drag it with your finger to another column. On screens up to 1000px wide, the arrow button in a task card
 also opens the "Move to" menu to move the task to the previous or next board
 column, including on devices without native drag-and-drop support.
 The column assignment is saved locally and in Firebase.

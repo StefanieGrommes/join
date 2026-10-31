@@ -2,11 +2,7 @@
 const contactFieldRules = [
   { key: "name", check: isValidName, message: "Please enter first and last name" },
   { key: "email", check: isValidEmail, message: "Please enter a valid email address." },
-  {
-    key: "phone",
-    check: isValidPhoneNr,
-    message: "Please enter at least 9 digits (+, spaces, () and - allowed).",
-  },
+  { key: "phone", check: (v) => v === "" || isValidPhoneNr(v), message: "Please enter a valid phone number." },
 ];
 
 /**
@@ -15,7 +11,7 @@ const contactFieldRules = [
  */
 function showDialog() {
   const dialog = document.querySelector("dialog");
-  if (dialog) dialog.showModal();
+  if (!dialog) return;
   resetContactFormValidation();
   dialog.showModal();
 }
@@ -42,8 +38,8 @@ function resetDialogContent() {
   document.getElementById("dialogHeadline").textContent = "Add contact";
   document.getElementById("dialogSubline").style.display = "";
   document.getElementById("submitBtnText").textContent = "Create contact";
-  document.getElementById("dialogAvatar").innerHTML =
-    `<img src="../assets/contact-guest-img.svg" alt="Guest Image" />`;
+  document.getElementById("dialogAvatar").innerHTML = displayGuestImage();
+
 }
 
 /**

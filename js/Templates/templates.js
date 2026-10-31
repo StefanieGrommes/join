@@ -107,7 +107,7 @@ function getAssignedContactsTemplate(avatars, assignedCount) {
 /**
  * Returns the HTML of the small task card of a board column.
  * @param {Object} task - Task with id, title, description, category and categoryColor.
- * @param {{assigned: string, priorityIcon: (string|undefined), progressWidth: number, progressLabel: string}} view - Prepared display values.
+ * @param {{assigned: string, priorityIcon: (string|undefined), progressWidth: number, progressLabel: string}} view - Prepared display values; the progress bar is hidden at 0%.
  * @returns {string} HTML string of the card.
  */
 function getTaskCardTemplate(task, view) {
@@ -126,12 +126,12 @@ function getTaskCardTemplate(task, view) {
       <h3 class="board-card-title">${escapeHtml(task.title)}</h3>
       <p class="board-card-description">${escapeHtml(task.description)}</p>
 
-      <div class="board-card-progress">
+      ${progressWidth > 0 ? `<div class="board-card-progress">
         <div class="board-progress-bar">
           <span style="width:${progressWidth}%"></span>
         </div>
         <span class="board-progress-label">${progressLabel}</span>
-      </div>
+      </div>` : ''}
 
       <div class="board-card-footer">
         ${assigned}
@@ -216,12 +216,17 @@ function getTaskDetailTemplate(task, view) {
         </div>
 
         <div class="board-detail-actions">
-          <button type="button" class="board-detail-button board-detail-button--ghost" data-action="delete-task" aria-label="Delete task">
-            <span class="board-detail-button-icon" aria-hidden="true">🗑</span>
+          <div class="profile-menu board-delete-confirm" id="board-delete-confirm" role="alertdialog" aria-label="Delete task" hidden>
+            <p>Delete this task?</p>
+            <button type="button" data-action="confirm-delete">Delete</button>
+            <button type="button" data-action="cancel-delete">Cancel</button>
+          </div>
+          <button type="button" class="board-detail-button board-detail-button--ghost" data-action="delete-task" aria-label="Delete task" aria-haspopup="dialog" aria-expanded="false" aria-controls="board-delete-confirm">
+            <img class="board-detail-button-icon" src="../assets/delete-subtask.png" alt="" aria-hidden="true">
             <span class="board-detail-button-text">Delete</span>
           </button>
           <button type="button" class="board-detail-button board-detail-button--primary" data-action="edit-task" aria-label="Edit task">
-            <span class="board-detail-button-icon" aria-hidden="true">✎</span>
+            <img class="board-detail-button-icon" src="../assets/edit-subtask.png" alt="" aria-hidden="true">
             <span class="board-detail-button-text">Edit</span>
           </button>
         </div>
@@ -244,14 +249,12 @@ function getContactDetailTemplate(contact) {
         ${getInitials(contact.firstName, contact.lastName)}
       </div>
       <div class="contact-detail-head">
-        <p class="contact-detail-name">${contact.firstName} ${contact.lastName}</p>
+        <p class="contact-detail-name">${getContactDisplayName(contact)}</p>
         <div class="contact-detail-actions">
           <button class="detail-action-btn" onclick="openEditDialog('${contact.id}')">
             <img class="icon-edit" src="../assets/edit.svg" alt="" /> Edit
           </button>
-          <button class="detail-action-btn" onclick="deleteContact('${contact.id}')">
-            <img class="icon-delete" src="../assets/delete.svg" alt="" /> Delete
-          </button>
+         ${getContactDeleteButtonTemplate(contact)}
         </div>
       </div>
     </div>
@@ -271,8 +274,67 @@ function getContactDetailTemplate(contact) {
       <button class="detail-action-btn" onclick="openEditDialog('${contact.id}')">
         <img class="icon-edit" src="../assets/edit.svg" alt="" />Edit
       </button>
-      <button class="detail-action-btn" onclick="deleteContact('${contact.id}')">
-        <img class="icon-delete" src="../assets/delete.svg" alt="" />Delete
-      </button>
+      ${getContactDeleteButtonTemplate(contact)}
     </div>`;
 }
+
+/**
+ * Returns the delete button of the contact detail view, empty for the own contact.
+ * @param {Object} contact - Contact with id.
+ * @returns {string} HTML string of the button or an empty string.
+ */
+function getContactDeleteButtonTemplate(contact) {
+  if (isOwnContact(contact.id)) return "";
+  return `
+    <button class="detail-action-btn" onclick="deleteContact('${contact.id}')">
+      <img class="icon-delete" src="../assets/delete.svg" alt="" /> Delete
+    </button>`;
+}
+
+/**
+ * Builds the HTML for a single contact in the list.
+ * @param {Object} contact - Contact with id, firstName, lastName and email
+ * @returns {string} HTML string of the list item
+ */
+function getContactTemplate(contact) {
+  return `
+    <li class="contact-item" data-id="${contact.id}" onclick="openContactDetail('${contact.id}', this)">
+      <div class="contact-avatar" style="background-color: ${getContactColor(contact.id)}">${getInitials(contact.firstName, contact.lastName)}</div>
+      <div class="contact-info">
+        <p class="contact-name">${getContactDisplayName(contact)}</p>
+        <p class="contact-email">${contact.email}</p>
+      </div>
+    </li>`;
+}
+
+/**
+ * Builds an image if logged in as guest.
+ * @returns {string} HTML string of the image item
+ */
+function displayGuestImage() {
+  return `<img src="../assets/contact-guest-img.svg" alt="Guest Image" />`;
+}
+
+/**
+ * Builds a large image of the Avatar.
+ * @param {Object} contact - Contact with id, firstName, lastName and email
+ * @returns {string} HTML string of the large image including Initials and individuals color.
+ */
+function displayDialogAvatar(contact) {
+  return `<div class="contact-avatar-large" style="background-color: ${getContactColor(contact.id)}">${getInitials(contact.firstName, contact.lastName)}
+          </div>`;
+}
+
+/**
+ * Builds an alphabetic list for each letter and fills it with the contacts sorted by their last name.
+ * @param {string} letter - first letter of lastName
+ * @returns {string} HTML string of one letter
+ */
+function displayContactGroupTemplate(letter, items) {
+return `<div class="contact-group">
+           <p class="group-letter">${letter}</p>
+          <ul class="contact-list">${items}</ul>
+        </div>`;
+}
+
+
