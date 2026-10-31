@@ -227,15 +227,6 @@
     cursor: pointer;
   }
 
-  @media (max-width: 768px) {
-    .board-card-move-button {
-      display: inline-flex;
-    }
-    .board-card-header {
-      justify-content: space-between;
-    }
-  }
-
   .board-move-menu {
     position: fixed;
     z-index: 1000;
